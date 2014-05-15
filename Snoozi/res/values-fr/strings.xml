@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+        <string name="app_name">Snoozi</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Paramètres</string>
+    <string name="welcome">Snoozi est une toute nouvelle expérience de reveil. Programmez votre alarme, et laissez Snoozi faire le reste!</string>
+    <string name="activate">Activate Alarm</string>
+    <string name="Hour">Heure</string>
+    <string name="Repeat">Repéter</string>
+    <string name="Vibration">Vibration</string>
+    <string name="dotline">---</string>
+    <string name="done">J\'ai fini !</string>
+    <string name="preversion">Cette version est un prototype,beaucoup de fonctionnalités et de relooking sont à venir!</string>
+    <string name="Everyday">Tous les jours</string>
+    <string name="alarmon">Alarme Activée</string>
+    <string name="alarmoff">Alarm Désactivée</string>
+    <string name="snoozeinfivemin">Cette alarme va se repéter dans 5 minutes</string>
+    <string name="title_activity_video">VideoActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="like">J\'aime</string>
+    <string name="dislike">Je n\'aime pas</string>
+    <string name="snooziTeam">Snoozi Team</string>
+    <string name="fakedate">08 May 14</string>
+    <string name="blank"></string>
+    <string name="alarnIsSet">L\'alarme est programmée dans</string>
+    <string name="day">jour</string>
+    <string name="days">jours</string>
+    <string name="hour">heure</string>
+    <string name="hours">heures</string>
+    <string name="minute">minute</string>
+    <string name="minutes">minutes</string>
+    <string name="second">seconde</string>
+    <string name="seconds">secondes</string>
+
+    <string-array name="dayofweek">
+        <item>Lundi</item>
+        <item>Mardi</item>
+        <item>Mercredi</item>
+        <item>Jeudi</item>
+        <item>Vendredi</item>
+        <item>Samedi</item>
+        <item>Dimanche</item>
+    </string-array>
+    <string-array name="dayofweekshort">
+        <item> Lun.</item>
+        <item> Mar.</item>
+        <item> Mer.</item>
+        <item> Jeu.</item>
+        <item> Ven.</item>
+        <item> Sam.</item>
+        <item> Dim.</item>
+    </string-array>
+    <string-array name="snooziphrase">
+        <item>Advantage of being an Unemployed Dad</item>
+        <item>Annoying People on the plane</item>
+        <item>Average Tuesday Night</item>
+        <item>Rick Rolled by Snoozi !</item>
+        <item>Never go Full Retard</item>
+        <item>Have fun with your morning wood!</item>
+        <item>They wish they hadnt skipped Gym Class</item>
+        <item>I can Play better</item>
+        <item>Luckly You have Snoozi</item>
+        <item>Get a room already</item>
+    </string-array>
+
+    <string name="volume">Volume de l\'alarme</string>
+    <string name="title_activity_survey">SurveyActivity</string>
+    <string name="thankyou">"Félicitations! Vous avez réussi à regarder toutes les vidéos! Merci de votre soutient! "</string>
+    <string name="howrating">Quelle note mettriez-vous a ce que vous avez testez?</string>
+    <string name="sendcomment">Nous serions ravi d\'avoir vos commentaires, suggestions ou feedbacks:</string>
+    <string name="sendbtn">Envoyer avec Amour</string>
+    <string name="finalthanks">Toutes ces informations seront lues avec soin et utilisées pour améliorer Snoozi!</string>
+<string name="sendthanks">Merci pour vos commentaires</string>
+    
+</resources>

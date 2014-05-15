@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Snoozi</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">设定</string>
+    <string name="welcome">Snoozi是一个新体验. 设定您的闹钟, 剩下的就交给Snoozi!</string>
+    <string name="activate">确定</string>
+    <string name="Hour">响铃时间</string>
+    <string name="Repeat">重复</string>
+    <string name="Vibration">振动</string>
+    <string name="dotline">---</string>
+    <string name="done">I\'m done !</string>
+    <string name="preversion">这只是一个原型,其他功能将在不久推出</string>
+    <string name="Everyday">每天</string>
+    <string name="alarmon">闹钟 ON</string>
+    <string name="alarmoff">闹钟 OFF</string>
+    <string name="snoozeinfivemin">闹钟暂停5分</string>
+    <string name="title_activity_video">VideoActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="like">顶</string>
+    <string name="dislike">踩</string>
+    <string name="snooziTeam">Snoozi Team</string>
+    <string name="fakedate">08 May 14</string>
+    <string name="blank"></string>
+    <string name="alarnIsSet">此闹钟以设置为从现在起</string>
+    <string name="day">天</string>
+    <string name="days">天</string>
+    <string name="hour">小时</string>
+    <string name="hours">小时</string>
+    <string name="minute">分钟</string>
+    <string name="minutes">分钟</string>
+    <string name="second">秒</string>
+    <string name="seconds">秒</string>
+
+    <string-array name="dayofweek">
+        <item>星期一</item>
+        <item>星期二</item>
+        <item>星期三</item>
+        <item>星期四</item>
+        <item>星期五</item>
+        <item>星期六</item>
+        <item>星期日</item>
+    </string-array>
+    <string-array name="dayofweekshort">
+        <item>一</item>
+        <item>二</item>
+        <item>三</item>
+        <item>四</item>
+        <item>五</item>
+        <item>六</item>
+        <item>日</item>
+    </string-array>
+    <string-array name="snooziphrase">
+        <item>下岗爸爸的好处</item>
+        <item>烦人的飞机乘客</item>
+        <item>普遍的星期二晚</item>
+        <item>Rick Rolled by Snoozi!</item>
+        <item>Never go Full Retard</item>
+        <item>Have fun with your morning wood!</item>
+        <item>希望他们没有逃体育课</item>
+        <item>还没我弹得好呢</item>
+        <item>幸亏你有Snoozi</item>
+        <item>开房吧</item>
+    </string-array>
+
+    <string name="volume">闹钟音量</string>
+    <string name="title_activity_survey">调查表</string>
+    <string name="thankyou">"祝贺您坚持到了第十天! 谢谢您对我们的支持! "</string>
+    <string name="howrating">您对我们原型的体会如何?\n</string>
+    <string name="sendcomment">我们希望对您的体会有进一不的了解:</string>
+    <string name="sendbtn">Send with Love</string>
+    <string name="finalthanks">您所提供的所有信息将会帮助我们做的更好!</string>
+    <string name="sendthanks">谢谢您的建议</string>
+  
+</resources>

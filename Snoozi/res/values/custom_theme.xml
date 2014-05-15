@@ -1,0 +1,7 @@
+<resources>
+	
+    <style name="TitleBarTheme" parent="android:Theme">
+    	<item name="android:windowTitleSize">50dip</item>
+        <item name="android:windowTitleBackgroundStyle">@drawable/main_header_gradient</item>
+    </style>
+</resources>
