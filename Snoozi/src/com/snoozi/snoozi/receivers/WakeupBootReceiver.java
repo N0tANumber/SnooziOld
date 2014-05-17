@@ -18,7 +18,7 @@ public class WakeupBootReceiver extends BroadcastReceiver {
 			boolean isActivated = settings.getBoolean("activate", false);
 			if(isActivated)
 			{
-				AlarmLauncher.LaunchNextAlarm(context);
+				AlarmLauncher.checkAndPlanifyNextAlarm(context);
 			}
         }
 	}

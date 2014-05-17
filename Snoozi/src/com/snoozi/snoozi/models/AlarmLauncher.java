@@ -5,7 +5,9 @@ import java.util.Calendar;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.UI.AlarmReceiverActivity;
 import com.snoozi.snoozi.receivers.WakeupBootReceiver;
+import com.snoozi.snoozi.utils.EventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.TrackingSender;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -17,35 +19,59 @@ import android.content.pm.PackageManager;
 
 public class AlarmLauncher {
 
-	
-	public static boolean LaunchNextAlarm(Context context, int secondFromNow)
+	/**
+	 * Planify next launch of the alarm
+	 * @param context
+	 * @param secondFromNow 
+	 * 		if <> 0 alarm will launch after specified second, not from parameters
+	 * @return true
+	 *   if planification succeed
+	 */
+	public static boolean planifyNextAlarm(Context context, int secondFromNow)
 	{
-		Calendar calendar = getNextLaunchCalendar(context,secondFromNow);
-		
-		Intent intent = new Intent(context, AlarmReceiverActivity.class);
-		//PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-		PendingIntent alarmIntent = PendingIntent.getActivity(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-		alarmMgr.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), alarmIntent);
-		
-		//Activating the bootreceiver
-		ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
-		PackageManager pm = context.getPackageManager();
-
-		pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+		try {
+			//Getting the next launch time with a calendar
+			Calendar calendar = getNextLaunchCalendar(context,secondFromNow);
+			
+			//planning an alarm with a PendingIntent
+			Intent intent = new Intent(context, AlarmReceiverActivity.class);
+			//12345 is the alarm id. using the same alarm id overwritte previous planification of this alarm
+			PendingIntent alarmIntent = PendingIntent.getActivity(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+			AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+			alarmMgr.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), alarmIntent);
+			
+			//Activating the bootreceiver for registering alarm if device is reboot
+			ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
+			PackageManager pm = context.getPackageManager();
+			pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+			
+		} catch (Exception e) {
+			TrackingSender sender = new TrackingSender(context);
+			sender.sendUserEvent(EventType.ERROR_LOGGER,e.toString());
+			return false;
+		}
 		return true;
 	}
 	
-	public static boolean LaunchNextAlarm(Context context)
+	/**
+	 * Check and Planify next launch of the alarm (if activated)
+	 * @param context
+	 * @return true if alarm is planned,otherwise false
+	 */
+	public static boolean checkAndPlanifyNextAlarm(Context context)
 	{
 		//We check if alarm is still enabled
 		SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		if(settings.getBoolean("activate", false))
-			return LaunchNextAlarm(context, 0);
+			return planifyNextAlarm(context, 0);
 		else
 			return false;
 	}
 	
+	/**
+	 * Remove pending alarm planification
+	 * @param context
+	 */
 	public static void CancelAlarm(Context context)
 	{
 		// If the alarm has been set, cancel it.
@@ -54,6 +80,7 @@ public class AlarmLauncher {
 		PendingIntent alarmIntent = PendingIntent.getActivity(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		alarmMgr.cancel(alarmIntent);
 		
+		//Disabling reboot alarm receiver
 		ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
 		PackageManager pm = context.getPackageManager();
 
@@ -77,19 +104,16 @@ public class AlarmLauncher {
 
 		if(secondFromNow > 0)
 		{
-			// Set the next alarm to start 
+			// Set the next alarm to start second from now
 			calendar.add(Calendar.SECOND,secondFromNow);
 
-			
 		}else
 		{
-			//TODO : Launch next alarm from the user pref
-			//calendar.add(Calendar.SECOND, 10);
+			//Calculating next alarm from the user pref 
 			SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 			int hour = settings.getInt("hour", 7);
 			int minute = settings.getInt("minute", 30);
 			boolean[] checkedday = {false,false,false,false,false,false,false};
-			//Update Days state from Pref
 			checkedday[0] = settings.getBoolean("sunday", false);
 			checkedday[1] = settings.getBoolean("monday", false);
 			checkedday[2] = settings.getBoolean("tuesday", false);
@@ -105,7 +129,7 @@ public class AlarmLauncher {
 
 			if(!(settings.getBoolean("monday", false) || settings.getBoolean("tuesday", false) || settings.getBoolean("wednesday", false) ||	settings.getBoolean("thursday", false) || settings.getBoolean("friday", false) || settings.getBoolean("saturday", false) || settings.getBoolean("sunday", false)))
 			{
-				//REPEAT NEVER, we must check the hour
+				//REPEAT EVERYDAY -> We must check the hour
 				if(minutetoday > hour*60 + minute )
 					dayadded++; // not today, so tomorrow -> add a day
 			}else
@@ -126,20 +150,25 @@ public class AlarmLauncher {
 						}
 
 					if(!isFound)
-						dayadded++;
+						dayadded++; // not found so we add a day
 				}
 			}
 			calendar.add(Calendar.DATE, dayadded); 
 			calendar.set(Calendar.HOUR_OF_DAY, hour);
 			calendar.set(Calendar.MINUTE, minute);
 			
-
 		}
 
 
 		return calendar;
 	}
 	
+	/**
+	 * Return de timespan to the next alarm
+	 * @param context
+	 * @return 
+	 * 		X days Y hours Z minutes
+	 */
 	public static String getNextAlarmAsString(Context context)
 	{
 		Calendar nextAlarm = AlarmLauncher.getNextLaunchCalendar(context, 0);

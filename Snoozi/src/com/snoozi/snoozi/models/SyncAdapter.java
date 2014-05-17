@@ -21,6 +21,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -109,6 +110,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						endpointBuilder).build();
 				//Building a tracking end for all message
 				String userId = SnooziUtility.getAccountNames(this.getContext());
+				String versionName;
+				try {
+					versionName = this.getContext().getPackageManager().getPackageInfo(this.getContext().getPackageName(), 0).versionName;
+				} catch (NameNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					versionName = "—";
+				}
 				do {
 					int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns._ID));
 					long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTAMP));
@@ -127,6 +136,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					trackingEvent.setTimestamp(timestamp);
 					trackingEvent.setTimeString(timestring);
 					trackingEvent.setVideoid(videoid);
+					trackingEvent.setApkVersion(versionName);
 					//Sending the tracking Event
 					TrackingEvent result = endpoint.insertTrackingEvent(trackingEvent).execute();
 					if(result != null)

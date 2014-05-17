@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/messageEndpoint/v1/20140513214622/java/1.16.0-rc/snoozi.com-messageEndpoint-v1-20140513214622-java-1.16.0-rc-sources.jar", 
-      "path": "snoozi.com-messageEndpoint-v1-20140513214622-java-1.16.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/messageEndpoint/v1/20140517154012/java/1.16.0-rc/snoozi.com-messageEndpoint-v1-20140517154012-java-1.16.0-rc-sources.jar", 
+      "path": "snoozi.com-messageEndpoint-v1-20140517154012-java-1.16.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2014-05-13 21:46"
+      "timestamp": "2014-05-17 15:40"
     }, 
     {
-      "path": "snoozi.com-messageEndpoint-v1-20140513214622-java-1.16.0-rc.jar.properties", 
+      "path": "snoozi.com-messageEndpoint-v1-20140517154012-java-1.16.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -701,5 +701,5 @@
   "version": "v1", 
   "language_version": "1.16.0-rc", 
   "id": "messageEndpoint:v1", 
-  "revision": 20140513214622
+  "revision": 20140517154012
 }

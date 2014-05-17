@@ -55,6 +55,7 @@ public class VideoActivity extends Activity {
 	private int _oldmusicVol;
 	public int _videoViewCount = 0;
 	
+	private boolean _isActivityPaused = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,10 +131,28 @@ public class VideoActivity extends Activity {
 
 	
 	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		_isActivityPaused =true;
+		
+	}
+
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		_isActivityPaused = false;
+	}
+
+
+	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		stopPlaying();
 		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, _oldmusicVol, 0);
+		mVideoView.getCurrentPosition();
 		
 		TrackingSender sender = new TrackingSender(getApplicationContext());
 		if(_videoViewCount >0)
@@ -207,24 +226,26 @@ public class VideoActivity extends Activity {
 			int theprecent = 0;
 
 			do {
-
-				current  = mVideoView.getCurrentPosition();
-				//System.out.println("duration - " + duration + " current- "
-				//        + current);
-				try {
-					if(duration > 0)
-					{
-						int currentPrecent = (int) (current * 100 / duration);
-						if(theprecent != currentPrecent)
+				if(!_isActivityPaused)
+				{
+					current  = mVideoView.getCurrentPosition();
+					//System.out.println("duration - " + duration + " current- "
+					//        + current);
+					try {
+						if(duration > 0)
 						{
-							publishProgress(currentPrecent);
-							theprecent = currentPrecent ;
+							int currentPrecent = (int) (current * 100 / duration);
+							if(theprecent != currentPrecent)
+							{
+								publishProgress(currentPrecent);
+								theprecent = currentPrecent ;
+							}
+							
 						}
-						
+						Thread.sleep(200);
+	
+					} catch (Exception e) {
 					}
-					Thread.sleep(200);
-
-				} catch (Exception e) {
 				}
 			} while (mVideoPlayback != VIDEO_STATE.STOPPED);
 

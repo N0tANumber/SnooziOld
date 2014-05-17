@@ -116,7 +116,7 @@ public class AlarmSettingActivity extends Activity {
 				//Dispatch event to the server
 				if(isChecked)
 				{
-					AlarmLauncher.LaunchNextAlarm(getApplicationContext());
+					AlarmLauncher.checkAndPlanifyNextAlarm(getApplicationContext());
 					sender.sendUserEvent(EventType.ALARM_SET,"set" + evtDescr.toString());
 					
 					

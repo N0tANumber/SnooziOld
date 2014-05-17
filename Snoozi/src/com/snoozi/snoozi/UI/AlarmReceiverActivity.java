@@ -135,7 +135,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 				//Reporting alarm killed
 				TrackingSender sender = new TrackingSender(getApplicationContext());
 				sender.sendUserEvent(_alarmEvent,"",SnooziUtility.getVideoNumber(this));
-				AlarmLauncher.LaunchNextAlarm(this);
+				AlarmLauncher.checkAndPlanifyNextAlarm(this);
 			    
 			}
 			finish();
@@ -216,7 +216,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		case R.drawable.ic_item_snooze:
 			_alarmEvent = EventType.ALARM_SNOOZE;
 			sender.sendUserEvent(_alarmEvent,"",  SnooziUtility.getVideoNumber(this));
-			AlarmLauncher.LaunchNextAlarm(this,5*60);
+			AlarmLauncher.planifyNextAlarm(this,5*60);
 			Toast.makeText(this,getResources().getString(R.string.snoozeinfivemin) , Toast.LENGTH_LONG).show();
 			finish();
 			break;
@@ -225,7 +225,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 			_alarmEvent = EventType.ALARM_WAKEUP;
 			sender.sendUserEvent(_alarmEvent,"",  SnooziUtility.getVideoNumber(this));
 			stopRinginAlarm();
-			AlarmLauncher.LaunchNextAlarm(this);
+			AlarmLauncher.checkAndPlanifyNextAlarm(this);
 			
 			Intent intent = new Intent(this, VideoActivity.class);
 			startActivityForResult(intent, 1);
