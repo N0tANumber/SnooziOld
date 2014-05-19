@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.AlarmLauncher;
-import com.snoozi.snoozi.utils.EventType;
+import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
 
@@ -66,14 +66,14 @@ public class AlarmSettingActivity extends Activity {
 		TrackingSender sender = new TrackingSender(getApplicationContext());
 		if(isFirstLaunch)
 		{
-			sender.sendUserEvent(EventType.APP_FIRSTLAUNCH);
+			sender.sendUserEvent(TrackingEventType.APP_FIRSTLAUNCH);
 			//Save firstlaunch state
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean("firstLaunch", false);
 			editor.commit();
 		}
 		else
-			sender.sendUserEvent(EventType.APP_LAUNCH);
+			sender.sendUserEvent(TrackingEventType.APP_LAUNCH);
 
 	}
 
@@ -117,7 +117,7 @@ public class AlarmSettingActivity extends Activity {
 				if(isChecked)
 				{
 					AlarmLauncher.checkAndPlanifyNextAlarm(getApplicationContext());
-					sender.sendUserEvent(EventType.ALARM_SET,"set" + evtDescr.toString());
+					sender.sendUserEvent(TrackingEventType.ALARM_SET,"set" + evtDescr.toString());
 					
 					
 					//We display a toast message
@@ -132,7 +132,7 @@ public class AlarmSettingActivity extends Activity {
 				}
 				else
 				{
-					sender.sendUserEvent(EventType.ALARM_UNSET,"unset" + evtDescr.toString());
+					sender.sendUserEvent(TrackingEventType.ALARM_UNSET,"unset" + evtDescr.toString());
 					AlarmLauncher.CancelAlarm(getApplicationContext());
 				}
 

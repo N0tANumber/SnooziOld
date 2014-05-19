@@ -6,6 +6,8 @@ import android.provider.BaseColumns;
 
 /**
  * SnooziContract give the constant to accessing the ContentProvider of the Snoozi app.
+ * constant are sorted like this :
+ *    - Provider > table > Columns
  * @author CtrlX
  *
  */

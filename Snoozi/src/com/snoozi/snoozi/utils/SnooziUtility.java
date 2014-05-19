@@ -10,16 +10,16 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.snoozi.app";
-	private static String _username = "";
+	private static String m_username = "";
 	
-	private static int _videoNumber = 0;
+	private static int m_videoNumber = 0;
 	/**
 	 * Return the user account email
 	 * @param context
 	 * @return email like foo@gmail.com
 	 */
 	public static String getAccountNames(Context context) {
-		if(_username == "")
+		if(m_username == "")
 		{
 			AccountManager mAccountManager = AccountManager.get(context);
 		    Account[] accounts = mAccountManager.getAccountsByType(
@@ -29,23 +29,23 @@ public class SnooziUtility {
 		        names[i] = accounts[i].name;
 		    }
 		    if(names.length > 0)
-		    	_username = names[0];
+		    	m_username = names[0];
 		    else 
-		    	_username = "unknown";
+		    	m_username = "unknown";
 		}
-		return _username;
+		return m_username;
 	    
 	}
 	
 	public static int getVideoNumber(Context context)
 	{
-		if(_videoNumber == 0)
+		if(m_videoNumber == 0)
 		{
 			SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-			_videoNumber = settings.getInt("videoNumber", 1);
+			m_videoNumber = settings.getInt("videoNumber", 1);
 		}
 		
-		return _videoNumber; 
+		return m_videoNumber; 
 	}
 	
 	public static void setVideoNumber(Context context,int newNumber)
@@ -55,7 +55,7 @@ public class SnooziUtility {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putInt("videoNumber", newNumber);
 		editor.commit();
-		_videoNumber = newNumber;
+		m_videoNumber = newNumber;
 	}
 	
 	

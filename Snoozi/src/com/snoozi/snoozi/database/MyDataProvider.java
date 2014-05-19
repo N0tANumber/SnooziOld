@@ -20,10 +20,10 @@ public class MyDataProvider extends ContentProvider {
      * Defines a handle to the database helper object. The MainDatabaseHelper class is defined
      * in a following snippet.
      */
-    private MainDatabaseHelper mOpenHelper;
+    private MainDatabaseHelper m_OpenHelper;
     
 	/**
-	 * Constant to match URI with the patern
+	 * Constant to match URI with the pattern
 	 * @see http://developer.android.com/reference/android/content/UriMatcher.html
 	 */
     private static final int TRACKING = 1;
@@ -39,7 +39,7 @@ public class MyDataProvider extends ContentProvider {
 	
 	@Override
 	public boolean onCreate() {
-		mOpenHelper = new MainDatabaseHelper(getContext());
+		m_OpenHelper = new MainDatabaseHelper(getContext());
 		
 		return true;
 	}
@@ -65,7 +65,7 @@ public class MyDataProvider extends ContentProvider {
 		int match = sUriMatcher.match(uri);
 		if (match != TRACKING)
 			throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = m_OpenHelper.getWritableDatabase();
 		try 
 		{
 			
@@ -110,7 +110,7 @@ public class MyDataProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		
-		SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+		SQLiteDatabase db = m_OpenHelper.getReadableDatabase();
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		boolean useAuthorityUri = false;
 		try {
@@ -161,7 +161,7 @@ public class MyDataProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = m_OpenHelper.getWritableDatabase();
 		int updateCount = 0;
 		switch (sUriMatcher.match(uri)) {
 		case TRACKING:
@@ -197,7 +197,7 @@ public class MyDataProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		SQLiteDatabase db = m_OpenHelper.getWritableDatabase();
 		int delCount = 0;
 		switch (sUriMatcher.match(uri)) {
 		case TRACKING:

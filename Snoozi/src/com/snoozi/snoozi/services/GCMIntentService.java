@@ -21,7 +21,9 @@ import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.snoozi.deviceinfoendpoint.model.DeviceInfo;
 import com.snoozi.snoozi.UI.MainActivity;
 import com.snoozi.snoozi.UI.RegisterActivity;
+import com.snoozi.snoozi.database.SnooziContract;
 import com.snoozi.snoozi.models.CloudEndpointUtils;
+import com.snoozi.snoozi.models.SyncAdapter;
 import com.snoozi.snoozi.utils.SnooziUtility;
 
 /**
@@ -139,8 +141,8 @@ public class GCMIntentService extends GCMBaseIntentService {
            * app initialization has already created the account.
            */
     	  // Create the dummy account
-          Account mAccount = MainActivity.CreateSyncAccount(context);
-          ContentResolver.requestSync(mAccount, MainActivity.AUTHORITY, null);
+          Account mAccount = SyncAdapter.GetSyncAccount(context);
+          ContentResolver.requestSync(mAccount, SnooziContract.AUTHORITY, null);
       }
       /*
 	  sendNotificationIntent(

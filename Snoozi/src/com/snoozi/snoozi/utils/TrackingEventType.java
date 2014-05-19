@@ -1,6 +1,11 @@
 package com.snoozi.snoozi.utils;
 
-public enum EventType {
+/**
+ * Each type of TRACKING EVENT
+ * @author CtrlX
+ *
+ */
+public enum TrackingEventType {
 	DEBUGGING,
 	ERROR_LOGGER,
 	APP_FIRSTLAUNCH,

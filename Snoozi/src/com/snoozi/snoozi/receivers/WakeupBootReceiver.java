@@ -8,6 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+/**
+ * Class for re-planing alarm if device is rebooted
+ * @author CtrlX
+ *
+ */
 public class WakeupBootReceiver extends BroadcastReceiver {
 
 	@Override

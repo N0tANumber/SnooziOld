@@ -1,7 +1,7 @@
 package com.snoozi.snoozi.UI;
 
 import com.snoozi.snoozi.*;
-import com.snoozi.snoozi.utils.EventType;
+import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
 
@@ -42,7 +42,7 @@ public class SurveyActivity extends Activity {
 				// TODO Auto-generated method stub
 				String comm = _commenttxt.getText().toString();
 				sender = new TrackingSender(getApplicationContext());
-				sender.sendUserEvent(EventType.APP_COMMENT, comm);
+				sender.sendUserEvent(TrackingEventType.APP_COMMENT, comm);
 				
 				String nextString = getResources().getString(R.string.sendthanks);
 				Toast.makeText(getApplicationContext(),nextString , Toast.LENGTH_LONG).show();
@@ -64,7 +64,7 @@ public class SurveyActivity extends Activity {
 		super.onStop();
 		int rating = _ratingBar.getProgress();
 		sender = new TrackingSender(getApplicationContext());
-		sender.sendUserEvent(EventType.APP_RATING, rating + "");
+		sender.sendUserEvent(TrackingEventType.APP_RATING, rating + "");
 		finish();
 	}
 	

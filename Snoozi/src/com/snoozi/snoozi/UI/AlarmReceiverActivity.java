@@ -6,7 +6,7 @@ import com.fima.glowpadview.GlowPadView.OnTriggerListener;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.AlarmLauncher;
 import com.snoozi.snoozi.models.MusicHandler;
-import com.snoozi.snoozi.utils.EventType;
+import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
 
@@ -30,7 +30,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 	private MusicHandler mMediaPlayer = null;
 	private GlowPadView mGlowPadView;
 	
-	private EventType _alarmEvent = EventType.ALARM_KILLED;
+	private TrackingEventType _alarmEvent = TrackingEventType.ALARM_KILLED;
 	private Vibrator _vibrator = null;
 	private long _launchtime = 0;
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
@@ -57,7 +57,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		
 		
 		TrackingSender sender = new TrackingSender(getApplicationContext());
-		sender.sendUserEvent(EventType.ALARM_LAUNCH,"", SnooziUtility.getVideoNumber(this));
+		sender.sendUserEvent(TrackingEventType.ALARM_LAUNCH,"", SnooziUtility.getVideoNumber(this));
 		
 		//If alarm is launched only one time, we disable it
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
@@ -129,7 +129,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 			Log.i(TAG,"Stop Alarm");
 			stopRinginAlarm();
 			
-			if (_alarmEvent == EventType.ALARM_KILLED) 
+			if (_alarmEvent == TrackingEventType.ALARM_KILLED) 
 			{
 				Log.i(TAG,"alarm killed");
 				//Reporting alarm killed
@@ -214,7 +214,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		TrackingSender sender = new TrackingSender(getApplicationContext());
 		switch (resId) {
 		case R.drawable.ic_item_snooze:
-			_alarmEvent = EventType.ALARM_SNOOZE;
+			_alarmEvent = TrackingEventType.ALARM_SNOOZE;
 			sender.sendUserEvent(_alarmEvent,"",  SnooziUtility.getVideoNumber(this));
 			AlarmLauncher.planifyNextAlarm(this,5*60);
 			Toast.makeText(this,getResources().getString(R.string.snoozeinfivemin) , Toast.LENGTH_LONG).show();
@@ -222,7 +222,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 			break;
 
 		case R.drawable.ic_item_wakeup:
-			_alarmEvent = EventType.ALARM_WAKEUP;
+			_alarmEvent = TrackingEventType.ALARM_WAKEUP;
 			sender.sendUserEvent(_alarmEvent,"",  SnooziUtility.getVideoNumber(this));
 			stopRinginAlarm();
 			AlarmLauncher.checkAndPlanifyNextAlarm(this);

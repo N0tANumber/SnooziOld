@@ -14,9 +14,9 @@ import android.os.IBinder;
  */
 public class SyncService extends Service {
     // Storage for an instance of the sync adapter
-    private static SyncAdapter sSyncAdapter = null;
+    private static SyncAdapter m_SyncAdapter = null;
     // Object to use as a thread-safe lock
-    private static final Object sSyncAdapterLock = new Object();
+    private static final Object m_SyncAdapterLock = new Object();
     /*
      * Instantiate the sync adapter object.
      */
@@ -27,9 +27,9 @@ public class SyncService extends Service {
          * Set the sync adapter as syncable
          * Disallow parallel syncs
          */
-        synchronized (sSyncAdapterLock) {
-            if (sSyncAdapter == null) {
-                sSyncAdapter = new SyncAdapter(getApplicationContext(), true);
+        synchronized (m_SyncAdapterLock) {
+            if (m_SyncAdapter == null) {
+                m_SyncAdapter = new SyncAdapter(getApplicationContext(), true);
             }
         }
     }
@@ -46,7 +46,7 @@ public class SyncService extends Service {
          * in the base class code when the SyncAdapter
          * constructors call super()
          */
-        return sSyncAdapter.getSyncAdapterBinder();
+        return m_SyncAdapter.getSyncAdapterBinder();
     }
 	
 }

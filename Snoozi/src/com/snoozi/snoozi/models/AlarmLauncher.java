@@ -5,7 +5,7 @@ import java.util.Calendar;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.UI.AlarmReceiverActivity;
 import com.snoozi.snoozi.receivers.WakeupBootReceiver;
-import com.snoozi.snoozi.utils.EventType;
+import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
 
@@ -17,6 +17,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 
+/**
+ * Singleton class for planning a new alarm or for retrieving the next alarm launch
+ * For now, work only with 1 alarm set
+ * @author CtrlX
+ *
+ */
 public class AlarmLauncher {
 
 	/**
@@ -47,7 +53,7 @@ public class AlarmLauncher {
 			
 		} catch (Exception e) {
 			TrackingSender sender = new TrackingSender(context);
-			sender.sendUserEvent(EventType.ERROR_LOGGER,e.toString());
+			sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,e.toString());
 			return false;
 		}
 		return true;

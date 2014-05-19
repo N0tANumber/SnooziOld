@@ -7,6 +7,11 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.os.Bundle;
 
+/**
+ * Authenticator permit the registration of the user Account
+ * @author CtrlX
+ *
+ */
 public class Authenticator extends AbstractAccountAuthenticator {
 
 	// Simple constructor

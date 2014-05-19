@@ -2,7 +2,7 @@ package com.snoozi.snoozi.UI;
 
 
 import com.snoozi.snoozi.*;
-import com.snoozi.snoozi.utils.EventType;
+import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
 
@@ -156,17 +156,17 @@ public class VideoActivity extends Activity {
 		
 		TrackingSender sender = new TrackingSender(getApplicationContext());
 		if(_videoViewCount >0)
-			sender.sendUserEvent(EventType.VIDEO_VIEWED,_videoViewCount + " time(s)", _VideoNum);
+			sender.sendUserEvent(TrackingEventType.VIDEO_VIEWED,_videoViewCount + " time(s)", _VideoNum);
 		else
-			sender.sendUserEvent(EventType.VIDEO_CANCELED,"canceled at " + Math.round(current/1000.0f) +"s./" + Math.round(duration/1000.0f) + "s.", _VideoNum  );
+			sender.sendUserEvent(TrackingEventType.VIDEO_CANCELED,"canceled at " + Math.round(current/1000.0f) +"s./" + Math.round(duration/1000.0f) + "s.", _VideoNum  );
 		
 		RadioButton radioLike = (RadioButton) findViewById(R.id.radioLike);
 		RadioButton radioDislike = (RadioButton) findViewById(R.id.radioDislike);
 		sender = new TrackingSender(getApplicationContext());
 		if(radioLike.isChecked())
-			sender.sendUserEvent(EventType.VIDEO_RATING, "1", _VideoNum);
+			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "1", _VideoNum);
 		else if(radioDislike.isChecked())
-			sender.sendUserEvent(EventType.VIDEO_RATING, "-1", _VideoNum);
+			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "-1", _VideoNum);
 					
 		
 		//prepare next video
