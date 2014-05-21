@@ -73,7 +73,7 @@
             android:noHistory="true" 
             >
         </activity>
-        <service android:name="com.snoozi.snoozi.services.GCMIntentService" />
+        <service android:name="com.snoozi.snoozi.GCMIntentService"/>
         
         <service android:name="com.snoozi.snoozi.services.AuthenticatorService" >
             <intent-filter>

@@ -1,6 +1,9 @@
 package com.snoozi.snoozi.database;
 
 
+import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
+
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -21,7 +24,8 @@ public class MyDataProvider extends ContentProvider {
      * in a following snippet.
      */
     private MainDatabaseHelper m_OpenHelper;
-    
+    private SQLiteDatabase db;
+
 	/**
 	 * Constant to match URI with the pattern
 	 * @see http://developer.android.com/reference/android/content/UriMatcher.html
@@ -40,9 +44,33 @@ public class MyDataProvider extends ContentProvider {
 	@Override
 	public boolean onCreate() {
 		m_OpenHelper = new MainDatabaseHelper(getContext());
-		
+		db = m_OpenHelper.getWritableDatabase();
 		return true;
 	}
+	
+	
+	
+
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		int match = sUriMatcher.match(uri);
+		Uri result = null;
+		try 
+		{
+			if (match == TRACKING)
+			{
+				long id = db.insert( SnooziContract.trackingevents.TABLE,null, values);
+				result = getUriForId(id, uri);
+			}else
+				throw new Exception("Unsupported URI for insertion : " + uri);
+
+		} catch (Exception e) {
+			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.insert : " + e.toString());
+
+		}
+		return result;
+	}
+	
 	
 	@Override
 	public String getType(Uri uri) {
@@ -54,51 +82,32 @@ public class MyDataProvider extends ContentProvider {
             case TRACKING_ID:
             	return SnooziContract.trackingevents.CONTENT_MIME_ITEM_TYPE;
             default:
-            	throw new IllegalArgumentException("Unsupported URI: " + uri);
+            	 SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.getType  Unsupported URI : " + uri);
+            	return null;
         }
 	}
 
-	
-
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		int match = sUriMatcher.match(uri);
-		if (match != TRACKING)
-			throw new IllegalArgumentException("Unsupported URI for insertion: " + uri);
-		SQLiteDatabase db = m_OpenHelper.getWritableDatabase();
-		try 
-		{
-			
-	     	switch (match)
-			{
-			    case TRACKING:
-			    	long id = db.insert( SnooziContract.trackingevents.TABLE,null, values);
-			    	
-			         return getUriForId(id, uri);
-			    default:
-			    	throw new IllegalArgumentException("Unsupported URI: " + uri);
-			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
 	private Uri getUriForId(long id, Uri uri) {
-		if (id > 0) {
-			Uri itemUri = ContentUris.withAppendedId(uri, id);
-			if (!isInBatchMode()) {
-				// notify all listeners of changes:
-				getContext().
-				getContentResolver().
-				notifyChange(itemUri, null);
+		Uri result = null;
+		try {
+
+			if (id > 0) {
+				Uri itemUri = ContentUris.withAppendedId(uri, id);
+				if (!isInBatchMode()) {
+					// notify all listeners of changes:
+					getContext().
+					getContentResolver().
+					notifyChange(itemUri, null);
+				}
+				result= itemUri;
 			}
-			return itemUri;
+			if(result == null)
+				throw new Exception("Problem while inserting into uri: " + uri);
+
+		} catch (Exception e) {
+			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider : " + e.toString());
 		}
-		// s.th. went wrong:
-		throw new SQLException(
-				"Problem while inserting into uri: " + uri);
+		return result;
 	}
 	
 	private boolean isInBatchMode()
@@ -110,7 +119,6 @@ public class MyDataProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		
-		SQLiteDatabase db = m_OpenHelper.getReadableDatabase();
 		SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
 		boolean useAuthorityUri = false;
 		try {
@@ -152,8 +160,7 @@ public class MyDataProvider extends ContentProvider {
 			   return cursor;
 			   
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.query : " + e.toString());		
 		}
 		return null;
 	}
@@ -161,35 +168,40 @@ public class MyDataProvider extends ContentProvider {
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
-		SQLiteDatabase db = m_OpenHelper.getWritableDatabase();
 		int updateCount = 0;
-		switch (sUriMatcher.match(uri)) {
-		case TRACKING:
-			updateCount = db.update(
-					SnooziContract.trackingevents.TABLE, 
-					values, 
-					selection,
-					selectionArgs);
-			break;
-		case TRACKING_ID:
-			String idStr = uri.getLastPathSegment();
-			String where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
-			if (!TextUtils.isEmpty(selection)) {
-				where += " AND " + selection;
+		try {
+
+			switch (sUriMatcher.match(uri)) {
+			case TRACKING:
+				updateCount = db.update(
+						SnooziContract.trackingevents.TABLE, 
+						values, 
+						selection,
+						selectionArgs);
+				break;
+			case TRACKING_ID:
+				String idStr = uri.getLastPathSegment();
+				String where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				updateCount = db.update(
+						SnooziContract.trackingevents.TABLE, 
+						values, 
+						where,
+						selectionArgs);
+				break;
+			default:
+				// no support for updating photos or entities!
+				throw new IllegalArgumentException("Unsupported URI: " + uri);
 			}
-			updateCount = db.update(
-					SnooziContract.trackingevents.TABLE, 
-					values, 
-					where,
-					selectionArgs);
-			break;
-		default:
-			// no support for updating photos or entities!
-			throw new IllegalArgumentException("Unsupported URI: " + uri);
-		}
-		// notify all listeners of changes:
-		if (updateCount > 0 && !isInBatchMode()) {
-			getContext().getContentResolver().notifyChange(uri, null);
+			// notify all listeners of changes:
+			if (updateCount > 0 && !isInBatchMode()) {
+				getContext().getContentResolver().notifyChange(uri, null);
+			}
+		} catch (Exception e) {
+			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.update : " + e.toString());
+
 		}
 		return updateCount;
 	}
@@ -197,33 +209,38 @@ public class MyDataProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		SQLiteDatabase db = m_OpenHelper.getWritableDatabase();
 		int delCount = 0;
-		switch (sUriMatcher.match(uri)) {
-		case TRACKING:
-			delCount = db.delete(
-					SnooziContract.trackingevents.TABLE, 
-					selection,
-					selectionArgs);
-			break;
-		case TRACKING_ID:
-			String idStr = uri.getLastPathSegment();
-			String where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
-			if (!TextUtils.isEmpty(selection)) {
-				where += " AND " + selection;
+		try {
+
+			switch (sUriMatcher.match(uri)) {
+			case TRACKING:
+				delCount = db.delete(
+						SnooziContract.trackingevents.TABLE, 
+						selection,
+						selectionArgs);
+				break;
+			case TRACKING_ID:
+				String idStr = uri.getLastPathSegment();
+				String where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				delCount = db.delete(
+						SnooziContract.trackingevents.TABLE, 
+						where,
+						selectionArgs);
+				break;
+			default:
+				// no support for updating photos or entities!
+				throw new IllegalArgumentException("Unsupported URI: " + uri);
 			}
-			delCount = db.delete(
-					SnooziContract.trackingevents.TABLE, 
-					where,
-					selectionArgs);
-			break;
-		default:
-			// no support for updating photos or entities!
-			throw new IllegalArgumentException("Unsupported URI: " + uri);
-		}
-		// notify all listeners of changes:
-		if (delCount > 0 && !isInBatchMode()) {
-			getContext().getContentResolver().notifyChange(uri, null);
+			// notify all listeners of changes:
+			if (delCount > 0 && !isInBatchMode()) {
+				getContext().getContentResolver().notifyChange(uri, null);
+			}
+		} catch (Exception e) {
+			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.delete : " + e.toString());
+
 		}
 		return delCount;
 	}

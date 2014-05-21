@@ -7,7 +7,6 @@ import com.snoozi.messageEndpoint.model.CollectionResponseMessageData;
 import com.snoozi.messageEndpoint.model.MessageData;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.CloudEndpointUtils;
-import com.snoozi.snoozi.services.GCMIntentService;
 import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.TrackingSender;
 import com.google.api.client.extensions.android.http.AndroidHttp;

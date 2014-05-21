@@ -4,6 +4,9 @@
 # view AndroidManifest.xml #generated:100
 -keep class com.google.android.gcm.GCMBroadcastReceiver { <init>(...); }
 
+# view AndroidManifest.xml #generated:76
+-keep class com.snoozi.snoozi.GCMIntentService { <init>(...); }
+
 # view AndroidManifest.xml #generated:51
 -keep class com.snoozi.snoozi.UI.AlarmReceiverActivity { <init>(...); }
 
@@ -30,9 +33,6 @@
 
 # view AndroidManifest.xml #generated:78
 -keep class com.snoozi.snoozi.services.AuthenticatorService { <init>(...); }
-
-# view AndroidManifest.xml #generated:76
--keep class com.snoozi.snoozi.services.GCMIntentService { <init>(...); }
 
 # view AndroidManifest.xml #generated:87
 -keep class com.snoozi.snoozi.services.SyncService { <init>(...); }

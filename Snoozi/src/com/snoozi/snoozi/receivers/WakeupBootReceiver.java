@@ -1,6 +1,6 @@
 package com.snoozi.snoozi.receivers;
 
-import com.snoozi.snoozi.models.AlarmLauncher;
+import com.snoozi.snoozi.models.AlarmPlanifier;
 import com.snoozi.snoozi.utils.SnooziUtility;
 
 import android.content.BroadcastReceiver;
@@ -23,7 +23,7 @@ public class WakeupBootReceiver extends BroadcastReceiver {
 			boolean isActivated = settings.getBoolean("activate", false);
 			if(isActivated)
 			{
-				AlarmLauncher.checkAndPlanifyNextAlarm(context);
+				AlarmPlanifier.checkAndPlanifyNextAlarm(context);
 			}
         }
 	}

@@ -1,6 +1,9 @@
 package com.snoozi.snoozi.UI;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.snoozi.snoozi.*;
 
 import android.os.Bundle;
@@ -31,27 +34,34 @@ public class MainActivity extends Activity {
 		
 		
 		
-        
-		
 		//TEST : Start up RegisterActivity right away
 		//Intent intent = new Intent(this, RegisterActivity.class);
 		//startActivity(intent);
 		
-		try {
-			//sleep for displaying the splash screen for 1sec.
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		final Timer timer = new Timer(true);
+		TimerTask timerTask = new TimerTask() 
+		{
+			@Override
+			public void run() 
+			{   
+				//after 1s, launch the setting activity
+				launchSettingActivity();
+			}
+		};
 
-        Intent intent = new Intent(this, AlarmSettingActivity.class);
-		startActivity(intent);
-		// Since this is just a wrapper to start the main activity,
-		// finish it after launching the AlarmSettingActivity
-		finish();
+		timer.schedule(timerTask, 1000);
+		
+		
 	}
 	
+	private void launchSettingActivity()
+	{
+		 Intent intent = new Intent(this, AlarmSettingActivity.class);
+		startActivity(intent);
+		//for now finish main activity after launching the AlarmSettingActivity
+		finish();
+	}
 	
 	
 }

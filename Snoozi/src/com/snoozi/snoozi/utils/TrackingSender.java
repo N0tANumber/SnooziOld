@@ -105,7 +105,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 			//On demande une synchro avec le server
 			Bundle settingsBundle = new Bundle();
 	        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-	        settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+	        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this.m_appContext), SnooziContract.AUTHORITY, settingsBundle);
 			
 			

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.snoozi.snoozi.*;
-import com.snoozi.snoozi.models.AlarmLauncher;
+import com.snoozi.snoozi.models.AlarmPlanifier;
 import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
@@ -116,12 +116,12 @@ public class AlarmSettingActivity extends Activity {
 				//Dispatch event to the server
 				if(isChecked)
 				{
-					AlarmLauncher.checkAndPlanifyNextAlarm(getApplicationContext());
+					AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
 					sender.sendUserEvent(TrackingEventType.ALARM_SET,"set" + evtDescr.toString());
 					
 					
 					//We display a toast message
-					String nextString = AlarmLauncher.getNextAlarmAsString(getApplicationContext());
+					String nextString = AlarmPlanifier.getNextAlarmAsString(getApplicationContext());
 					if(nextString.length() > 0)
 					{
 						nextString = getResources().getString(R.string.alarnIsSet) + " " + nextString;
@@ -133,7 +133,7 @@ public class AlarmSettingActivity extends Activity {
 				else
 				{
 					sender.sendUserEvent(TrackingEventType.ALARM_UNSET,"unset" + evtDescr.toString());
-					AlarmLauncher.CancelAlarm(getApplicationContext());
+					AlarmPlanifier.CancelAlarm(getApplicationContext());
 				}
 
 

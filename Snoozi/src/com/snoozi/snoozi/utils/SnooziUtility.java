@@ -5,14 +5,68 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.snoozi.app";
+	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
+	public static final boolean DEV_MODE = true;
+
 	private static String m_username = "";
 	
 	private static int m_videoNumber = 0;
+	
+	public class SYNC_ACTION{
+		public static final String NEW_VIDEO_AVAILABLE = "NEW_VIDEO_AVAILABLE";
+		public static final String SEND_DATA = "SEND_DATA";
+	}
+	
+	public static enum TRACETYPE{
+		DEBUG,
+		INFO,
+		ERROR
+	}
+	
+	
+	public static void trace(Context context, TRACETYPE traceType, String message)
+	{
+		String stackinfo = "";
+		try {
+			StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+			StackTraceElement laststack = stack[stack.length-1];
+			if(stack.length > 1)
+				laststack = stack[stack.length-2];
+			
+			stackinfo =  laststack.getMethodName() + " : " + message + "    (" +laststack.getClassName()+" at line "+ laststack.getLineNumber() + ")";
+		} catch (Exception e) {
+			stackinfo = message;
+		}
+		
+		switch (traceType) {
+		case DEBUG :
+			Log.d(SNOOZI_TRACE,stackinfo);
+			break;
+		case INFO :
+			Log.i(SNOOZI_TRACE,stackinfo);
+			break;
+		case ERROR :
+			
+			Log.e(SNOOZI_TRACE,stackinfo);
+			if(!DEV_MODE)
+			{
+				// Logging to the server
+				TrackingSender sender = new TrackingSender(context);
+				sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
+			}
+		break;
+		default:
+			break;
+		}
+	}
+	
+	
 	/**
 	 * Return the user account email
 	 * @param context
