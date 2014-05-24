@@ -12,7 +12,7 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.snoozi.app";
 	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
-	public static final boolean DEV_MODE = true;
+	public static final boolean DEV_MODE = false;
 
 	private static String m_username = "";
 	
@@ -57,8 +57,8 @@ public class SnooziUtility {
 			if(!DEV_MODE)
 			{
 				// Logging to the server
-				TrackingSender sender = new TrackingSender(context);
-				sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
+				//TrackingSender sender = new TrackingSender(context);
+				//sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
 			}
 		break;
 		default:

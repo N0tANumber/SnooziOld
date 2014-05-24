@@ -1,6 +1,9 @@
 package com.snoozi.snoozi.UI;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.fima.glowpadview.GlowPadView;
 import com.fima.glowpadview.GlowPadView.OnTriggerListener;
 import com.snoozi.snoozi.*;
@@ -61,8 +64,9 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		
 		//If alarm is launched only one time, we disable it
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		AlarmPlanifier.checkAndPlanifyNextAlarm(this);
-	    
+		
+		
+		
 		/* we dont disable alarm anymore (never -> everyday)
 		if(!(settings.getBoolean("monday", false) ||
 				settings.getBoolean("tuesday", false) ||
@@ -106,8 +110,8 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		// uncomment this to hide targets
 		mGlowPadView.setShowTargetsOnIdle(true);
 		_launchtime = System.currentTimeMillis();
-		
 	}
+	
 	
 	
 	@Override
@@ -116,7 +120,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		super.onStart();
 		Log.i(TAG,"onStartAlarm");
 		
-		
+		AlarmPlanifier.checkAndPlanifyNextAlarm(this);
 	}
 	@Override
 	protected void onPause() {

@@ -4,7 +4,10 @@ package com.snoozi.snoozi.UI;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.snoozi.snoozi.*;
+import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 import android.os.Bundle;
 import android.accounts.Account;
@@ -27,11 +30,18 @@ public class MainActivity extends Activity {
 
 
 
+	@SuppressWarnings("unused")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
+		if(Deviceinfoendpoint.DEFAULT_ROOT_URL == "https://evident-quasar-565.appspot.com/_ah/api/")
+		{
+			SnooziUtility.trace(this, TRACETYPE.ERROR, "You need to change all endpoint DEFAULT_ROOT_URL to match your current api version : ex : https://evident... ==> https://2-dot-evident");
+			finish();
+			return;
+		}
 		
 		
 		//TEST : Start up RegisterActivity right away

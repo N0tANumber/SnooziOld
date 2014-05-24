@@ -147,6 +147,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						String type = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TYPE));
 						int videoid = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.VIDEOID));
 
+						if(description.length() > 500)
+							description = description.substring(0, 500);
 						//Building the trackingEvent
 						TrackingEvent trackingEvent = new TrackingEvent();
 						trackingEvent.setUserid(userId)
@@ -182,11 +184,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 
 			} catch (IOException e) {
-				SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IOException :  " +  e.toString());
+				//ne pas mettre TYPE"ERROR car sinon il va spammer le server de log error
+				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter IOException :  " +  e.toString());
 			} catch (RemoteException e) {
-				SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter RemoteException :  " +  e.toString());
+				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter RemoteException :  " +  e.toString());
 			} catch (IllegalArgumentException e) {
-				SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IllegalArgumentException :  " +  e.toString());
+				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter IllegalArgumentException :  " +  e.toString());
+			} catch (Exception e) {
+				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter IllegalArgumentException :  " +  e.toString());
 			}finally{
 				if(cursor != null)
 					cursor.close();

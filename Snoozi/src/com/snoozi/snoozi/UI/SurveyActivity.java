@@ -63,8 +63,11 @@ public class SurveyActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 		int rating = _ratingBar.getProgress();
-		sender = new TrackingSender(getApplicationContext());
-		sender.sendUserEvent(TrackingEventType.APP_RATING, rating + "");
+		if(rating > 0)
+		{	
+			sender = new TrackingSender(getApplicationContext());
+			sender.sendUserEvent(TrackingEventType.APP_RATING, rating + "");
+		}
 		finish();
 	}
 	
