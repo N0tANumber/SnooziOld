@@ -1,0 +1,7 @@
+<queue-entries>
+  <total-storage-limit>500M</total-storage-limit>
+  <queue>
+    <name>backup</name>
+    <rate>500/s</rate>
+  </queue>
+</queue-entries>
