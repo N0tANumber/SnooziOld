@@ -1,22 +1,23 @@
 package com.snoozi;
 
-import com.snoozi.EMF;
-
+import com.snoozi.PMF;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
-import com.google.appengine.datanucleus.query.JPACursorHelper;
+import com.google.appengine.datanucleus.query.JDOCursorHelper;
+import com.google.apphosting.datastore.DatastoreV4.PropertyFilter;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 @Api(name = "videoendpoint",version="v2", namespace = @ApiNamespace(ownerDomain = "snoozi.com", ownerName = "snoozi.com", packagePath = ""))
 public class VideoEndpoint {
@@ -34,28 +35,82 @@ public class VideoEndpoint {
 			@Nullable @Named("cursor") String cursorString,
 			@Nullable @Named("limit") Integer limit) {
 
-		
-		
-		
-		EntityManager mgr = null;
+		PersistenceManager mgr = null;
 		Cursor cursor = null;
 		List<Video> execute = null;
 
 		try {
-			mgr = getEntityManager();
-			Query query = mgr.createQuery("select from Video as Video");
+			mgr = getPersistenceManager();
+			Query query = mgr.newQuery(Video.class);
+			query.setOrdering("timestamp desc");
 			if (cursorString != null && cursorString != "") {
 				cursor = Cursor.fromWebSafeString(cursorString);
-				query.setHint(JPACursorHelper.CURSOR_HINT, cursor);
+				HashMap<String, Object> extensionMap = new HashMap<String, Object>();
+				extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+				query.setExtensions(extensionMap);
+			}
+			if (limit != null) {
+				query.setRange(0, limit);
+			}
+			execute = (List<Video>) query.execute();
+			cursor = JDOCursorHelper.getCursor(execute);
+			if (cursor != null)
+				cursorString = cursor.toWebSafeString();
+
+			// Tight loop for fetching all entities from datastore and accomodate
+			// for lazy fetch.
+			for (Video obj : execute)
+				;
+		} finally {
+			mgr.close();
+		}
+
+		return CollectionResponse.<Video> builder().setItems(execute)
+				.setNextPageToken(cursorString).build();
+	}
+	
+	/**
+	 * Get all recent video posted
+	 * @param cursorString  point to start	
+	 * @param limit record count
+	 * @param status status of type VIDEO_STATUS (OK, REPORT,DELETE...)
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "unused" })
+	@ApiMethod(name = "listRecentVideo", path="listRecentVideo")
+	public CollectionResponse<Video> listRecentVideo(
+			@Nullable @Named("cursor") String cursorString,
+			@Nullable @Named("limit") Integer limit,
+			@Nullable @Named("status") String status) {
+
+		PersistenceManager mgr = null;
+		Cursor cursor = null;
+		List<Video> execute = null;
+
+		try {
+			mgr = getPersistenceManager();
+			Query query = mgr.newQuery(Video.class);
+			query.setFilter("status ==  statusParam");
+			query.declareParameters("String statusParam");
+			
+			
+			query.setOrdering("timestamp desc");
+			if (cursorString != null && cursorString != "") {
+				cursor = Cursor.fromWebSafeString(cursorString);
+				HashMap<String, Object> extensionMap = new HashMap<String, Object>();
+				extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+				query.setExtensions(extensionMap);
 			}
 
 			if (limit != null) {
-				query.setFirstResult(0);
-				query.setMaxResults(limit);
+				query.setRange(0, limit);
 			}
+			
+			if(status == null)
+				status = "OK";
 
-			execute = (List<Video>) query.getResultList();
-			cursor = JPACursorHelper.getCursor(execute);
+			execute = (List<Video>) query.execute(status);
+			cursor = JDOCursorHelper.getCursor(execute);
 			if (cursor != null)
 				cursorString = cursor.toWebSafeString();
 
@@ -71,6 +126,7 @@ public class VideoEndpoint {
 				.setNextPageToken(cursorString).build();
 	}
 
+	
 	/**
 	 * This method gets the entity having primary key id. It uses HTTP GET method.
 	 *
@@ -78,11 +134,11 @@ public class VideoEndpoint {
 	 * @return The entity with primary key id.
 	 */
 	@ApiMethod(name = "getVideo")
-	public Video getVideo(@Named("id") String id) {
-		EntityManager mgr = getEntityManager();
+	public Video getVideo(@Named("id") Long id) {
+		PersistenceManager mgr = getPersistenceManager();
 		Video video = null;
 		try {
-			video = mgr.find(Video.class, id);
+			video = mgr.getObjectById(Video.class, id);
 		} finally {
 			mgr.close();
 		}
@@ -99,12 +155,12 @@ public class VideoEndpoint {
 	 */
 	@ApiMethod(name = "insertVideo")
 	public Video insertVideo(Video video) {
-		EntityManager mgr = getEntityManager();
+		PersistenceManager mgr = getPersistenceManager();
 		try {
 			if (containsVideo(video)) {
 				throw new EntityExistsException("Object already exists");
 			}
-			mgr.persist(video);
+			mgr.makePersistent(video);
 		} finally {
 			mgr.close();
 		}
@@ -121,12 +177,12 @@ public class VideoEndpoint {
 	 */
 	@ApiMethod(name = "updateVideo")
 	public Video updateVideo(Video video) {
-		EntityManager mgr = getEntityManager();
+		PersistenceManager mgr = getPersistenceManager();
 		try {
 			if (!containsVideo(video)) {
 				throw new EntityNotFoundException("Object does not exist");
 			}
-			mgr.persist(video);
+			mgr.makePersistent(video);
 		} finally {
 			mgr.close();
 		}
@@ -140,32 +196,33 @@ public class VideoEndpoint {
 	 * @param id the primary key of the entity to be deleted.
 	 */
 	@ApiMethod(name = "removeVideo")
-	public void removeVideo(@Named("id") String id) {
-		EntityManager mgr = getEntityManager();
+	public void removeVideo(@Named("id") Long id) {
+		PersistenceManager mgr = getPersistenceManager();
 		try {
-			Video video = mgr.find(Video.class, id);
-			mgr.remove(video);
+			Video video = mgr.getObjectById(Video.class, id);
+			mgr.deletePersistent(video);
 		} finally {
 			mgr.close();
 		}
 	}
 
 	private boolean containsVideo(Video video) {
-		EntityManager mgr = getEntityManager();
+		if(video.getId() ==null)
+			return false;
+		PersistenceManager mgr = getPersistenceManager();
 		boolean contains = true;
 		try {
-			Video item = mgr.find(Video.class, video.getId());
-			if (item == null) {
-				contains = false;
-			}
+			mgr.getObjectById(Video.class, video.getId());
+		} catch (javax.jdo.JDOObjectNotFoundException ex) {
+			contains = false;
 		} finally {
 			mgr.close();
 		}
 		return contains;
 	}
 
-	private static EntityManager getEntityManager() {
-		return EMF.get().createEntityManager();
+	private static PersistenceManager getPersistenceManager() {
+		return PMF.get().getPersistenceManager();
 	}
 
 }

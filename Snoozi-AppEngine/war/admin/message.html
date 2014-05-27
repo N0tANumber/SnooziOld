@@ -2,7 +2,7 @@
 
 <html lang="en">
 <head>
-<title>Cloud Endpoints Starter Template</title>
+<title>Registered Device</title>
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 <!-- Styles, taken from Bootstrap Sign-in Form Example.-->
@@ -84,11 +84,11 @@ if (window.location.hostname == 'localhost'
   
   // This method loads the deviceinfoendpoint and messageEndpoint libraries
   function loadGapi() {
-    gapi.client.load('deviceinfoendpoint', 'v1', function() {
+    gapi.client.load('deviceinfoendpoint', 'v2', function() {
       updateRegisteredDeviceTable();
     });
     
-    gapi.client.load('messageEndpoint', 'v1', function() {});
+    gapi.client.load('messageEndpoint', 'v2', function() {});
   }
 
   // Function for checking error responses; it correctly sanitizes error messages
@@ -210,7 +210,7 @@ if (window.location.hostname == 'localhost'
 
 <body>
  <div class="container">
-  <h1>Cloud Endpoints Starter Template</h1>
+  <h1>Registered Device list</h1>
   <p style="">This sample lists all of your registered Android
    devices by accessing the Cloud Endpoint exposed by your App Engine
    App.</p>

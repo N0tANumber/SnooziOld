@@ -1,5 +1,8 @@
 package com.snoozi;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -48,6 +51,36 @@ public class TrackingEvent {
 	 * if(trackingevent.getKey() == null)
 			return false;
 	 */
+	
+	/* Via query function
+	query = mgr.newQuery(TrackingEvent.class);
+	query.setFilter("type == tracktype");
+	query.setRange(0, 200);
+	query.setOrdering("timestamp desc");*/
+	
+	/* Via query filter 
+	 Query.Builder query = Query.newBuilder();
+	query.addKindBuilder().setName("com.snoozi.TrackingEvent");
+	query.setFilter(makeFilter(
+	    makeFilter("type", PropertyFilter.Operator.EQUAL, makeValue("ERROR_LOGGER")).build(),
+	    makeFilter("otherfilter", PropertyFilter.Operator.LESS_THAN, makeValue(63)).build()));
+	query.addOrder(makeOrder("timestamp", PropertyOrder.Direction.DESCENDING));
+	query.execute()... */
+	
+	/* Via query string 
+	 query = mgr.newQuery("select from com.snoozi.TrackingEvent " +
+            " where type == tracktype " +
+			 " RANGE 0,200");
+			 
+			 */
+	
+	public TrackingEvent() {
+		
+		Calendar cal = Calendar.getInstance();
+		Date currentLocalTime = cal.getTime();
+		timestamp = currentLocalTime.getTime();
+		timeString = currentLocalTime.toString();
+	}
 	
 	 public Long getKey() {
 		 return key;

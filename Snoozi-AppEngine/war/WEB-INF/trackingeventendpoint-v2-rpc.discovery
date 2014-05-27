@@ -1,10 +1,10 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/jpI1RLX-tTfNwFEX7s40uYhKuY4\"",
+ "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/YNhA0jUkLsvDYBKbcRZTjCihpkA\"",
  "discoveryVersion": "v1",
- "id": "trackingeventendpoint:2",
+ "id": "trackingeventendpoint:v2",
  "name": "trackingeventendpoint",
- "version": "2",
+ "version": "v2",
  "description": "This is an API",
  "ownerDomain": "snoozi.com",
  "ownerName": "snoozi.com",
@@ -104,7 +104,8 @@
      "type": "string"
     },
     "key": {
-     "type": "string"
+     "type": "string",
+     "format": "int64"
     },
     "string": {
      "type": "string"
@@ -136,7 +137,8 @@
    "parameters": {
     "id": {
      "type": "string",
-     "required": true
+     "required": true,
+     "format": "int64"
     }
    },
    "parameterOrder": [
@@ -185,12 +187,19 @@
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
+  "trackingeventendpoint.removeErrorLoggerEvent": {
+   "id": "trackingeventendpoint.removeErrorLoggerEvent",
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
   "trackingeventendpoint.removeTrackingEvent": {
    "id": "trackingeventendpoint.removeTrackingEvent",
    "parameters": {
     "id": {
      "type": "string",
-     "required": true
+     "required": true,
+     "format": "int64"
     }
    },
    "parameterOrder": [

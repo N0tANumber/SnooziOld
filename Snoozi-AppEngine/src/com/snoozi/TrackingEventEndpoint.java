@@ -1,7 +1,6 @@
 package com.snoozi;
 
 import com.snoozi.PMF;
-
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -19,7 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-@Api(name = "trackingeventendpoint",version="2", namespace = @ApiNamespace(ownerDomain = "snoozi.com", ownerName = "snoozi.com", packagePath = ""))
+@Api(name = "trackingeventendpoint",version="v2", namespace = @ApiNamespace(ownerDomain = "snoozi.com", ownerName = "snoozi.com", packagePath = ""))
 public class TrackingEventEndpoint {
 
 	/**
@@ -142,10 +141,59 @@ public class TrackingEventEndpoint {
 	public void removeTrackingEvent(@Named("id") Long id) {
 		PersistenceManager mgr = getPersistenceManager();
 		try {
+			
 			TrackingEvent trackingevent = mgr.getObjectById(
 					TrackingEvent.class, id);
 			mgr.deletePersistent(trackingevent);
 		} finally {
+			mgr.close();
+		}
+	}	
+	
+	/**
+	 * This method removes the entity with primary key id.
+	 * It uses HTTP DELETE method.
+	 *
+	 * @param id the primary key of the entity to be deleted.
+	 */
+	@SuppressWarnings("unchecked")
+	@ApiMethod(name = "removeErrorLoggerEvent")
+	public void removeErrorLoggerEvent() {
+		PersistenceManager mgr = getPersistenceManager();
+		Query query = null;
+		
+		
+		try {
+			/* Via query function
+			query = mgr.newQuery(TrackingEvent.class);
+			query.setFilter("type == tracktype");
+			query.setRange(0, 200);
+			query.setOrdering("timestamp desc");*/
+			
+			/* Via query filter 
+			 Query.Builder query = Query.newBuilder();
+			query.addKindBuilder().setName("com.snoozi.TrackingEvent");
+			query.setFilter(makeFilter(
+			    makeFilter("type", PropertyFilter.Operator.EQUAL, makeValue("ERROR_LOGGER")).build(),
+			    makeFilter("otherfilter", PropertyFilter.Operator.LESS_THAN, makeValue(63)).build()));
+			query.addOrder(makeOrder("timestamp", PropertyOrder.Direction.DESCENDING));
+			query.execute()... */
+			
+			/* Via query string */
+			 query = mgr.newQuery("select from com.snoozi.TrackingEvent " +
+	                " where type == tracktype " +
+					 " RANGE 0,200");
+				
+			query.declareParameters("String tracktype");
+
+			List<TrackingEvent> results = (List<TrackingEvent>) query.execute("ERROR_LOGGER");
+			if (!results.isEmpty()) {
+			    for (TrackingEvent p : results) {
+			    	mgr.deletePersistent(p);
+			    }
+			  }
+		} finally {
+			query.closeAll();
 			mgr.close();
 		}
 	}

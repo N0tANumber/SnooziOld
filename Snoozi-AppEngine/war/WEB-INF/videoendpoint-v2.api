@@ -78,7 +78,7 @@
       "request" : {
         "parameters" : {
           "id" : {
-            "type" : "string",
+            "type" : "int64",
             "required" : true
           }
         },
@@ -99,7 +99,7 @@
       "request" : {
         "parameters" : {
           "id" : {
-            "type" : "string",
+            "type" : "int64",
             "required" : true
           }
         },
@@ -107,6 +107,35 @@
       },
       "response" : {
         "body" : "empty"
+      }
+    },
+    "videoendpoint.listRecentVideo" : {
+      "path" : "listRecentVideo",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.VideoEndpoint.listRecentVideo",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          },
+          "status" : {
+            "type" : "string",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
       }
     },
     "videoendpoint.insertVideo" : {
@@ -133,7 +162,8 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "int64"
           },
           "url" : {
             "type" : "string"
@@ -152,8 +182,24 @@
           },
           "level" : {
             "type" : "integer"
+          },
+          "userid" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "status" : {
+            "$ref" : "VIDEO_STATUS"
           }
         }
+      },
+      "VIDEO_STATUS" : {
+        "id" : "VIDEO_STATUS",
+        "type" : "string",
+        "enum" : [ "OK", "REPORT", "DELETE" ]
       },
       "CollectionResponse_Video" : {
         "id" : "CollectionResponse_Video",
@@ -191,6 +237,11 @@
         }
       },
       "com.snoozi.VideoEndpoint.removeVideo" : {
+      },
+      "com.snoozi.VideoEndpoint.listRecentVideo" : {
+        "response" : {
+          "$ref" : "CollectionResponse_Video"
+        }
       },
       "com.snoozi.VideoEndpoint.insertVideo" : {
         "request" : {

@@ -3,7 +3,7 @@
   "abstract" : false,
   "root" : "https://evident-quasar-565.appspot.com/_ah/api",
   "name" : "trackingeventendpoint",
-  "version" : "2",
+  "version" : "v2",
   "defaultVersion" : false,
   "adapter" : {
     "bns" : "https://evident-quasar-565.appspot.com/_ah/spi",
@@ -26,6 +26,21 @@
   "ownerDomain" : "snoozi.com",
   "ownerName" : "snoozi.com",
   "methods" : {
+    "trackingeventendpoint.removeErrorLoggerEvent" : {
+      "path" : "errorloggerevent",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.TrackingEventEndpoint.removeErrorLoggerEvent",
+      "request" : {
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
     "trackingeventendpoint.getTrackingEvent" : {
       "path" : "trackingevent/{id}",
       "httpMethod" : "GET",
@@ -186,6 +201,8 @@
       }
     },
     "methods" : {
+      "com.snoozi.TrackingEventEndpoint.removeErrorLoggerEvent" : {
+      },
       "com.snoozi.TrackingEventEndpoint.getTrackingEvent" : {
         "response" : {
           "$ref" : "TrackingEvent"

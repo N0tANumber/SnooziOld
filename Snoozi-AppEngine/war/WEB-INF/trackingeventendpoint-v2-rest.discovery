@@ -1,10 +1,10 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/jpI1RLX-tTfNwFEX7s40uYhKuY4\"",
+ "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/YNhA0jUkLsvDYBKbcRZTjCihpkA\"",
  "discoveryVersion": "v1",
- "id": "trackingeventendpoint:2",
+ "id": "trackingeventendpoint:v2",
  "name": "trackingeventendpoint",
- "version": "2",
+ "version": "v2",
  "description": "This is an API",
  "ownerDomain": "snoozi.com",
  "ownerName": "snoozi.com",
@@ -13,10 +13,10 @@
   "x32": "http://www.google.com/images/icons/product/search-32.gif"
  },
  "protocol": "rest",
- "baseUrl": "https://evident-quasar-565.appspot.com/_ah/api/trackingeventendpoint/2/",
- "basePath": "/_ah/api/trackingeventendpoint/2/",
+ "baseUrl": "https://evident-quasar-565.appspot.com/_ah/api/trackingeventendpoint/v2/",
+ "basePath": "/_ah/api/trackingeventendpoint/v2/",
  "rootUrl": "https://evident-quasar-565.appspot.com/_ah/api/",
- "servicePath": "trackingeventendpoint/2/",
+ "servicePath": "trackingeventendpoint/v2/",
  "batchPath": "batch",
  "parameters": {
   "alt": {
@@ -106,7 +106,8 @@
      "type": "string"
     },
     "key": {
-     "type": "string"
+     "type": "string",
+     "format": "int64"
     },
     "string": {
      "type": "string"
@@ -140,6 +141,7 @@
     "id": {
      "type": "string",
      "required": true,
+     "format": "int64",
      "location": "path"
     }
    },
@@ -190,6 +192,14 @@
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
+  "removeErrorLoggerEvent": {
+   "id": "trackingeventendpoint.removeErrorLoggerEvent",
+   "path": "errorloggerevent",
+   "httpMethod": "DELETE",
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
   "removeTrackingEvent": {
    "id": "trackingeventendpoint.removeTrackingEvent",
    "path": "trackingevent/{id}",
@@ -198,6 +208,7 @@
     "id": {
      "type": "string",
      "required": true,
+     "format": "int64",
      "location": "path"
     }
    },
