@@ -12,7 +12,7 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.snoozi.app";
 	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
-	public static final boolean DEV_MODE = false;
+	public static final boolean DEV_MODE = true;
 
 	private static String m_username = "";
 	
@@ -54,7 +54,7 @@ public class SnooziUtility {
 		case ERROR :
 			
 			Log.e(SNOOZI_TRACE,stackinfo);
-			if(!DEV_MODE)
+			if(!DEV_MODE && context != null)
 			{
 				// Logging to the server
 				//TrackingSender sender = new TrackingSender(context);

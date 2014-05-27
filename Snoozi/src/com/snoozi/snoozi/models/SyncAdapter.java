@@ -7,11 +7,13 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 
@@ -19,12 +21,19 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.snoozi.messageEndpoint.model.CollectionResponseMessageData;
+import com.snoozi.messageEndpoint.model.MessageData;
 import com.snoozi.snoozi.GCMIntentService;
 import com.snoozi.snoozi.database.SnooziContract;
+import com.snoozi.snoozi.database.SnooziContract.videos.Columns;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 import com.snoozi.trackingeventendpoint.Trackingeventendpoint;
+import com.snoozi.trackingeventendpoint.Trackingeventendpoint.RemoveErrorLoggerEvent;
 import com.snoozi.trackingeventendpoint.model.TrackingEvent;
+import com.snoozi.videoendpoint.Videoendpoint;
+import com.snoozi.videoendpoint.model.CollectionResponseVideo;
+import com.snoozi.videoendpoint.model.Video;
 
 
 /**
@@ -101,107 +110,197 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		
 		
 		SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG, action);
+		
 		if( action.equals(SnooziUtility.SYNC_ACTION.NEW_VIDEO_AVAILABLE))
 		{
-			// we must call the serveur to get a list of all new available video
-			SnooziUtility.trace(this.getContext(), TRACETYPE.INFO, "gogo list");
+			//We get all recent video from the server
+			this.retrieveRecentVideo(provider);
 			
-		}else
+		}else if( action.equals(SnooziUtility.SYNC_ACTION.SEND_DATA))
 		{
-			// Otherwise : SnooziUtility.SYNC_ACTION.SEND_DATA 
 			// we send all data to the server if any
-
-			Cursor cursor = null;
-			try {
-				//We check all tracking event in Contentproviders
-				cursor = provider.query(SnooziContract.trackingevents.CONTENT_URI, SnooziContract.trackingevents.PROJECTION_ALL, null, null,  null);
-				//TODO : selection de la liste des tracking Event
-				if (cursor.moveToFirst()) 
-				{
-					// We got some tracking to send
-					//Preparing the endpoint for sending all tracking event
-					Trackingeventendpoint.Builder endpointBuilder = new Trackingeventendpoint.Builder(
-							AndroidHttp.newCompatibleTransport(),
-							new JacksonFactory(),
-							new HttpRequestInitializer() {
-								public void initialize(HttpRequest httpRequest) { }
-							});
-					//Building a tracking end for all message
-					Trackingeventendpoint endpoint = CloudEndpointUtils.updateBuilder(
-							endpointBuilder).build();
-					String userId = SnooziUtility.getAccountNames(this.getContext());
-					String versionName;
-					try {
-						versionName = this.getContext().getPackageManager().getPackageInfo(this.getContext().getPackageName(), 0).versionName;
-					} catch (NameNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						versionName = "—";
-					}
-					do {
-						// getting the data from the cursor
-						int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns._ID));
-						long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTAMP));
-						String timestring = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTRING));
-						String description = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.DESCRIPTION));
-						String type = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TYPE));
-						int videoid = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.VIDEOID));
-
-						if(description.length() > 500)
-							description = description.substring(0, 500);
-						//Building the trackingEvent
-						TrackingEvent trackingEvent = new TrackingEvent();
-						trackingEvent.setUserid(userId)
-								.setAndroidVersion(android.os.Build.VERSION.SDK_INT)
-								.setDeviceInformation(android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " " + android.os.Build.VERSION.RELEASE)
-								.setDescription(description)
-								.setType(type)
-								.setTimestamp(timestamp)
-								.setTimeString(timestring)
-								.setVideoid(videoid)
-								.setApkVersion(versionName);
-						TrackingEvent result;
-						if(SnooziUtility.DEV_MODE)
-						{
-							SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"## DEV MODE DUMMY## Tracking "+type+" synchronisation complete, id : " + id);
-							result = new TrackingEvent();
-						}else
-						{
-							//Sending the tracking Event
-							result = endpoint.insertTrackingEvent(trackingEvent).execute();
-							SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Tracking "+type+" synchronisation complete, id : " + id);
-						}
-						if(result != null)
-						{
-							// Deleting the Tracking event
-							provider.delete(SnooziContract.trackingevents.CONTENT_URI, 
-											SnooziContract.trackingevents.Columns._ID + " = ? ", 
-											new String[]{String.valueOf(id)});
-						}
-					} while (cursor.moveToNext());
-
-				}
-
-
-			} catch (IOException e) {
-				//ne pas mettre TYPE"ERROR car sinon il va spammer le server de log error
-				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter IOException :  " +  e.toString());
-			} catch (RemoteException e) {
-				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter RemoteException :  " +  e.toString());
-			} catch (IllegalArgumentException e) {
-				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter IllegalArgumentException :  " +  e.toString());
-			} catch (Exception e) {
-				SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"SyncAdapter IllegalArgumentException :  " +  e.toString());
-			}finally{
-				if(cursor != null)
-					cursor.close();
-			}
+			this.sendTrackingEvent(provider);
 		}
-
 	}
 
 
+	/**
+	 * Send all pending trackingEvent to the server
+	 * @param provider
+	 */
+	private boolean sendTrackingEvent(ContentProviderClient provider) {
+		Cursor cursor = null;
+		boolean success = false;
+		try {
+			//We check all tracking event in Contentproviders
+			cursor = provider.query(SnooziContract.trackingevents.CONTENT_URI, SnooziContract.trackingevents.PROJECTION_ALL, null, null,  null);
+			if (cursor.moveToFirst()) 
+			{
+				// We got some tracking to send
+				//Preparing the endpoint for sending all tracking event
+				Trackingeventendpoint.Builder endpointBuilder = new Trackingeventendpoint.Builder(
+						AndroidHttp.newCompatibleTransport(),
+						new JacksonFactory(),
+						new HttpRequestInitializer() {
+							public void initialize(HttpRequest httpRequest) { }
+						});
+				
+				//Building a tracking end for all message
+				Trackingeventendpoint endpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
+				String userId = SnooziUtility.getAccountNames(this.getContext());
+				String versionName;
+				
+				/*
+				try {
+					RemoveErrorLoggerEvent removeresult = endpoint.removeErrorLoggerEvent();
+					removeresult.execute();
+					SnooziUtility.trace(getContext(), TRACETYPE.INFO,"deletion" + removeresult.toString());
+				} catch (Exception e) {
+					SnooziUtility.trace(getContext(), TRACETYPE.ERROR, e.toString());
+				}*/
+				
+				try {
+					versionName = this.getContext().getPackageManager().getPackageInfo(this.getContext().getPackageName(), 0).versionName;
+				} catch (NameNotFoundException e) {
+					SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter NameNotFoundException :  " +  e.toString());
+					versionName = "—";
+				}
+				do {
+					// getting the data from the cursor
+					int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns._ID));
+					long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTAMP));
+					String timestring = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTRING));
+					String description = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.DESCRIPTION));
+					String type = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TYPE));
+					int videoid = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.VIDEOID));
 
+					if(description.length() > 500)
+						description = description.substring(0, 500);
+					//Building the trackingEvent
+					TrackingEvent trackingEvent = new TrackingEvent();
+					trackingEvent.setUserid(userId)
+							.setAndroidVersion(android.os.Build.VERSION.SDK_INT)
+							.setDeviceInformation(android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " " + android.os.Build.VERSION.RELEASE)
+							.setDescription(description)
+							.setType(type)
+							.setTimestamp(timestamp)
+							.setTimeString(timestring)
+							.setVideoid(videoid)
+							.setApkVersion(versionName);
+					TrackingEvent answerEvent;
+					if(SnooziUtility.DEV_MODE)
+					{
+						SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"## DEV MODE DUMMY## Tracking "+type+" synchronisation complete, id : " + id);
+						answerEvent = new TrackingEvent();
+					}else
+					{
+						//Sending the tracking Event
+						answerEvent = endpoint.insertTrackingEvent(trackingEvent).execute();
+						SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Tracking "+type+" synchronisation complete, id : " + id);
+					}
+					if(answerEvent != null)
+					{
+						
+						// Deleting the Tracking event
+						provider.delete(SnooziContract.trackingevents.CONTENT_URI, 
+										SnooziContract.trackingevents.Columns._ID + " = ? ", 
+										new String[]{String.valueOf(id)});
+					}
+				} while (cursor.moveToNext());
+
+			}
+			success = true;
+
+		} catch (IOException e) {
+			//ne pas mettre TYPE"ERROR car sinon il va spammer le server de log error
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IOException :  " +  e.toString());
+		} catch (RemoteException e) {
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter RemoteException :  " +  e.toString());
+		} catch (IllegalArgumentException e) {
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IllegalArgumentException :  " +  e.toString());
+		} catch (Exception e) {
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IllegalArgumentException :  " +  e.toString());
+		}finally{
+			if(cursor != null)
+				cursor.close();
+		}
+		
+		return success;
+	}
+
+	
+	
+	/**
+	 * Get if needed all recent video from the server
+	 * @param provider
+	 * @return
+	 */
+	public boolean retrieveRecentVideo(ContentProviderClient provider)
+	{
+		boolean success = true;
+		
+		// we must call the serveur to get a list of all recent  video
+		//Preparing the endpoint for receiving all video
+		Videoendpoint.Builder endpointBuilder = new Videoendpoint.Builder(
+				AndroidHttp.newCompatibleTransport(),
+				new JacksonFactory(),
+				new HttpRequestInitializer() {
+					public void initialize(HttpRequest httpRequest) { }
+				});
+		Videoendpoint videoEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
+		CollectionResponseVideo videolist = null;
+		//Getting a list of all recent video
+		try {
+			videolist = videoEndpoint.listRecentVideo().setLimit(10).execute();
+		} catch (IOException e) {
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"GetRecentVideo IOException :  " +  e.toString());
+			return false;
+		}
+		
+		// for each video, we check existence
+		Cursor cursor = null;
+		for(Video video : videolist.getItems()) 
+		{
+			SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"looking in local BDD for video " + video.getUrl());
+			try {
+				// We look in the content provider if we already have that video in stock
+				cursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ALL, SnooziContract.videos.Columns.URL + " LIKE ?", new String[]{video.getUrl()},  null);
+			
+				if(cursor.getCount() == 0)
+				{
+					SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"Video " + video.getUrl() + " not present in local BDD so inserting...");
+					ContentValues values = new ContentValues();
+					values.put(SnooziContract.videos.Columns.URL,video.getUrl() );
+					values.put(SnooziContract.videos.Columns.LOCALURL,"" );
+					values.put(SnooziContract.videos.Columns.DESCRIPTION,video.getDescription() );
+					values.put(SnooziContract.videos.Columns.LIKE,video.getLike() );
+					values.put(SnooziContract.videos.Columns.DISLIKE,video.getDislike() );
+					values.put(SnooziContract.videos.Columns.VIEWCOUNT,video.getViewcount() );
+					values.put(SnooziContract.videos.Columns.STATUS,video.getStatus() );
+					values.put(SnooziContract.videos.Columns.FILESTATUS,"PENDING" );
+					values.put(SnooziContract.videos.Columns.LEVEL,video.getLevel() );
+					values.put(SnooziContract.videos.Columns.TIMESTAMP,video.getTimestamp() );
+					values.put(SnooziContract.videos.Columns.USERID,video.getUserid() );
+					
+					Uri theResult = provider.insert(SnooziContract.videos.CONTENT_URI, values);
+					SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"Video " + video.getUrl() + " inserted : " + theResult.toString());
+					
+				}else
+					SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"Video " + video.getUrl() + " already present in local BDD so SKIPPING...");
+				
+			}
+			catch (Exception e) {
+				SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"GetRecentVideo Exception :  " +  e.toString());
+				success = false;
+			}
+			
+			
+		}
+		
+		
+		
+		return success;
+	}
 
 
 	/**

@@ -188,7 +188,8 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setUserid(SnooziUtility.getAccountNames(context))
                 .setDeviceInformation(android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " " + android.os.Build.VERSION.RELEASE)).execute();
       }
-      
+      SnooziUtility.trace(context, TRACETYPE.DEBUG,"GCM registered  with id :  " +  registration);
+		
 	    //Saving registration State
 	    SharedPreferences settings =context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = settings.edit();

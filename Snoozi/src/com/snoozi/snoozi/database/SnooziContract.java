@@ -57,5 +57,49 @@ public class SnooziContract {
 			
 		}
 	}
+	
+	public static final class videos
+	{
+		public static final String CONTENT_PATH = "videos";
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(SnooziContract.CONTENT_URI,CONTENT_PATH);
+		
+		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.snoozi.provider_videos";
+		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.snoozi.provider_videos";
+		
+		public static final String TABLE = "video";
+		
+		public static final String[] PROJECTION_ALL = {Columns._ID,
+								Columns.URL,
+								Columns.LOCALURL,
+								Columns.DESCRIPTION,
+								Columns.LIKE,
+								Columns.DISLIKE,
+								Columns.VIEWCOUNT,
+								Columns.STATUS,
+								Columns.FILESTATUS,
+								Columns.LEVEL,
+								Columns.TIMESTAMP,
+								Columns.USERID
+								};
+		
+		public static final String SORT_ORDER_DEFAULT = Columns.TIMESTAMP + " DESC";
+		
+		public final static class Columns implements BaseColumns{
+			private Columns(){}
+			
+			public static final String URL = "url";
+			public static final String LOCALURL = "localurl";
+			public static final String DESCRIPTION = "description";
+			public static final String LIKE = "like";
+			public static final String DISLIKE = "dislike";
+			public static final String VIEWCOUNT = "viewcount";
+			public static final String STATUS = "status";
+			public static final String FILESTATUS = "filestatus";
+			public static final String LEVEL = "level";
+			public static final String TIMESTAMP = "timestamp";
+			public static final String USERID = "userid";
+			
+		}
+	}
 
 }

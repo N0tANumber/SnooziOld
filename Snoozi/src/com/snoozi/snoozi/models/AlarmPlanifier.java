@@ -137,11 +137,16 @@ public class AlarmPlanifier {
 				int minutetoday = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
 				int today = calendar.get(Calendar.DAY_OF_WEEK)-1;
 				int dayadded = 0;
-
-				if(!(settings.getBoolean("monday", false) || settings.getBoolean("tuesday", false) || settings.getBoolean("wednesday", false) ||	settings.getBoolean("thursday", false) || settings.getBoolean("friday", false) || settings.getBoolean("saturday", false) || settings.getBoolean("sunday", false)))
+				
+				int daychecked = 0;
+				for (int i = 0; i < 7; i++) {
+					if(checkedday[i])
+						daychecked++;
+				}
+				if(daychecked == 0 || daychecked == 7)
 				{
 					//REPEAT EVERYDAY -> We must check the hour
-					if(minutetoday > hour*60 + minute )
+					if(minutetoday >= hour*60 + minute )
 						dayadded++; // not today, so tomorrow -> add a day
 				}else
 				{

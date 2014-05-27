@@ -1,6 +1,7 @@
 package com.snoozi.snoozi.database;
 
 
+import com.snoozi.snoozi.database.SnooziContract.videos.Columns;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
@@ -32,6 +33,9 @@ public class MyDataProvider extends ContentProvider {
 	 */
     private static final int TRACKING = 1;
     private static final int TRACKING_ID = 2;
+    
+    private static final int VIDEO = 3;
+    private static final int VIDEO_ID = 4;
 	
 	
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);;
@@ -39,6 +43,8 @@ public class MyDataProvider extends ContentProvider {
 	{
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.trackingevents.CONTENT_PATH, TRACKING);
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.trackingevents.CONTENT_PATH + "/#", TRACKING_ID);	
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.videos.CONTENT_PATH, VIDEO);
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.videos.CONTENT_PATH + "/#", VIDEO_ID);	
 	}
 	
 	@Override
@@ -61,6 +67,10 @@ public class MyDataProvider extends ContentProvider {
 			{
 				long id = db.insert( SnooziContract.trackingevents.TABLE,null, values);
 				result = getUriForId(id, uri);
+			}else if (match == VIDEO)
+			{
+				long id = db.insert( SnooziContract.videos.TABLE,null, values);
+				result = getUriForId(id, uri);
 			}else
 				throw new Exception("Unsupported URI for insertion : " + uri);
 
@@ -75,16 +85,20 @@ public class MyDataProvider extends ContentProvider {
 	@Override
 	public String getType(Uri uri) {
 		int match = sUriMatcher.match(uri);
-        switch (match)
-        {
-            case TRACKING:
-                return SnooziContract.trackingevents.CONTENT_MIME_TYPE;
-            case TRACKING_ID:
-            	return SnooziContract.trackingevents.CONTENT_MIME_ITEM_TYPE;
-            default:
-            	 SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.getType  Unsupported URI : " + uri);
-            	return null;
-        }
+		switch (match)
+		{
+		case TRACKING:
+			return SnooziContract.trackingevents.CONTENT_MIME_TYPE;
+		case TRACKING_ID:
+			return SnooziContract.trackingevents.CONTENT_MIME_ITEM_TYPE;
+		case VIDEO:
+			return SnooziContract.videos.CONTENT_MIME_TYPE;
+		case VIDEO_ID:
+			return SnooziContract.videos.CONTENT_MIME_ITEM_TYPE;
+		default:
+			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.getType  Unsupported URI : " + uri);
+			return null;
+		}
 	}
 
 	private Uri getUriForId(long id, Uri uri) {
@@ -135,6 +149,18 @@ public class MyDataProvider extends ContentProvider {
 				builder.setTables(SnooziContract.trackingevents.TABLE);
 				builder.appendWhere(SnooziContract.trackingevents.Columns._ID + " = " + uri.getLastPathSegment());
 				
+			case VIDEO:
+				//SELECT ALL THE VIDEOS
+				builder.setTables(SnooziContract.videos.TABLE);
+				if (TextUtils.isEmpty(sortOrder)) 
+					sortOrder = SnooziContract.videos.SORT_ORDER_DEFAULT;
+				break;
+				
+			case VIDEO_ID :
+				// SELECT ONE VIDEO
+				builder.setTables(SnooziContract.videos.TABLE);
+				builder.appendWhere(SnooziContract.videos.Columns._ID + " = " + uri.getLastPathSegment());
+				
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 			}
@@ -169,31 +195,49 @@ public class MyDataProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
 		int updateCount = 0;
+		String idStr = "";
+		String where = "";
+		String table = "";
 		try {
 
 			switch (sUriMatcher.match(uri)) {
 			case TRACKING:
-				updateCount = db.update(
-						SnooziContract.trackingevents.TABLE, 
-						values, 
-						selection,
-						selectionArgs);
+				table = SnooziContract.trackingevents.TABLE;
+				where = selection;
 				break;
 			case TRACKING_ID:
-				String idStr = uri.getLastPathSegment();
-				String where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
+				table = SnooziContract.trackingevents.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
-				updateCount = db.update(
-						SnooziContract.trackingevents.TABLE, 
-						values, 
-						where,
-						selectionArgs);
+				break;
+			case VIDEO:
+				table = SnooziContract.videos.TABLE;
+				where = selection;
+				break;
+			case VIDEO_ID:
+				table = SnooziContract.videos.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.videos.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
 				break;
 			default:
 				// no support for updating photos or entities!
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
+			}
+			
+			
+			if(!table.equals(""))
+			{
+				updateCount = db.update(
+						table, 
+						values, 
+						where,
+						selectionArgs);
 			}
 			// notify all listeners of changes:
 			if (updateCount > 0 && !isInBatchMode()) {
@@ -210,29 +254,48 @@ public class MyDataProvider extends ContentProvider {
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int delCount = 0;
+		String table = "";
+		String idStr = "";
+		String where = "";
+		
 		try {
 
 			switch (sUriMatcher.match(uri)) {
 			case TRACKING:
-				delCount = db.delete(
-						SnooziContract.trackingevents.TABLE, 
-						selection,
-						selectionArgs);
+				table = SnooziContract.trackingevents.TABLE;
+				where = selection;
 				break;
 			case TRACKING_ID:
-				String idStr = uri.getLastPathSegment();
-				String where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
+				table = SnooziContract.trackingevents.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
-				delCount = db.delete(
-						SnooziContract.trackingevents.TABLE, 
-						where,
-						selectionArgs);
+				break;
+			case VIDEO:
+				table = SnooziContract.videos.TABLE;
+				where = selection;
+				break;
+			case VIDEO_ID:
+				table = SnooziContract.videos.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.videos.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
 				break;
 			default:
 				// no support for updating photos or entities!
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
+			}
+			
+			if(!table.equals(""))
+			{
+				delCount = db.delete(
+						table, 
+						where,
+						selectionArgs);
 			}
 			// notify all listeners of changes:
 			if (delCount > 0 && !isInBatchMode()) {
@@ -254,9 +317,9 @@ public class MyDataProvider extends ContentProvider {
 
 		// A string that defines the SQL statement for creating a table
 		private static final String DBNAME = "SnooziDB.db";
-		private static final int DB_VERSION = 1;
+		private static final int DB_VERSION = 2;
 		 
-        private static final String SQL_CREATE_MAIN = "CREATE TABLE IF NOT EXISTS " +
+		private static final String SQL_CREATE_TRACKINGEVENT = "CREATE TABLE IF NOT EXISTS " +
         		SnooziContract.trackingevents.TABLE +  // Table's name
 		    "(" +                           // The columns in the table
 		     SnooziContract.trackingevents.Columns._ID + "  INTEGER PRIMARY KEY, " +
@@ -266,6 +329,23 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.trackingevents.Columns.VIDEOID + " INTEGER, " +
 		     SnooziContract.trackingevents.Columns.DESCRIPTION + " TEXT )";
 		
+		private static final String SQL_CREATE_VIDEO = "CREATE TABLE IF NOT EXISTS " +
+        		SnooziContract.videos.TABLE +  // Table's name
+		    "(" +                           // The columns in the table
+		     SnooziContract.videos.Columns._ID + "  INTEGER PRIMARY KEY, " +
+		     SnooziContract.videos.Columns.URL + " TEXT, " +
+		     SnooziContract.videos.Columns.LOCALURL + " TEXT, " +
+		     SnooziContract.videos.Columns.DESCRIPTION + " TEXT, " +
+		     SnooziContract.videos.Columns.LIKE + " INTEGER, " +
+		     SnooziContract.videos.Columns.DISLIKE + " INTEGER, " +
+		     SnooziContract.videos.Columns.VIEWCOUNT + " INTEGER, " +
+		     SnooziContract.videos.Columns.STATUS + " TEXT, " +
+		     SnooziContract.videos.Columns.FILESTATUS + " TEXT, " +
+		     SnooziContract.videos.Columns.LEVEL + " INTEGER, " +
+		     SnooziContract.videos.Columns.TIMESTAMP + " LONG, " +
+		     SnooziContract.videos.Columns.USERID + " LONG )";
+		
+	
 	    
 	    /*
 	     * Instantiates an open helper for the provider's SQLite data repository
@@ -273,6 +353,7 @@ public class MyDataProvider extends ContentProvider {
 	     */
 	    MainDatabaseHelper(Context context) {
 	        super(context, DBNAME, null,DB_VERSION);
+	        
 	    }
 
 	    /*
@@ -281,8 +362,9 @@ public class MyDataProvider extends ContentProvider {
 	     */
 	    public void onCreate(SQLiteDatabase db) {
 	        // Creates the main table
-	        db.execSQL(SQL_CREATE_MAIN);
-	    }
+	        db.execSQL(SQL_CREATE_TRACKINGEVENT);
+	        db.execSQL(SQL_CREATE_VIDEO);
+		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -296,19 +378,19 @@ public class MyDataProvider extends ContentProvider {
 	        try {
 	            if(oldVersion<2){
 	                // Upgrade database structure from Version 1 to 2
-	                String alterTable = "ALTER ....";
-
-	                db.execSQL(alterTable);
+	                db.execSQL(SQL_CREATE_VIDEO);
+	                SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 2");
+					
 	                Log.i("DATABASE","Successfully upgraded to Version 2");
 	            }
-	            
+	            /*
 	            if(oldVersion<3){
 	                // Upgrade database structure from Version 2 to 3
 	                String alterTable = "ALTER ....";
 
 	                db.execSQL(alterTable);
 	                Log.i("DATABASE","Successfully upgraded to Version 3");
-	            }
+	            }*/
 
 	            // Only when this code is executed, the changes will be applied 
 	            // to the database
