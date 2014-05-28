@@ -2,6 +2,7 @@ package com.snoozi.snoozi.UI;
 
 
 import com.snoozi.snoozi.*;
+import com.snoozi.snoozi.models.MyVideo;
 import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
@@ -13,6 +14,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -20,7 +22,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -42,7 +43,7 @@ public class VideoActivity extends Activity {
 	}
 	 
 
-	private int _VideoNum;
+	private MyVideo currentVideo;
 	private VideoView mVideoView;
 	private ProgressBar mProgressBar;
 	
@@ -73,12 +74,12 @@ public class VideoActivity extends Activity {
         
         mVideoView.setLayoutParams(new LinearLayout.LayoutParams(width,height));
         
-		_VideoNum = SnooziUtility.getVideoNumber(this);
+		currentVideo = SnooziUtility.getCurrentAlarmVideo(this);
 		
 		TextView videoTitle = (TextView) findViewById(R.id.videoTitle);
-		videoTitle.setText(getResources().getStringArray(R.array.snooziphrase)[_VideoNum-1]);
+		videoTitle.setText(currentVideo.getDescription());
 		
-		mVideoView.setVideoURI(SnooziUtility.getVideoUri(this));
+		mVideoView.setVideoURI(Uri.parse(currentVideo.getLocalurl()));
 		
 		audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 		_oldmusicVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -156,38 +157,38 @@ public class VideoActivity extends Activity {
 		
 		TrackingSender sender = new TrackingSender(getApplicationContext());
 		if(_videoViewCount >0)
-			sender.sendUserEvent(TrackingEventType.VIDEO_VIEWED,_videoViewCount + " time(s)", _VideoNum);
+		{
+			currentVideo.addViewcount(_videoViewCount);
+			currentVideo.setMyviewcount(currentVideo.getMyviewcount() + _videoViewCount);
+			
+			sender.sendUserEvent(TrackingEventType.VIDEO_VIEWED,_videoViewCount + " time(s)", currentVideo.getVideoid());
+		}
 		else
-			sender.sendUserEvent(TrackingEventType.VIDEO_CANCELED,"canceled at " + Math.round(current/1000.0f) +"s./" + Math.round(duration/1000.0f) + "s.", _VideoNum  );
+		{
+			currentVideo.addViewcount(1);
+			currentVideo.setMyviewcount(currentVideo.getMyviewcount() + 1);
+			
+			sender.sendUserEvent(TrackingEventType.VIDEO_CANCELED,"canceled at " + Math.round(current/1000.0f) +"s./" + Math.round(duration/1000.0f) + "s.", currentVideo.getVideoid()  );
+		}
 		
 		RadioButton radioLike = (RadioButton) findViewById(R.id.radioLike);
 		RadioButton radioDislike = (RadioButton) findViewById(R.id.radioDislike);
 		sender = new TrackingSender(getApplicationContext());
 		if(radioLike.isChecked())
-			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "1", _VideoNum);
+		{
+			currentVideo.addLike(1);
+			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "1", currentVideo.getVideoid());
+		}
 		else if(radioDislike.isChecked())
-			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "-1", _VideoNum);
-					
+		{
+			currentVideo.addDislike(1);
+			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "-1", currentVideo.getVideoid());
+		}			
 		
 		//prepare next video
-		int nextvideonum = _VideoNum;
-		if(nextvideonum == 10)
-		{
-			nextvideonum = 1;
-			SharedPreferences prefs = this.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-			boolean isalreadySurvey =  prefs.getBoolean("isSurvey", false);
-			if(!isalreadySurvey)
-			{
-				
-				Intent intent = new Intent(this, SurveyActivity.class);
-				startActivity(intent);
-			}
-		}
-		else
-			nextvideonum++;
-		SnooziUtility.setVideoNumber(this,nextvideonum );
-		
-		
+		currentVideo.saveAndSync(this);
+		SnooziUtility.unsetVideo( );
+		currentVideo = null;
 		
 		Intent returnIntent = new Intent();
 		setResult(RESULT_CANCELED, returnIntent);  

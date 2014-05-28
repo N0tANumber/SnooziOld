@@ -56,26 +56,7 @@ public class AlarmSettingActivity extends Activity {
 	private SeekBar volumebar;
 	private AudioManager audioManager; 
 
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-		// FirstLaunch tracking
-		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		boolean isFirstLaunch = settings.getBoolean("firstLaunch", true);
-		TrackingSender sender = new TrackingSender(getApplicationContext());
-		if(isFirstLaunch)
-		{
-			sender.sendUserEvent(TrackingEventType.APP_FIRSTLAUNCH);
-			//Save firstlaunch state
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putBoolean("firstLaunch", false);
-			editor.commit();
-		}
-		else
-			sender.sendUserEvent(TrackingEventType.APP_LAUNCH);
 
-	}
 
 	@Override
 	protected void onStop() {
@@ -346,7 +327,7 @@ public class AlarmSettingActivity extends Activity {
 		audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 		int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		volumebar.setMax(maxVol);
-		volumebar.setProgress(settings.getInt("volume", (int)Math.floor(maxVol*0.60)));
+		volumebar.setProgress(settings.getInt("volume", (int)Math.floor(maxVol*0.50)));
 		
 		volumebar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() 
         {
@@ -382,7 +363,7 @@ public class AlarmSettingActivity extends Activity {
 	 */
 	private void SavePref()
 	{
-		this.getApplicationContext();
+		//this.getApplicationContext();
 		SharedPreferences prefs = this.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean("activate", chkactivate.isChecked());

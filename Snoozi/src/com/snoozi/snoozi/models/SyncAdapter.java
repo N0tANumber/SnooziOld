@@ -7,6 +7,7 @@ import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,21 +16,19 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.RemoteException;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson.JacksonFactory;
-import com.snoozi.messageEndpoint.model.CollectionResponseMessageData;
-import com.snoozi.messageEndpoint.model.MessageData;
 import com.snoozi.snoozi.GCMIntentService;
 import com.snoozi.snoozi.database.SnooziContract;
-import com.snoozi.snoozi.database.SnooziContract.videos.Columns;
+import com.snoozi.snoozi.receivers.VideoDownloadReceiver;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 import com.snoozi.trackingeventendpoint.Trackingeventendpoint;
-import com.snoozi.trackingeventendpoint.Trackingeventendpoint.RemoveErrorLoggerEvent;
 import com.snoozi.trackingeventendpoint.model.TrackingEvent;
 import com.snoozi.videoendpoint.Videoendpoint;
 import com.snoozi.videoendpoint.model.CollectionResponseVideo;
@@ -45,12 +44,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	// Define a variable to contain a content resolver instance
 	ContentResolver m_ContentResolver;
 
+	private static boolean isRegistationPending = false;
 
 	// An account type, in the form of a domain name
 	private static final String ACCOUNT_TYPE = "com.snoozi";
 	// The account name
 	private static final String ACCOUNT = "default_account";
 
+	
 
 	/**
 	 * Set up the sync adapter
@@ -83,16 +84,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) 
 	{
-
+		
 		SharedPreferences settings =this.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		boolean isRegistered = settings.getBoolean("isRegistered", false);
 		
-		if(!isRegistered)
+		if(!isRegistered && !isRegistationPending)
 		{
 			SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"isRegistered : " + isRegistered);
 			//Not registered yet so Registering Google cloud messaging
 			try {
 				GCMIntentService.register(this.getContext());
+				isRegistationPending = true;
 			} catch (Exception e) 
 			{
 				//probleme during GCM registration
@@ -130,6 +132,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	 */
 	private boolean sendTrackingEvent(ContentProviderClient provider) {
 		Cursor cursor = null;
+		
 		boolean success = false;
 		try {
 			//We check all tracking event in Contentproviders
@@ -172,7 +175,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					String timestring = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTRING));
 					String description = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.DESCRIPTION));
 					String type = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TYPE));
-					int videoid = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.VIDEOID));
+					long videoid = cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.VIDEOID));
 
 					if(description.length() > 500)
 						description = description.substring(0, 500);
@@ -219,7 +222,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (IllegalArgumentException e) {
 			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IllegalArgumentException :  " +  e.toString());
 		} catch (Exception e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IllegalArgumentException :  " +  e.toString());
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter Exception :  " +  e.toString());
 		}finally{
 			if(cursor != null)
 				cursor.close();
@@ -238,66 +241,117 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public boolean retrieveRecentVideo(ContentProviderClient provider)
 	{
 		boolean success = true;
+		int maxDownloadedVideo = 10 ;
 		
-		// we must call the serveur to get a list of all recent  video
-		//Preparing the endpoint for receiving all video
-		Videoendpoint.Builder endpointBuilder = new Videoendpoint.Builder(
-				AndroidHttp.newCompatibleTransport(),
-				new JacksonFactory(),
-				new HttpRequestInitializer() {
-					public void initialize(HttpRequest httpRequest) { }
-				});
-		Videoendpoint videoEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
-		CollectionResponseVideo videolist = null;
-		//Getting a list of all recent video
+		//We check how many video are still waiting not viewed
+		Cursor playedcursor = null;
 		try {
-			videolist = videoEndpoint.listRecentVideo().setLimit(10).execute();
-		} catch (IOException e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"GetRecentVideo IOException :  " +  e.toString());
-			return false;
-		}
-		
-		// for each video, we check existence
-		Cursor cursor = null;
-		for(Video video : videolist.getItems()) 
+			playedcursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ID, SnooziContract.videos.Columns.MYVIEWCOUNT + " == 0 AND " + SnooziContract.videos.Columns.FILESTATUS + " != ? AND  " + SnooziContract.videos.Columns.FILESTATUS + " != ? ",new String[]{"ERROR","DUMMY"},  null);
+			int notPlayedVideoCount = playedcursor.getCount();
+			SnooziUtility.trace(getContext(),TRACETYPE.DEBUG,"in stock : " +  notPlayedVideoCount + " - maxDownloadedVideo : " + maxDownloadedVideo);
+			maxDownloadedVideo = maxDownloadedVideo - notPlayedVideoCount;
+			// If We have enough video to play, we skill the retrieval of new video
+			if(maxDownloadedVideo < 0)
+				maxDownloadedVideo = 0;
+		} catch (Exception e) {
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"retrieveRecentVideo Exception :  " +  e.toString());
+			
+		}finally
 		{
-			SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"looking in local BDD for video " + video.getUrl());
+			if(playedcursor != null)
+				playedcursor.close();
+		}
+		
+		if(maxDownloadedVideo >0)
+		{
+			SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Getting from server " +  maxDownloadedVideo + " new video");
+			// we must call the serveur to get a list of all recent  video
+			//Preparing the endpoint for receiving all video
+			Videoendpoint.Builder endpointBuilder = new Videoendpoint.Builder(
+					AndroidHttp.newCompatibleTransport(),
+					new JacksonFactory(),
+					new HttpRequestInitializer() {
+						public void initialize(HttpRequest httpRequest) { }
+					});
+			Videoendpoint videoEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
+			CollectionResponseVideo videolist = null;
+			//Getting a list of all recent video
 			try {
-				// We look in the content provider if we already have that video in stock
-				cursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ALL, SnooziContract.videos.Columns.URL + " LIKE ?", new String[]{video.getUrl()},  null);
+				videolist = videoEndpoint.listRecentVideo().setLimit(maxDownloadedVideo).execute();
+			} catch (IOException e) {
+				SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"GetRecentVideo IOException :  " +  e.toString());
+				return false;
+			}
 			
-				if(cursor.getCount() == 0)
-				{
-					SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"Video " + video.getUrl() + " not present in local BDD so inserting...");
-					ContentValues values = new ContentValues();
-					values.put(SnooziContract.videos.Columns.URL,video.getUrl() );
-					values.put(SnooziContract.videos.Columns.LOCALURL,"" );
-					values.put(SnooziContract.videos.Columns.DESCRIPTION,video.getDescription() );
-					values.put(SnooziContract.videos.Columns.LIKE,video.getLike() );
-					values.put(SnooziContract.videos.Columns.DISLIKE,video.getDislike() );
-					values.put(SnooziContract.videos.Columns.VIEWCOUNT,video.getViewcount() );
-					values.put(SnooziContract.videos.Columns.STATUS,video.getStatus() );
-					values.put(SnooziContract.videos.Columns.FILESTATUS,"PENDING" );
-					values.put(SnooziContract.videos.Columns.LEVEL,video.getLevel() );
-					values.put(SnooziContract.videos.Columns.TIMESTAMP,video.getTimestamp() );
-					values.put(SnooziContract.videos.Columns.USERID,video.getUserid() );
-					
-					Uri theResult = provider.insert(SnooziContract.videos.CONTENT_URI, values);
-					SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"Video " + video.getUrl() + " inserted : " + theResult.toString());
-					
-				}else
-					SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"Video " + video.getUrl() + " already present in local BDD so SKIPPING...");
+			// for each video, we synchronise with values in local Database
+			Cursor cursor = null;
+			for(Video video : videolist.getItems()) 
+			{
+				SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"looking in local BDD for video " + video.getUrl());
+				//Preparing video data to insert or update ( both case)
+				ContentValues values = new ContentValues();
+				values.put(SnooziContract.videos.Columns.DESCRIPTION,video.getDescription() );
+				values.put(SnooziContract.videos.Columns.LIKE,video.getLike() );
+				values.put(SnooziContract.videos.Columns.DISLIKE,video.getDislike() );
+				values.put(SnooziContract.videos.Columns.VIEWCOUNT,video.getViewcount() );
+				values.put(SnooziContract.videos.Columns.STATUS,video.getStatus() );
+				values.put(SnooziContract.videos.Columns.LEVEL,video.getLevel() );
 				
+				try 
+				{
+					// We look in the content provider if we already have that video in stock
+					cursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ALL, SnooziContract.videos.Columns.URL + " LIKE ?", new String[]{video.getUrl()},  null);
+					
+					if(cursor.getCount() == 0)
+					{
+						//INSERTION OF THE VIDEO
+						values.put(SnooziContract.videos.Columns.VIDEOID,video.getId() );
+						values.put(SnooziContract.videos.Columns.TIMESTAMP,video.getTimestamp() );
+						values.put(SnooziContract.videos.Columns.USERID,video.getUserid() );
+						values.put(SnooziContract.videos.Columns.URL,video.getUrl() );
+						values.put(SnooziContract.videos.Columns.FILESTATUS,"PENDING" );
+						String localUrl = "file://" + this.getContext().getExternalFilesDir(Environment.DIRECTORY_MOVIES ).getPath() +"/" +  video.getId() + ".mp4";
+						values.put(SnooziContract.videos.Columns.LOCALURL,localUrl);
+	
+						Uri videouri = provider.insert(SnooziContract.videos.CONTENT_URI, values);
+						SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"INSERTED Video " + video.getId() + " : " + videouri.toString());
+					}else
+					{
+						if (cursor.moveToFirst()) 
+						{
+							//UPDATE OF THE VIDEO
+							int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
+							String url = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.URL));
+							String fileStatus = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.FILESTATUS));
+							if(!url.equals(video.getUrl()) || fileStatus.equals("ERROR"))
+							{
+								//URL has changedor is in error, we must redownload the file
+								values.put(SnooziContract.videos.Columns.URL,video.getUrl() );
+								String localUrl = "file://" + this.getContext().getExternalFilesDir(Environment.DIRECTORY_MOVIES ).getPath() +"/" +  video.getId() + ".mp4";
+								values.put(SnooziContract.videos.Columns.LOCALURL,localUrl);
+								values.put(SnooziContract.videos.Columns.FILESTATUS,"PENDING" );
+							}
+						
+							//Already present in database, we update the info ( description, like, dislike, viewcount,level)
+							int updatecount = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, id), values,null,null);
+							SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"UPDATED Video " + video.getId() + " : " + updatecount);
+						}
+					}
+					
+				}
+				catch (Exception e) {
+					SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"retrieveRecentVideo Exception :  " +  e.toString());
+					success = false;
+				}finally{
+					if(cursor != null)
+						cursor.close();
+				}
 			}
-			catch (Exception e) {
-				SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"GetRecentVideo Exception :  " +  e.toString());
-				success = false;
-			}
-			
-			
 		}
 		
 		
+		//Launching Download Manager
+		VideoDownloadReceiver.launchingPendingDownload(getContext());
 		
 		return success;
 	}

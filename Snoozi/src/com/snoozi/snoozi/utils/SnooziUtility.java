@@ -1,13 +1,14 @@
 package com.snoozi.snoozi.utils;
 
+
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.snoozi.snoozi.models.MyVideo;
 
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.snoozi.app";
@@ -16,7 +17,7 @@ public class SnooziUtility {
 
 	private static String m_username = "";
 	
-	private static int m_videoNumber = 0;
+	private static MyVideo m_video = null;
 	
 	public class SYNC_ACTION{
 		public static final String NEW_VIDEO_AVAILABLE = "NEW_VIDEO_AVAILABLE";
@@ -54,11 +55,12 @@ public class SnooziUtility {
 		case ERROR :
 			
 			Log.e(SNOOZI_TRACE,stackinfo);
-			if(!DEV_MODE && context != null)
-			{
-				// Logging to the server
-				//TrackingSender sender = new TrackingSender(context);
-				//sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
+			if(!DEV_MODE) {
+				if (context != null) {
+					// Logging to the server
+					//TrackingSender sender = new TrackingSender(context);
+					//sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
+				}
 			}
 		break;
 		default:
@@ -91,32 +93,56 @@ public class SnooziUtility {
 	    
 	}
 	
-	public static int getVideoNumber(Context context)
+	public static MyVideo getCurrentAlarmVideo(Context context)
 	{
-		if(m_videoNumber == 0)
+		
+		if(m_video == null)
 		{
-			SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-			m_videoNumber = settings.getInt("videoNumber", 1);
+			m_video = MyVideo.getNextUnViewedVideo(context);
+			
+			//SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+			//m_video = settings.getInt("videoNumber", 1);
+			
 		}
 		
-		return m_videoNumber; 
+		return m_video; 
 	}
 	
-	public static void setVideoNumber(Context context,int newNumber)
+	/**
+	 * Unset the video so there can be another one selected with getCurrentAlarmVideo
+	 * @param context
+	 */
+	public static void unsetVideo()
 	{
 		
-		SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putInt("videoNumber", newNumber);
-		editor.commit();
-		m_videoNumber = newNumber;
+		//SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+		//SharedPreferences.Editor editor = settings.edit();
+		//editor.putInt("videoNumber", newNumber);
+		//editor.commit();
+		
+		m_video = null;
 	}
 	
 	
 	public static Uri getVideoUri(Context context)
 	{
-		String path = "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video"+getVideoNumber(context), "raw", context.getPackageName());
 		
-		return Uri.parse(path);
+		MyVideo video = getCurrentAlarmVideo(context);
+		//String path = "";
+		/*if(video == null)
+		{
+			//TODO : if no video, playing embedded video
+			Random generator = new Random();
+			int videoNumber = generator.nextInt(2);
+			SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putInt("videoNumber", videoNumber);
+			editor.commit();
+			path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
+		}else
+			path = video.getLocalurl();
+		*/
+		return Uri.parse(video.getLocalurl());
 	}
+	
 }

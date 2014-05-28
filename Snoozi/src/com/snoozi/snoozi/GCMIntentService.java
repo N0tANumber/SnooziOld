@@ -20,7 +20,6 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson.JacksonFactory;
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.snoozi.deviceinfoendpoint.model.DeviceInfo;
-import com.snoozi.snoozi.UI.MainActivity;
 import com.snoozi.snoozi.UI.RegisterActivity;
 import com.snoozi.snoozi.database.SnooziContract;
 import com.snoozi.snoozi.models.CloudEndpointUtils;
@@ -188,6 +187,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setUserid(SnooziUtility.getAccountNames(context))
                 .setDeviceInformation(android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " " + android.os.Build.VERSION.RELEASE)).execute();
       }
+      
       SnooziUtility.trace(context, TRACETYPE.DEBUG,"GCM registered  with id :  " +  registration);
 		
 	    //Saving registration State
@@ -195,7 +195,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 		SharedPreferences.Editor editor = settings.edit();
 		editor.putBoolean("isRegistered", true);
 		editor.commit();
-      
+		//	SnooziUtility.trace(context, TRACETYPE.ERROR,"isRegistered not commiting " );
+		
     } catch (IOException e) {
     	String msg = "Exception received when attempting to register with server at "
                 + endpoint.getRootUrl() + " : " + e.toString();

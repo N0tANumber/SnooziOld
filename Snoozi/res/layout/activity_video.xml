@@ -15,25 +15,10 @@
                 android:layout_margin="10dp"
             android:orientation="vertical" >
 
-            
-
-                <VideoView
-                    android:id="@+id/myvideoView"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp" android:background="#0000"
-                    />
-           
-            <ProgressBar
-                android:id="@+id/Progressbar"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="5dp" />
-
-           
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp" >
 
                 <ImageView
@@ -85,11 +70,26 @@
                 </LinearLayout>
 
             </LinearLayout>
+            
+            
+
+                <VideoView
+                    android:id="@+id/myvideoView"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp" android:background="#0000"
+                    />
+           
+            <ProgressBar
+                android:id="@+id/Progressbar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="5dp" />
 
             <RadioGroup
                 android:id="@+id/radioGroup1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:gravity="fill_horizontal"
                 android:orientation="horizontal"
                 android:paddingBottom="50dp" >
@@ -122,6 +122,7 @@
         </LinearLayout>
     </ScrollView>
 
-    
+   
+
 
 </RelativeLayout>

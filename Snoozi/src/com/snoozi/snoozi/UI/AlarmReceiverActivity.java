@@ -1,17 +1,16 @@
 package com.snoozi.snoozi.UI;
 
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import com.fima.glowpadview.GlowPadView;
 import com.fima.glowpadview.GlowPadView.OnTriggerListener;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.AlarmPlanifier;
 import com.snoozi.snoozi.models.AlarmSound;
+import com.snoozi.snoozi.models.MyVideo;
 import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
+import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,7 +18,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -35,9 +33,10 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 	
 	private TrackingEventType _alarmEvent = TrackingEventType.ALARM_KILLED;
 	private Vibrator _vibrator = null;
-	private long _launchtime = 0;
+	//private long _launchtime = 0;
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
 	
+	private MyVideo currentVideo = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -56,18 +55,21 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 	            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
        	
 		setContentView(R.layout.activity_wakescreen);
-		Log.i(TAG,"oncreateAlarm");
+
 		
+		currentVideo = SnooziUtility.getCurrentAlarmVideo(this);
+		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.oncreateAlarm with video " +  currentVideo.getLocalurl());
 		
 		TrackingSender sender = new TrackingSender(getApplicationContext());
-		sender.sendUserEvent(TrackingEventType.ALARM_LAUNCH,"", SnooziUtility.getVideoNumber(this));
+		sender.sendUserEvent(TrackingEventType.ALARM_LAUNCH,"",currentVideo.getVideoid());
 		
-		//If alarm is launched only one time, we disable it
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		
+		AlarmPlanifier.checkAndPlanifyNextAlarm(this);
 		
 		
 		/* we dont disable alarm anymore (never -> everyday)
+		//If alarm is launched only one time, we disable it
 		if(!(settings.getBoolean("monday", false) ||
 				settings.getBoolean("tuesday", false) ||
 				settings.getBoolean("wednesday", false) ||
@@ -86,8 +88,14 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		
 		//Play sound
 		mMediaPlayer = new AlarmSound(this);
-		mMediaPlayer.load(SnooziUtility.getVideoUri(this), true);
-		mMediaPlayer.play(5000);
+		try {
+			mMediaPlayer.load(SnooziUtility.getVideoUri(this), true);
+			
+		} catch (Exception e) {
+			//TODO : Error while loading video, playing fallback sound
+			SnooziUtility.trace(this, TRACETYPE.ERROR,"AlarmReceiverActivity.onCreate Exception :  " +  e.toString());
+			
+		}
 		
 		boolean isVibrate = settings.getBoolean("vibrate", false);
 		if(isVibrate)
@@ -95,11 +103,6 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		// Start without a delay
 		// Vibrate for 100 milliseconds
 		// Sleep for 1000 milliseconds
-		if (_vibrator !=null && _vibrator.hasVibrator())
-		{
-			long[] pattern = {0, 1000, 200};
-			_vibrator.vibrate(pattern, 0);
-		}
 		
 		 
 		mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
@@ -109,7 +112,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		// mGlowPadView.setVibrateEnabled(false);
 		// uncomment this to hide targets
 		mGlowPadView.setShowTargetsOnIdle(true);
-		_launchtime = System.currentTimeMillis();
+		//_launchtime = System.currentTimeMillis();
 	}
 	
 	
@@ -118,40 +121,54 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Log.i(TAG,"onStartAlarm");
+		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onStartAlarm");
 		
-		AlarmPlanifier.checkAndPlanifyNextAlarm(this);
+		
 	}
+	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onResumeAlarm");
+		startRingingAlarm();
+	}
+
+
+
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		Log.i(TAG,"onPauseAlarm");
-		
+		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onPauseAlarm");
+		stopRingingAlarm();
+		/*
 		long currenttime = System.currentTimeMillis();
 		if(currenttime - _launchtime > 1000)
 		{
 		
-			Log.i(TAG,"Stop Alarm");
+			SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity Stop Alarm");
 			stopRinginAlarm();
 			
 			if (_alarmEvent == TrackingEventType.ALARM_KILLED) 
 			{
-				Log.i(TAG,"alarm killed");
+				SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity Alarm Killed");
 				//Reporting alarm killed
 				TrackingSender sender = new TrackingSender(getApplicationContext());
-				sender.sendUserEvent(_alarmEvent,"",SnooziUtility.getVideoNumber(this));
+				sender.sendUserEvent(_alarmEvent,"",currentVideo.getVideoid());
 				
 			}
 			finish();
 		}
+		*/
 	}
 	
 	@Override
     public void onConfigurationChanged(Configuration newConfig) 
     {
         super.onConfigurationChanged(newConfig);
-        Log.i(TAG,"onConfigurationChanged");
+        SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onConfigurationChanged");
+		
 		
     }
 
@@ -166,14 +183,14 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		Log.i(TAG,"onStop");
+		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onStop");
 		
 	}
 
 	@Override
 	public void onGrabbed(View v, int handle) {
 		// TODO Auto-generated method stub
-		Log.i(TAG,"onGrabbed");
+		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onGrabbed");
 		
 	}
 
@@ -188,27 +205,52 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		Log.i(TAG,"onDestroyAlarm");
 		
 		
 		if(isFinishing())
 		{
-			Log.i(TAG,"onDestroyAlarm Finishing");
-			stopRinginAlarm();
+			SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onDestroy with Finishing");
+			stopRingingAlarm();
+			mMediaPlayer.stop();
+			mMediaPlayer.release();
+			mMediaPlayer = null;
+			_vibrator = null;
+			//SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity Stop Alarm");
+			//stopRinginAlarm();
 			
+			if (_alarmEvent == TrackingEventType.ALARM_KILLED) 
+			{
+				SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity Alarm Killed");
+				//Reporting alarm killed
+				TrackingSender sender = new TrackingSender(getApplicationContext());
+				sender.sendUserEvent(_alarmEvent,"",currentVideo.getVideoid());
+				
+			}
+		}else
+			SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onDestroy");
+	}
+	
+	
+	
+	private void startRingingAlarm()
+	{
+		if(mMediaPlayer != null)
+			mMediaPlayer.play(3000);
+		if (_vibrator !=null && _vibrator.hasVibrator())
+		{
+			long[] pattern = {0, 1000, 200};
+			_vibrator.vibrate(pattern, 0);
 		}
 	}
 
-	private void stopRinginAlarm(){
+	private void stopRingingAlarm(){
 		if(mMediaPlayer != null)
-		{
-			mMediaPlayer.stop();
-			mMediaPlayer = null;
-		}
+			mMediaPlayer.pause();
+			
 		if (_vibrator!=null && _vibrator.hasVibrator())
 		{
 			_vibrator.cancel();
-			_vibrator = null;
+			
 		}
 	}
 
@@ -220,7 +262,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 		switch (resId) {
 		case R.drawable.ic_item_snooze:
 			_alarmEvent = TrackingEventType.ALARM_SNOOZE;
-			sender.sendUserEvent(_alarmEvent,"",  SnooziUtility.getVideoNumber(this));
+			sender.sendUserEvent(_alarmEvent,"",  currentVideo.getVideoid());
 			AlarmPlanifier.planifyNextAlarm(this,5*60);
 			Toast.makeText(this,getResources().getString(R.string.snoozeinfivemin) , Toast.LENGTH_LONG).show();
 			finish();
@@ -228,8 +270,8 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 
 		case R.drawable.ic_item_wakeup:
 			_alarmEvent = TrackingEventType.ALARM_WAKEUP;
-			sender.sendUserEvent(_alarmEvent,"",  SnooziUtility.getVideoNumber(this));
-			stopRinginAlarm();
+			sender.sendUserEvent(_alarmEvent,"",  currentVideo.getVideoid());
+			stopRingingAlarm();
 			Intent intent = new Intent(this, VideoActivity.class);
 			startActivityForResult(intent, 1);
 			
@@ -245,7 +287,7 @@ public class AlarmReceiverActivity extends Activity  implements OnTriggerListene
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.i(TAG,"onActivityResult");
+		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onActivityResult");
 		if (requestCode == 1) {
 			finish();
 		  }

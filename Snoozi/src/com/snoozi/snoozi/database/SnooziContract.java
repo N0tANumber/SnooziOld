@@ -42,6 +42,7 @@ public class SnooziContract {
 		
 		public static final String TABLE = "trackingevent";
 		
+		public static final String[] PROJECTION_ID = {Columns._ID};
 		public static final String[] PROJECTION_ALL = {Columns._ID,Columns.TYPE,Columns.DESCRIPTION,Columns.TIMESTAMP,Columns.TIMESTRING,Columns.VIDEOID};
 		
 		public static final String SORT_ORDER_DEFAULT = Columns.TIMESTAMP + " ASC";
@@ -68,36 +69,44 @@ public class SnooziContract {
 		
 		public static final String TABLE = "video";
 		
+		public static final String[] PROJECTION_ID = {Columns._ID};
 		public static final String[] PROJECTION_ALL = {Columns._ID,
 								Columns.URL,
+								Columns.VIDEOID,
 								Columns.LOCALURL,
 								Columns.DESCRIPTION,
 								Columns.LIKE,
 								Columns.DISLIKE,
 								Columns.VIEWCOUNT,
+								Columns.MYVIEWCOUNT,
 								Columns.STATUS,
 								Columns.FILESTATUS,
 								Columns.LEVEL,
 								Columns.TIMESTAMP,
-								Columns.USERID
+								Columns.USERID,
+								Columns.DOWNLOADID
 								};
 		
 		public static final String SORT_ORDER_DEFAULT = Columns.TIMESTAMP + " DESC";
+		public static final String SORT_ORDER_UNVIEWED = Columns.MYVIEWCOUNT + " ASC, " + Columns.TIMESTAMP + " ASC";
 		
 		public final static class Columns implements BaseColumns{
 			private Columns(){}
 			
 			public static final String URL = "url";
+			public static final String VIDEOID = "videoid";
 			public static final String LOCALURL = "localurl";
 			public static final String DESCRIPTION = "description";
 			public static final String LIKE = "like";
 			public static final String DISLIKE = "dislike";
 			public static final String VIEWCOUNT = "viewcount";
+			public static final String MYVIEWCOUNT = "myviewcount";
 			public static final String STATUS = "status";
 			public static final String FILESTATUS = "filestatus";
 			public static final String LEVEL = "level";
 			public static final String TIMESTAMP = "timestamp";
 			public static final String USERID = "userid";
+			public static final String DOWNLOADID = "downloadid";
 			
 		}
 	}

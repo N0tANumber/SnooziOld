@@ -4,17 +4,15 @@ package com.snoozi.snoozi.utils;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.snoozi.snoozi.UI.MainActivity;
 import com.snoozi.snoozi.database.SnooziContract;
 import com.snoozi.snoozi.models.SyncAdapter;
+import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 
 /**
@@ -28,7 +26,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	
 	private Context m_appContext;
 	//private TrackingEvent _trackingEvent;
-	private int m_videoid;
+	private Long m_videoid;
 	private String m_type;
 	private String m_description;
 	private long m_timestamp;
@@ -50,7 +48,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	 * @param theDescription
 	 * 			description of the event
 	 */
-	public void sendUserEvent(TrackingEventType theType, String theDescription,int videoid){
+	public void sendUserEvent(TrackingEventType theType, String theDescription,Long videoid){
 		//if(this._userAccount == null)
 		//	this._userAccount = SnooziUtility.getAccountNames(this._appContext);
 		
@@ -75,7 +73,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	 * 			description of the event
 	 */
 	public void sendUserEvent(TrackingEventType theType, String theDescription){
-		sendUserEvent( theType, theDescription,0);
+		sendUserEvent( theType, theDescription,0l);
 	}
 	
 	
@@ -99,7 +97,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 			values.put(SnooziContract.trackingevents.Columns.VIDEOID,this.m_videoid );
 
 			ContentResolver resolver = this.m_appContext.getContentResolver();
-			Uri theResult = resolver.insert(SnooziContract.trackingevents.CONTENT_URI, values);
+			resolver.insert(SnooziContract.trackingevents.CONTENT_URI, values);
 			//Log.i("CONTENTRESOLVER",theResult.toString());
 			
 			//On demande une synchro avec le server
@@ -110,7 +108,8 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 			
 			
 		} catch (Exception e) {
-			Log.e("CONTENTRESOLVER",e.toString());
+			SnooziUtility.trace(this.m_appContext,TRACETYPE.ERROR,"CONTENTRESOLVER Error " + e.toString());
+			
 		}
 		
 		/*

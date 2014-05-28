@@ -1,7 +1,6 @@
 package com.snoozi.snoozi.database;
 
 
-import com.snoozi.snoozi.database.SnooziContract.videos.Columns;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
@@ -11,13 +10,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 public class MyDataProvider extends ContentProvider {
 	/*
@@ -57,29 +54,7 @@ public class MyDataProvider extends ContentProvider {
 	
 	
 
-	@Override
-	public Uri insert(Uri uri, ContentValues values) {
-		int match = sUriMatcher.match(uri);
-		Uri result = null;
-		try 
-		{
-			if (match == TRACKING)
-			{
-				long id = db.insert( SnooziContract.trackingevents.TABLE,null, values);
-				result = getUriForId(id, uri);
-			}else if (match == VIDEO)
-			{
-				long id = db.insert( SnooziContract.videos.TABLE,null, values);
-				result = getUriForId(id, uri);
-			}else
-				throw new Exception("Unsupported URI for insertion : " + uri);
-
-		} catch (Exception e) {
-			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.insert : " + e.toString());
-
-		}
-		return result;
-	}
+	
 	
 	
 	@Override
@@ -190,7 +165,32 @@ public class MyDataProvider extends ContentProvider {
 		}
 		return null;
 	}
+	
+	
+	@Override
+	public Uri insert(Uri uri, ContentValues values) {
+		int match = sUriMatcher.match(uri);
+		Uri result = null;
+		try 
+		{
+			if (match == TRACKING)
+			{
+				long id = db.insert( SnooziContract.trackingevents.TABLE,null, values);
+				result = getUriForId(id, uri);
+			}else if (match == VIDEO)
+			{
+				long id = db.insert( SnooziContract.videos.TABLE,null, values);
+				result = getUriForId(id, uri);
+			}else
+				throw new Exception("Unsupported URI for insertion : " + uri);
 
+		} catch (Exception e) {
+			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.insert : " + e.toString());
+
+		}
+		return result;
+	}
+	
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
@@ -326,7 +326,7 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.trackingevents.Columns.TYPE + " TEXT, " +
 		     SnooziContract.trackingevents.Columns.TIMESTAMP + " LONG, " +
 		     SnooziContract.trackingevents.Columns.TIMESTRING + " TEXT, " +
-		     SnooziContract.trackingevents.Columns.VIDEOID + " INTEGER, " +
+		     SnooziContract.trackingevents.Columns.VIDEOID + " LONG default 0, " +
 		     SnooziContract.trackingevents.Columns.DESCRIPTION + " TEXT )";
 		
 		private static final String SQL_CREATE_VIDEO = "CREATE TABLE IF NOT EXISTS " +
@@ -334,18 +334,21 @@ public class MyDataProvider extends ContentProvider {
 		    "(" +                           // The columns in the table
 		     SnooziContract.videos.Columns._ID + "  INTEGER PRIMARY KEY, " +
 		     SnooziContract.videos.Columns.URL + " TEXT, " +
+		     SnooziContract.videos.Columns.VIDEOID + " LONG, " +
 		     SnooziContract.videos.Columns.LOCALURL + " TEXT, " +
 		     SnooziContract.videos.Columns.DESCRIPTION + " TEXT, " +
-		     SnooziContract.videos.Columns.LIKE + " INTEGER, " +
-		     SnooziContract.videos.Columns.DISLIKE + " INTEGER, " +
-		     SnooziContract.videos.Columns.VIEWCOUNT + " INTEGER, " +
+		     SnooziContract.videos.Columns.LIKE + " INTEGER default 0, " +
+		     SnooziContract.videos.Columns.DISLIKE + " INTEGER default 0, " +
+		     SnooziContract.videos.Columns.VIEWCOUNT + " INTEGER default 0, " +
+		     SnooziContract.videos.Columns.MYVIEWCOUNT + " INTEGER default 0, " +
 		     SnooziContract.videos.Columns.STATUS + " TEXT, " +
 		     SnooziContract.videos.Columns.FILESTATUS + " TEXT, " +
-		     SnooziContract.videos.Columns.LEVEL + " INTEGER, " +
+		     SnooziContract.videos.Columns.LEVEL + " INTEGER default 0, " +
 		     SnooziContract.videos.Columns.TIMESTAMP + " LONG, " +
+		     SnooziContract.videos.Columns.DOWNLOADID + " LONG default 0, " +
 		     SnooziContract.videos.Columns.USERID + " LONG )";
 		
-	
+		
 	    
 	    /*
 	     * Instantiates an open helper for the provider's SQLite data repository
@@ -362,8 +365,9 @@ public class MyDataProvider extends ContentProvider {
 	     */
 	    public void onCreate(SQLiteDatabase db) {
 	        // Creates the main table
-	        db.execSQL(SQL_CREATE_TRACKINGEVENT);
-	        db.execSQL(SQL_CREATE_VIDEO);
+	    	db.execSQL(SQL_CREATE_TRACKINGEVENT);
+	    	db.execSQL(SQL_CREATE_VIDEO);
+	    	
 		}
 
 		@Override
@@ -378,10 +382,11 @@ public class MyDataProvider extends ContentProvider {
 	        try {
 	            if(oldVersion<2){
 	                // Upgrade database structure from Version 1 to 2
-	                db.execSQL(SQL_CREATE_VIDEO);
-	                SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 2");
+	            	db.execSQL("DROP TABLE " + SnooziContract.trackingevents.TABLE + " ;");
+	            	db.execSQL(SQL_CREATE_TRACKINGEVENT);
+	    	        db.execSQL(SQL_CREATE_VIDEO);
+	    	        SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 2");
 					
-	                Log.i("DATABASE","Successfully upgraded to Version 2");
 	            }
 	            /*
 	            if(oldVersion<3){

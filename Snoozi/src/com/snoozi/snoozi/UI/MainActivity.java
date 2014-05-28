@@ -1,20 +1,27 @@
 package com.snoozi.snoozi.UI;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.snoozi.snoozi.*;
+import com.snoozi.snoozi.models.MyVideo;
 import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.utils.TrackingSender;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 import android.os.Bundle;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 /**
  * The Main Activity.
@@ -29,6 +36,7 @@ public class MainActivity extends Activity {
 
 
 
+	
 
 	@SuppressWarnings("unused")
 	@Override
@@ -64,6 +72,36 @@ public class MainActivity extends Activity {
 		
 		
 	}
+
+	
+	
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		// FirstLaunch tracking
+		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+		boolean isFirstLaunch = settings.getBoolean("firstLaunch", true);
+		TrackingSender sender = new TrackingSender(getApplicationContext());
+		if(isFirstLaunch)
+		{
+			SnooziUtility.trace(this,TRACETYPE.INFO,"First APP_LAUNCH ");
+			
+			sender.sendUserEvent(TrackingEventType.APP_FIRSTLAUNCH);
+			//Save firstlaunch state
+			SharedPreferences.Editor editor = settings.edit();
+			editor.putBoolean("firstLaunch", false);
+			editor.commit();
+			
+			//We insert the 3 dummy video into BDD
+			createDummyVideo();
+		}
+		else
+			sender.sendUserEvent(TrackingEventType.APP_LAUNCH);
+
+		//We copy the local BDD / Only on DEV MODE
+		exportLocalDatabase();
+	}
 	
 	private void launchSettingActivity()
 	{
@@ -73,6 +111,84 @@ public class MainActivity extends Activity {
 		finish();
 	}
 	
+	
+	private void createDummyVideo()
+	{
+		Context context = this;
+		
+		MyVideo videoObj = new MyVideo();
+		videoObj.setStatus("OK");
+		videoObj.setFilestatus("DUMMY");
+		int videoNumber = 0;
+		String path = "";
+
+		//FIRST VIDEO : Twin baby
+		videoNumber = 0;
+		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
+		videoObj.setLocalurl(path);
+		videoObj.setUrl("TwinBabies.m4v");
+		videoObj.setVideoid(5690091590647808l); // video id on the Cloud Storage for tracking like/view and others...
+		videoObj.setDescription("Advantage of being an Unemployed Dad");
+		videoObj.save(this);
+		videoObj.setId(0);
+
+		//SECOND VIDEO : Rick Rolls
+		videoNumber = 1;
+		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
+		videoObj.setLocalurl(path);
+		videoObj.setUrl("RickRoll.m4v");
+		videoObj.setVideoid(4777367553703936l); // video id on the Cloud Storage for tracking like/view and others...
+		videoObj.setDescription("Rick Rolled by Snoozi!");
+		videoObj.save(this);
+		videoObj.setId(0);
+
+		//THIRD VIDEO : Elephant piano
+		videoNumber = 2;
+		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
+		videoObj.setLocalurl(path);
+		videoObj.setUrl("ElephantPiano.m4v");
+		videoObj.setVideoid(5207439808921600l); // video id on the Cloud Storage for tracking like/view and others...
+		videoObj.setDescription("Have fun with your morning video!");
+		videoObj.save(this);
+
+	}
+	
+	/**
+	 * For accessing data in the database without rooting the device, we copy the database on the sd card ( no access restriction)
+	 * used only in dev mode
+	 */
+	private void exportLocalDatabase() {
+		if(SnooziUtility.DEV_MODE)
+		{
+			
+			try {
+				
+				File file = getDatabasePath("SnooziDB.db");
+				InputStream in = new FileInputStream(file);
+		        OutputStream out = null;
+		        
+				File outFile = new File("/storage/extSdCard/Android/Snoozi.db");
+				out = new FileOutputStream(outFile);
+		       
+		        byte[] buffer = new byte[1024];
+		        int read;
+		        while((read = in.read(buffer)) != -1){
+		          out.write(buffer, 0, read);
+		        }
+		        in.close();
+		        in = null;
+		        out.flush();
+		        out.close();
+		        
+		        
+		        out = null;
+		        
+				SnooziUtility.trace(this, TRACETYPE.DEBUG, outFile.getAbsolutePath());
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+	}
 	
 }
 
