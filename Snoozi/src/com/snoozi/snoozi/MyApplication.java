@@ -27,7 +27,7 @@ public class MyApplication extends Application {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             
-            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(R.xml.global_tracker) : null;
+            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(R.xml.myanalytics) : null;
             mTrackers.put(trackerId, t);
 
         }

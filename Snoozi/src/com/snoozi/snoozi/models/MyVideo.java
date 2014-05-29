@@ -26,7 +26,7 @@ import android.os.Bundle;
 import android.os.Environment;
 
 public class MyVideo {
-	
+
 	private int id;
 	private String url;
 	private Long videoid;
@@ -45,9 +45,9 @@ public class MyVideo {
 
 	private int addedLike;
 	private int addedViewcount;
-	
+
 	private boolean hasChanged;
-	
+
 	public MyVideo()
 	{
 		description = "";
@@ -65,17 +65,17 @@ public class MyVideo {
 		addedLike = 0;
 		addedViewcount = 0;
 		hasChanged = false;
-		
+
 	}
-	
+
 	/**
 	 * @param cursor
 	 */
 	public  MyVideo(Cursor cursor) {
 		this(); // default constructor
-		
+
 		try {
-			
+
 			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID)));
 			this.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.URL)));
 			this.setVideoid(cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.VIDEOID)));
@@ -91,17 +91,17 @@ public class MyVideo {
 			this.setTimestamp(cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.TIMESTAMP)));
 			this.setDownloadid(cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.DOWNLOADID)));
 			this.setUserid(cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.USERID)));
-			
+
 			hasChanged = false;
-			
+
 		} catch (Exception e) {
 			// Error during creation of this MyVideoObject
 		}
 	}
-	
+
 
 	public void addViewcount(int videoViewCount) {
-		
+
 		this.setMyviewcount(this.getMyviewcount() + videoViewCount);
 		this.addedViewcount = videoViewCount;
 		// TODO : voir comment faire pour envoyer le viewcount au serveur
@@ -113,10 +113,10 @@ public class MyVideo {
 	{
 		//We remove the previous like value to know what to add
 		this.addedLike = i - this.getMylike();
-		
+
 		this.setMylike(i);
 		hasChanged = true;
-		
+
 		// TODO : voir comment faire pour envoyer le viewcount au serveur
 
 	}
@@ -129,8 +129,8 @@ public class MyVideo {
 	 */
 	public int save(Context context) {
 		// TODO Auto-generated method stub
-		int result = 0;
-		
+		int result = 1;
+
 		if(this.getId() == 0 || hasChanged)
 		{
 			/* TODO : Doit  envoyer les message au serveur pour qu'il refresh ses datas concernant :
@@ -139,79 +139,84 @@ public class MyVideo {
 		 - like
 			 */
 			try {
-				
-			//SAVE THE VIDEO IN THE LOCAL DATABASE
-			ContentValues values = new ContentValues();
-			values.put(SnooziContract.videos.Columns.LIKE,getLike() );
-			values.put(SnooziContract.videos.Columns.MYLIKE,getMylike() );
-			values.put(SnooziContract.videos.Columns.VIEWCOUNT,getViewcount() );
-			values.put(SnooziContract.videos.Columns.MYVIEWCOUNT,getMyviewcount() );
-			
-			ContentResolver provider = context.getContentResolver();
-			if(this.getId() == 0)
-			{
-				//INSERTING
-				values.put(SnooziContract.videos.Columns.DESCRIPTION,getDescription() );
-				values.put(SnooziContract.videos.Columns.STATUS,getStatus() );
-				values.put(SnooziContract.videos.Columns.LEVEL,getLevel() );
-				values.put(SnooziContract.videos.Columns.VIDEOID,getVideoid() );
-				values.put(SnooziContract.videos.Columns.TIMESTAMP,getTimestamp() );
-				values.put(SnooziContract.videos.Columns.USERID,getUserid() );
-				values.put(SnooziContract.videos.Columns.URL,getUrl() );
-				values.put(SnooziContract.videos.Columns.FILESTATUS,getFilestatus() );
-				values.put(SnooziContract.videos.Columns.LOCALURL,getLocalurl());
-				
-				Uri videouri = provider.insert(SnooziContract.videos.CONTENT_URI, values);
-				//Retrieving id from path
-				result = Integer.parseInt(videouri.getLastPathSegment());
-				this.setId(result);
-			}else
-			{
-			
-				result = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, getId()), values,null,null);
-			}
-			
-			
-			SnooziUtility.trace(context,TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
+
+				//SAVE THE VIDEO IN THE LOCAL DATABASE
+				ContentValues values = new ContentValues();
+				values.put(SnooziContract.videos.Columns.LIKE,getLike() );
+				values.put(SnooziContract.videos.Columns.MYLIKE,getMylike() );
+				values.put(SnooziContract.videos.Columns.VIEWCOUNT,getViewcount() );
+				values.put(SnooziContract.videos.Columns.MYVIEWCOUNT,getMyviewcount() );
+
+				ContentResolver provider = context.getContentResolver();
+				if(this.getId() == 0)
+				{
+					//INSERTING
+					values.put(SnooziContract.videos.Columns.DESCRIPTION,getDescription() );
+					values.put(SnooziContract.videos.Columns.STATUS,getStatus() );
+					values.put(SnooziContract.videos.Columns.LEVEL,getLevel() );
+					values.put(SnooziContract.videos.Columns.VIDEOID,getVideoid() );
+					values.put(SnooziContract.videos.Columns.TIMESTAMP,getTimestamp() );
+					values.put(SnooziContract.videos.Columns.USERID,getUserid() );
+					values.put(SnooziContract.videos.Columns.URL,getUrl() );
+					values.put(SnooziContract.videos.Columns.FILESTATUS,getFilestatus() );
+					values.put(SnooziContract.videos.Columns.LOCALURL,getLocalurl());
+
+					Uri videouri = provider.insert(SnooziContract.videos.CONTENT_URI, values);
+					//Retrieving id from path
+					result = Integer.parseInt(videouri.getLastPathSegment());
+					this.setId(result);
+				}else
+				{
+
+					result = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, getId()), values,null,null);
+				}
+
+				hasChanged = false;
+
+				SnooziUtility.trace(context,TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
 			} catch (Exception e) {
 				SnooziUtility.trace(context,TRACETYPE.ERROR,"Save Video ERROR" + e.toString());
-				
+				result = 0;
 			}
-			
+
 		}
 		return result;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Save to local Database and send to server modified data
 	 * @param context
 	 */
 	public void saveAndSync(Context context) {
-		
+
 		if(this.save(context) > 0)
 		{
 			//UPDATE SUCCESS, THEN WE SEND NEW VALUE TO THE SERVER
-			
-			
+
+			try {
+
 				if(addedLike != 0 || addedViewcount != 0)
 				{
 					//On demande une synchro avec le server
 					Bundle settingsBundle = new Bundle();
-			        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			        settingsBundle.putString("action", SnooziUtility.SYNC_ACTION.SEND_RATING);
-			        settingsBundle.putInt("addedViewcount",addedViewcount);
-			        settingsBundle.putInt("addedLike", addedLike);
-			        settingsBundle.putLong("videoid", getVideoid());
-		  	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(context), SnooziContract.AUTHORITY, settingsBundle);
-
+					settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+					settingsBundle.putString("action", SnooziUtility.SYNC_ACTION.SEND_RATING);
+					settingsBundle.putInt("addedViewcount",addedViewcount);
+					settingsBundle.putInt("addedLike", addedLike);
+					settingsBundle.putLong("videoid", getVideoid());
 					
+					ContentResolver.requestSync(SyncAdapter.GetSyncAccount(context), SnooziContract.AUTHORITY, settingsBundle);
+
+
 					addedLike = 0;
 					addedViewcount = 0;
 				}
-				hasChanged = false;
-			
+
+			} catch (Exception e) {
+				SnooziUtility.trace(context,TRACETYPE.ERROR,"saveAndSync ERROR" + e.toString());
+			}
 
 
 
@@ -220,7 +225,7 @@ public class MyVideo {
 	}
 
 
-	
+
 	/**
 	 * Get the next less viewed, then older video
 	 * @param context
@@ -229,7 +234,7 @@ public class MyVideo {
 	public static MyVideo getNextUnViewedVideo(Context context)
 	{
 		MyVideo videoObj = null;
-		
+
 		Cursor cursor = null;
 		try{
 			//Selecting the video by her downloadid
@@ -256,8 +261,8 @@ public class MyVideo {
 
 				}
 			}
-			
-			
+
+
 		}
 		catch (Exception e) {
 			SnooziUtility.trace(context, TRACETYPE.ERROR,"Video.getNextUnViewedVideo Exception :  " +  e.toString());
@@ -266,41 +271,41 @@ public class MyVideo {
 			if(cursor != null)
 				cursor.close();
 		}
-		
+
 		if(videoObj == null)
 		{	
-				//In everyCase we return a video, even if it's a dummy one
+			//In everyCase we return a video, even if it's a dummy one
 			videoObj = new MyVideo();
 			Random generator = new Random();
 			int videoNumber = generator.nextInt(2);
 			String path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
 			videoObj.setLocalurl(path);
-			
+
 		}
 		return videoObj;
 	}
 
-	
-	
-	
+
+
+
 
 	@Override
 	public String toString() {
 		return "MyVideo [url=" + url + ", description=" + description + "]";
 	}
-	
+
 	public String getPublishDate()
 	{
 		//Calendar calendar = Calendar.getInstance();
 		//calendar.setTimeInMillis(timestamp);
-		
+
 		SimpleDateFormat df = new SimpleDateFormat("dd MMM yy");
-        String formattedDate = df.format(new Date(timestamp));
-       
+		String formattedDate = df.format(new Date(timestamp));
+
 		return formattedDate;
-		
+
 	}
-	
+
 
 	public int getId() {
 		return id;
@@ -390,7 +395,7 @@ public class MyVideo {
 	public void setMylike(int mylike) {
 		this.mylike = mylike;
 	}
-	
+
 
 	public void setViewcount(int viewcount) {
 		this.viewcount = viewcount;
@@ -430,9 +435,9 @@ public class MyVideo {
 
 
 
-	
 
-	
+
+
 
 
 }

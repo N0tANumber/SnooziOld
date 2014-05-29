@@ -111,13 +111,34 @@ public class AlarmSettingActivity extends Activity {
 				evtDescr.append(":");
 				evtDescr.append(picker.getCurrentMinute());
 				evtDescr.append(" on ");
-				evtDescr.append(txtdays.getText().toString());
+				String dayString = "";
+				SharedPreferences prefs = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+				ArrayList<String> theDayList = new ArrayList<String>();
+				if(prefs.getBoolean("monday",false))
+					theDayList.add("monday");
+				if(prefs.getBoolean("tuesday",false))
+					theDayList.add("tuesday");
+				if(prefs.getBoolean("wednesday",false))
+					theDayList.add("wednesday");
+				if(prefs.getBoolean("thursday",false))
+					theDayList.add("thursday");
+				if(prefs.getBoolean("friday",false))
+					theDayList.add("friday");
+				if(prefs.getBoolean("saturday",false))
+					theDayList.add("saturday");
+				if(prefs.getBoolean("sunday",false))
+					theDayList.add("sunday");
+				
+				if(theDayList.size() == 0 || theDayList.size() == 7)
+					dayString = "EveryDay";
+				else
+					dayString = theDayList.toString();
+				evtDescr.append(dayString);
 
 				//Dispatch event to the server
 				if(isChecked)
 				{
-					if(SnooziUtility.DEV_MODE)
-						AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
+					AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
 					sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.SET,"set" + evtDescr.toString());
 					
 					

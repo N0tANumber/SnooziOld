@@ -39,12 +39,14 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	private long m_timestamp;
 	private String m_timestring;
 	
+	private boolean isRunning;
 	
 	public TrackingSender(Context thecontext, Application apps){
 		
 		this.m_appContext = thecontext;
 		this.m_apps = apps;
 		//this._userAccount = null;
+		isRunning = false;
 		
 	}
 	
@@ -70,8 +72,8 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 		this.m_timestring = currentLocalTime.toString();
 		this.m_videoid = videoid;
 		
-		
-		this.execute(m_appContext);
+		if(!isRunning)
+			this.execute(m_appContext);
 	}
 	
 	/**
@@ -99,39 +101,51 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 		try 
 		{
 			// Get tracker.
-			
+			isRunning = true;
 	        Tracker t = ((MyApplication)this.m_apps).getTracker(
 	            TrackerName.APP_TRACKER);
+	        int theValue = 0;
+	        if(this.m_action.equals(TrackingEventAction.SET.toString()))
+	        	theValue = 1;
+        	else if(this.m_action.equals(TrackingEventAction.UNSET.toString()))
+        		theValue = -1;
+        	
 	        // Build and send an Event.
 	        t.send(new HitBuilders.EventBuilder()
 	            .setCategory(this.m_category)
 	            .setAction(this.m_action)
 	            .setLabel(this.m_description)
-	            .setValue(this.m_videoid)
+	            .setValue(theValue)
 	            .build());
 	        
-	        /*
-			ContentValues values = new ContentValues();
-			values.put(SnooziContract.trackingevents.Columns.TYPE,this.m_action );
-			values.put(SnooziContract.trackingevents.Columns.DESCRIPTION,this.m_description );
-			values.put(SnooziContract.trackingevents.Columns.TIMESTAMP,this.m_timestamp );
-			values.put(SnooziContract.trackingevents.Columns.TIMESTRING,this.m_timestring );
-			values.put(SnooziContract.trackingevents.Columns.VIDEOID,this.m_videoid );
-
-			ContentResolver resolver = this.m_appContext.getContentResolver();
-			resolver.insert(SnooziContract.trackingevents.CONTENT_URI, values);
-			//Log.i("CONTENTRESOLVER",theResult.toString());
+	        
+	        if(this.m_category.equals(TrackingEventCategory.ALARM.toString()))
+	        {
+	        	
+				ContentValues values = new ContentValues();
+				values.put(SnooziContract.trackingevents.Columns.TYPE,this.m_action );
+				values.put(SnooziContract.trackingevents.Columns.DESCRIPTION,this.m_description );
+				values.put(SnooziContract.trackingevents.Columns.TIMESTAMP,this.m_timestamp );
+				values.put(SnooziContract.trackingevents.Columns.TIMESTRING,this.m_timestring );
+				values.put(SnooziContract.trackingevents.Columns.VIDEOID,this.m_videoid );
+	
+				ContentResolver resolver = this.m_appContext.getContentResolver();
+				resolver.insert(SnooziContract.trackingevents.CONTENT_URI, values);
+				//Log.i("CONTENTRESOLVER",theResult.toString());
+				
+				//On demande une synchro avec le server
+				Bundle settingsBundle = new Bundle();
+		        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this.m_appContext), SnooziContract.AUTHORITY, settingsBundle);
 			
-			//On demande une synchro avec le server
-			Bundle settingsBundle = new Bundle();
-	        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-	        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this.m_appContext), SnooziContract.AUTHORITY, settingsBundle);
+	        }
 			
-			*/
 		} catch (Exception e) {
 			SnooziUtility.trace(this.m_appContext,TRACETYPE.ERROR,"CONTENTRESOLVER Error " + e.toString());
 			
+		}finally{
+			isRunning = false;
 		}
 		
 		/*

@@ -211,11 +211,9 @@ public class VideoActivity extends Activity {
 		// TODO Auto-generated method stub
 		try {
 			
-		stopPlaying();
 		//audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, _oldmusicVol, 0);
 		//mVideoView.getCurrentPosition();
 		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
-		
 		
 		if(_videoViewCount >0)
 		{
@@ -234,8 +232,10 @@ public class VideoActivity extends Activity {
 			sender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.CANCELED,"canceled at " + Math.round(current/1000.0f) +"s./" + Math.round(duration/1000.0f) + "s.", currentVideo.getVideoid()  );
 		}
 		
+		TrackingSender likesender = new TrackingSender(getApplicationContext(),getApplication());
+		
 		if(currentVideo.getMylike() != 0)
-			sender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.RATING, currentVideo.getMylike() +"", currentVideo.getVideoid());
+			likesender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.RATING, currentVideo.getMylike() +"", currentVideo.getVideoid());
 		
 		
 		
@@ -257,11 +257,13 @@ public class VideoActivity extends Activity {
 		SnooziUtility.unsetVideo( );
 		currentVideo = null;
 		
+		EasyTracker.getInstance().activityStop(this);
+		
+		stopPlaying();
 		
 		Intent returnIntent = new Intent();
 		setResult(RESULT_OK, returnIntent);  
 		
-		EasyTracker.getInstance().activityStop(this);
 		} catch (Exception e) {
 			SnooziUtility.trace(this, TRACETYPE.ERROR,"VideoActivity.onStop Error : "+ e.toString());
 			

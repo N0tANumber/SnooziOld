@@ -15,7 +15,7 @@ import com.snoozi.snoozi.models.MyVideo;
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.snoozi.app";
 	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
-	public static final boolean DEV_MODE = true;
+	public static final boolean DEV_MODE = false;
 
 	 
 	
