@@ -1,5 +1,9 @@
 package com.snoozi.snoozi.models;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import android.content.ContentResolver;
@@ -7,12 +11,18 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.json.jackson.JacksonFactory;
 import com.snoozi.snoozi.database.SnooziContract;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
+import com.snoozi.videoendpoint.Videoendpoint;
 
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 
 public class MyVideo {
@@ -90,18 +100,21 @@ public class MyVideo {
 	}
 	
 
-	public void addViewcount(int _videoViewCount) {
+	public void addViewcount(int videoViewCount) {
 		
-		this.setMyviewcount(this.getMyviewcount() + _videoViewCount);
-		this.addedViewcount = _videoViewCount;
+		this.setMyviewcount(this.getMyviewcount() + videoViewCount);
+		this.addedViewcount = videoViewCount;
 		// TODO : voir comment faire pour envoyer le viewcount au serveur
 		hasChanged = true;
 	}
 
 
-	public void addLike(int i) {
+	public void addLike(int i) 
+	{
+		//We remove the previous like value to know what to add
+		this.addedLike = i - this.getMylike();
+		
 		this.setMylike(i);
-		this.addedLike = i;
 		hasChanged = true;
 		
 		// TODO : voir comment faire pour envoyer le viewcount au serveur
@@ -155,13 +168,9 @@ public class MyVideo {
 				
 				result = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, getId()), values,null,null);
 			}
-			if(result > 0)
-			{
-				//UPDATE SUCCESS, THEN SEND NEW VALUE TO THE SERVER
-				SnooziUtility.trace(context,TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
-				hasChanged = false;
-			}
 			
+			
+			SnooziUtility.trace(context,TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
 			
 		}
 		return result;
@@ -177,16 +186,29 @@ public class MyVideo {
 		
 		if(this.save(context) > 0)
 		{
-			/* TODO : Doit  envoyer les message au serveur pour qu'il refresh ses datas concernant :
-		 - viewcount
-		 - dislike
-		 - like
-			 */
+			//UPDATE SUCCESS, THEN WE SEND NEW VALUE TO THE SERVER
 			
-				
-				addedLike = 0;
-				addedViewcount = 0;
 			
+				if(addedLike != 0 || addedViewcount != 0)
+				{
+					//On demande une synchro avec le server
+					Bundle settingsBundle = new Bundle();
+			        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			        settingsBundle.putString("action", SnooziUtility.SYNC_ACTION.SEND_RATING);
+			        settingsBundle.putInt("addedViewcount",addedViewcount);
+			        settingsBundle.putInt("addedLike", addedLike);
+			        settingsBundle.putLong("videoid", getVideoid());
+		  	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(context), SnooziContract.AUTHORITY, settingsBundle);
+
+					
+					addedLike = 0;
+					addedViewcount = 0;
+				}
+				hasChanged = false;
+			
+
+
+
 		}
 
 	}
@@ -254,11 +276,25 @@ public class MyVideo {
 
 	
 	
+	
 
 	@Override
 	public String toString() {
 		return "MyVideo [url=" + url + ", description=" + description + "]";
 	}
+	
+	public String getPublishDate()
+	{
+		//Calendar calendar = Calendar.getInstance();
+		//calendar.setTimeInMillis(timestamp);
+		
+		SimpleDateFormat df = new SimpleDateFormat("dd MMM yy");
+        String formattedDate = df.format(new Date(timestamp));
+       
+		return formattedDate;
+		
+	}
+	
 
 	public int getId() {
 		return id;

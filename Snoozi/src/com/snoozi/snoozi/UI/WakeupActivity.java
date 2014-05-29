@@ -7,6 +7,7 @@ import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.AlarmPlanifier;
 import com.snoozi.snoozi.models.AlarmSound;
 import com.snoozi.snoozi.models.MyVideo;
+import com.snoozi.snoozi.services.WakeupLaunchService;
 import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
@@ -226,6 +227,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 				sender.sendUserEvent(_alarmEvent,"",currentVideo.getVideoid());
 				
 			}
+			WakeupLaunchService.isrunning = false;
 		}else
 			SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onDestroy");
 	}

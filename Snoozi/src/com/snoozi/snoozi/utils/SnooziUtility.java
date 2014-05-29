@@ -21,8 +21,9 @@ public class SnooziUtility {
 	
 	public class SYNC_ACTION{
 		public static final String NEW_VIDEO_AVAILABLE = "NEW_VIDEO_AVAILABLE";
+		public static final String SEND_RATING = "SEND_RATING";
 		public static final String SEND_DATA = "SEND_DATA";
-	}
+		}
 	
 	public static enum TRACETYPE{
 		DEBUG,

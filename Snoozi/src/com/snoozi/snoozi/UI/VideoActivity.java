@@ -77,6 +77,9 @@ public class VideoActivity extends Activity {
 		TextView videoTitle = (TextView) findViewById(R.id.videoTitle);
 		videoTitle.setText(currentVideo.getDescription());
 		
+		TextView txtdate = (TextView) findViewById(R.id.txtDate);
+		txtdate.setText(currentVideo.getPublishDate());
+		
 		mVideoView.setVideoURI(Uri.parse(currentVideo.getLocalurl()));
 		
 		//audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);

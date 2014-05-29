@@ -122,6 +122,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		{
 			// we send all data to the server if any
 			this.sendTrackingEvent(provider);
+		}else if( action.equals(SnooziUtility.SYNC_ACTION.SEND_RATING))
+		{
+			//We send a user rating
+			int addedViewcount = extras.getInt("addedViewcount");
+			int addedLike = extras.getInt("addedLike");
+			long videoid = extras.getLong("videoid");
+			
+			this.sendRatingData(videoid, addedViewcount, addedLike);
 		}
 	}
 
@@ -238,7 +246,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	 * @param provider
 	 * @return
 	 */
-	public boolean retrieveRecentVideo(ContentProviderClient provider)
+	private boolean retrieveRecentVideo(ContentProviderClient provider)
 	{
 		boolean success = true;
 		int maxDownloadedVideo = 7 ;
@@ -355,7 +363,34 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		return success;
 	}
 
+	/**
+	 * Send user Rating for a video
+	 * @param videoid
+	 * @param addedViewcount
+	 * @param addedLike
+	 * @return
+	 */
+	private boolean sendRatingData(long videoid, int addedViewcount, int addedLike)
+	{
 
+		SnooziUtility.trace(getContext(),TRACETYPE.INFO,"Sending data to server : Video " + videoid + " with addedViewcount " + addedViewcount + " with addedLike " + addedLike);
+		try {
+			Videoendpoint.Builder endpointBuilder = new Videoendpoint.Builder(
+					AndroidHttp.newCompatibleTransport(),
+					new JacksonFactory(),
+					new HttpRequestInitializer() {
+						public void initialize(HttpRequest httpRequest) { }
+					});
+			Videoendpoint videoEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
+			videoEndpoint.rateVideo(videoid,addedLike,addedViewcount ).execute();
+		} catch (IOException e) {
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"sendRatingData Exception :  " +  e.toString());
+			return false;
+		}
+		return true;
+	}
+	
+	
 	/**
 	 * Get or Create a new dummy account for the sync adapter
 	 *

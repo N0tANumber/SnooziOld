@@ -97,7 +97,8 @@ public class AlarmSettingActivity extends Activity {
 				//Dispatch event to the server
 				if(isChecked)
 				{
-					AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
+					if(SnooziUtility.DEV_MODE)
+						AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
 					sender.sendUserEvent(TrackingEventType.ALARM_SET,"set" + evtDescr.toString());
 					
 					

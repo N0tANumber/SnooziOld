@@ -10,7 +10,7 @@ import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 public class WakeupLaunchService extends WakefulIntentService {
 
-	private static boolean isrunning = false;
+	public static boolean isrunning = false;
 	
 	
 	public WakeupLaunchService() {

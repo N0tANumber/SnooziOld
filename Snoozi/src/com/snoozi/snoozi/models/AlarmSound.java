@@ -101,14 +101,20 @@ public class AlarmSound
 				@Override
 				public void run() 
 				{
-					if(m_mediaPlayer.isPlaying())
-					{
-						updateVolume(finalvolumeStep);
-						if (m_currentVolume == INT_VOLUME_MAX)
+					try {
+						if(m_mediaPlayer.isPlaying())
 						{
-							timer.cancel();
-							timer.purge();
+							updateVolume(finalvolumeStep);
+							if (m_currentVolume == INT_VOLUME_MAX)
+							{
+								timer.cancel();
+								timer.purge();
+							}
 						}
+						
+					} catch (Exception e) {
+						timer.cancel();
+						timer.purge();
 					}
 				}
 			};

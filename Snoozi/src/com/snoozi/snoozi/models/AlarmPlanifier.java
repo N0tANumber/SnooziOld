@@ -106,8 +106,6 @@ public class AlarmPlanifier  {
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.set(Calendar.SECOND, 0);
-		calendar.set(Calendar.MILLISECOND, 0);
 
 		try {
 
@@ -118,6 +116,8 @@ public class AlarmPlanifier  {
 
 			}else
 			{
+				calendar.set(Calendar.SECOND, 0);
+				calendar.set(Calendar.MILLISECOND, 0);
 				//Calculating next alarm from the user pref 
 				SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 				int hour = settings.getInt("hour", 7);
