@@ -42,6 +42,35 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "videoendpoint.rateVideo" : {
+      "path" : "rateVideo",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.VideoEndpoint.rateVideo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "viewcount" : {
+            "type" : "int32",
+            "required" : true
+          },
+          "likevalue" : {
+            "type" : "int32",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "videoendpoint.listVideo" : {
       "path" : "video",
       "httpMethod" : "GET",
@@ -177,9 +206,6 @@
           "like" : {
             "type" : "integer"
           },
-          "dislike" : {
-            "type" : "integer"
-          },
           "level" : {
             "type" : "integer"
           },
@@ -199,7 +225,7 @@
       "VIDEO_STATUS" : {
         "id" : "VIDEO_STATUS",
         "type" : "string",
-        "enum" : [ "OK", "REPORT", "DELETE" ]
+        "enum" : [ "DUMMY", "PENDING", "OK", "REPORT", "DELETE" ]
       },
       "CollectionResponse_Video" : {
         "id" : "CollectionResponse_Video",
@@ -222,6 +248,11 @@
         "request" : {
           "$ref" : "Video"
         },
+        "response" : {
+          "$ref" : "Video"
+        }
+      },
+      "com.snoozi.VideoEndpoint.rateVideo" : {
         "response" : {
           "$ref" : "Video"
         }

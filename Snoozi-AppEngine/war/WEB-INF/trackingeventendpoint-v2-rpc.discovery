@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/YNhA0jUkLsvDYBKbcRZTjCihpkA\"",
+ "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/ttThbOziHKbbUMq8hCcjo7HuZq4\"",
  "discoveryVersion": "v1",
  "id": "trackingeventendpoint:v2",
  "name": "trackingeventendpoint",
@@ -124,8 +124,8 @@
      "type": "string"
     },
     "videoid": {
-     "type": "integer",
-     "format": "int32"
+     "type": "string",
+     "format": "int64"
     }
    }
   }

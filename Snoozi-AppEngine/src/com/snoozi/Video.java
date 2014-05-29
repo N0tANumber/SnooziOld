@@ -4,13 +4,13 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 @PersistenceCapable
 public class Video {
 	
 	public enum VIDEO_STATUS{
+		DUMMY,
+		PENDING,
 		OK,
 		REPORT,
 		DELETE
@@ -27,8 +27,6 @@ public class Video {
 	private int viewcount;
 	@Persistent
 	private int like;
-	@Persistent
-	private int dislike;
 	@Persistent
 	private int level;
 	@Persistent
@@ -48,14 +46,13 @@ public class Video {
 
 	public Video(){
 		like = 0;
-		dislike = 0;
 		level = 0;
 		viewcount = 0;
 		description = "";
 		url = "";
 		userid = 0l;
 		timestamp = System.currentTimeMillis();
-		status = VIDEO_STATUS.OK;
+		status = VIDEO_STATUS.PENDING;
 	}
 
 	public Long getId() {
@@ -78,9 +75,7 @@ public class Video {
 		return like;
 	}
 
-	public int getDislike() {
-		return dislike;
-	}
+	
 
 	public int getLevel() {
 		return level;
@@ -106,9 +101,7 @@ public class Video {
 		this.like = like;
 	}
 
-	public void setDislike(int dislike) {
-		this.dislike = dislike;
-	}
+	
 
 	public void setLevel(int level) {
 		this.level = level;

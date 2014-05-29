@@ -8,7 +8,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
 public class TrackingEvent {
@@ -42,7 +41,7 @@ public class TrackingEvent {
 	private int androidVersion;
 	
 	@Persistent
-	private int videoid;
+	private Long videoid;
 
 	/*info :
 	 * Quand on regenere, ca fait sauter le correctif
@@ -93,7 +92,7 @@ public class TrackingEvent {
 	public String getUserid(){
 		return userid;
 	}
-	public int getVideoid(){
+	public Long getVideoid(){
 		return videoid;
 	}
 	
@@ -123,7 +122,7 @@ public class TrackingEvent {
 	public void setUserid(String theuserid){
 		this.userid = theuserid;
 	}
-	public void setVideoid(int thevideoid){
+	public void setVideoid(Long thevideoid){
 		this.videoid = thevideoid;
 	}
 	

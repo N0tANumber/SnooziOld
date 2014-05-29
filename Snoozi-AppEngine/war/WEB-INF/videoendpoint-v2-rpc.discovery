@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/dcKVhCuNfNWMHjsLdtJEqYeNzaU\"",
+ "etag": "\"0NZZm4UuLZgEQBhMTwnFS1XIMrM/waSexFraq4fdnq23p3dzRSBbOt8\"",
  "discoveryVersion": "v1",
  "id": "videoendpoint:v2",
  "name": "videoendpoint",
@@ -91,10 +91,14 @@
    "type": "string",
    "enum": [
     "DELETE",
+    "DUMMY",
     "OK",
+    "PENDING",
     "REPORT"
    ],
    "enumDescriptions": [
+    "",
+    "",
     "",
     "",
     ""
@@ -106,10 +110,6 @@
    "properties": {
     "description": {
      "type": "string"
-    },
-    "dislike": {
-     "type": "integer",
-     "format": "int32"
     },
     "id": {
      "type": "string",
@@ -218,6 +218,37 @@
    },
    "returns": {
     "$ref": "CollectionResponse_Video"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "videoendpoint.rateVideo": {
+   "id": "videoendpoint.rateVideo",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "likevalue": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
+    },
+    "viewcount": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
+    }
+   },
+   "parameterOrder": [
+    "id",
+    "likevalue",
+    "viewcount"
+   ],
+   "returns": {
+    "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

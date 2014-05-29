@@ -4,10 +4,10 @@ import com.snoozi.PMF;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
+import com.google.api.server.spi.config.DefaultValue;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.datanucleus.query.JDOCursorHelper;
-import com.google.apphosting.datastore.DatastoreV4.PropertyFilter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,62 +69,7 @@ public class VideoEndpoint {
 				.setNextPageToken(cursorString).build();
 	}
 	
-	/**
-	 * Get all recent video posted
-	 * @param cursorString  point to start	
-	 * @param limit record count
-	 * @param status status of type VIDEO_STATUS (OK, REPORT,DELETE...)
-	 * @return
-	 */
-	@SuppressWarnings({ "unchecked", "unused" })
-	@ApiMethod(name = "listRecentVideo", path="listRecentVideo")
-	public CollectionResponse<Video> listRecentVideo(
-			@Nullable @Named("cursor") String cursorString,
-			@Nullable @Named("limit") Integer limit,
-			@Nullable @Named("status") String status) {
-
-		PersistenceManager mgr = null;
-		Cursor cursor = null;
-		List<Video> execute = null;
-
-		try {
-			mgr = getPersistenceManager();
-			Query query = mgr.newQuery(Video.class);
-			query.setFilter("status ==  statusParam");
-			query.declareParameters("String statusParam");
-			
-			
-			query.setOrdering("timestamp desc");
-			if (cursorString != null && cursorString != "") {
-				cursor = Cursor.fromWebSafeString(cursorString);
-				HashMap<String, Object> extensionMap = new HashMap<String, Object>();
-				extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
-				query.setExtensions(extensionMap);
-			}
-
-			if (limit != null) {
-				query.setRange(0, limit);
-			}
-			
-			if(status == null)
-				status = "OK";
-
-			execute = (List<Video>) query.execute(status);
-			cursor = JDOCursorHelper.getCursor(execute);
-			if (cursor != null)
-				cursorString = cursor.toWebSafeString();
-
-			// Tight loop for fetching all entities from datastore and accomodate
-			// for lazy fetch.
-			for (Video obj : execute)
-				;
-		} finally {
-			mgr.close();
-		}
-
-		return CollectionResponse.<Video> builder().setItems(execute)
-				.setNextPageToken(cursorString).build();
-	}
+	
 
 	
 	/**
@@ -188,6 +133,7 @@ public class VideoEndpoint {
 		}
 		return video;
 	}
+	
 
 	/**
 	 * This method removes the entity with primary key id.
@@ -225,4 +171,102 @@ public class VideoEndpoint {
 		return PMF.get().getPersistenceManager();
 	}
 
+	
+	
+	
+	/*
+	 ****************** CUSTOM METHOD & PATH ******************
+	 */
+	
+	
+	/**
+	 * Get all recent video posted
+	 * @param cursorString  point to start	
+	 * @param limit record count
+	 * @param status status of type VIDEO_STATUS (OK, REPORT,DELETE...)
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "unused" })
+	@ApiMethod(name = "listRecentVideo", path="listRecentVideo")
+	public CollectionResponse<Video> listRecentVideo(
+			@Nullable @Named("cursor") String cursorString,
+			@Nullable @Named("limit") Integer limit,
+			@Nullable @Named("status") String status) {
+
+		PersistenceManager mgr = null;
+		Cursor cursor = null;
+		List<Video> execute = null;
+
+		try {
+			mgr = getPersistenceManager();
+			Query query = mgr.newQuery(Video.class);
+			query.setFilter("status ==  statusParam");
+			query.declareParameters("String statusParam");
+			
+			
+			query.setOrdering("timestamp desc");
+			if (cursorString != null && cursorString != "") {
+				cursor = Cursor.fromWebSafeString(cursorString);
+				HashMap<String, Object> extensionMap = new HashMap<String, Object>();
+				extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+				query.setExtensions(extensionMap);
+			}
+
+			if (limit != null) {
+				query.setRange(0, limit);
+			}
+			
+			if(status == null)
+				status = "OK";
+
+			execute = (List<Video>) query.execute(status);
+			cursor = JDOCursorHelper.getCursor(execute);
+			if (cursor != null)
+				cursorString = cursor.toWebSafeString();
+
+			// Tight loop for fetching all entities from datastore and accomodate
+			// for lazy fetch.
+			for (Video obj : execute)
+				;
+		} finally {
+			mgr.close();
+		}
+
+		return CollectionResponse.<Video> builder().setItems(execute)
+				.setNextPageToken(cursorString).build();
+	}
+	
+	
+	
+	
+	/**
+	 * This method is used for adding a like to an existing entity. 
+	 * It uses HTTP PUT method.
+	 *
+	 * @param id the id of the entity
+	 * @param likevalue positive or negative value of the like
+	 * @return The updated entity.
+	 */
+	@ApiMethod(name = "rateVideo", path="rateVideo",httpMethod="PUT")
+	public Video rateVideo(@Named("id") Long id, @Named("viewcount") int viewcount, @Named("likevalue") int likevalue) {
+		PersistenceManager mgr = getPersistenceManager();
+		Video video = null;
+		try {
+			
+			video = mgr.getObjectById(Video.class, id);
+			if(video != null)
+			{
+				if(likevalue != 0)
+					video.setLike(video.getLike() + likevalue);
+				if(viewcount != 0)
+					video.setViewcount(video.getViewcount() + viewcount);
+				
+				mgr.makePersistent(video);
+			}
+		} finally {
+			mgr.close();
+		}
+		return video;
+	}	
+	
 }
