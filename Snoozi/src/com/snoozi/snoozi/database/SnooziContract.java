@@ -76,7 +76,7 @@ public class SnooziContract {
 								Columns.LOCALURL,
 								Columns.DESCRIPTION,
 								Columns.LIKE,
-								Columns.DISLIKE,
+								Columns.MYLIKE,
 								Columns.VIEWCOUNT,
 								Columns.MYVIEWCOUNT,
 								Columns.STATUS,
@@ -88,7 +88,7 @@ public class SnooziContract {
 								};
 		
 		public static final String SORT_ORDER_DEFAULT = Columns.TIMESTAMP + " DESC";
-		public static final String SORT_ORDER_UNVIEWED = Columns.MYVIEWCOUNT + " ASC, " + Columns.TIMESTAMP + " ASC";
+		public static final String SORT_ORDER_UNVIEWED = Columns.MYVIEWCOUNT + " ASC, " + Columns.MYLIKE + " DESC";
 		
 		public final static class Columns implements BaseColumns{
 			private Columns(){}
@@ -98,7 +98,7 @@ public class SnooziContract {
 			public static final String LOCALURL = "localurl";
 			public static final String DESCRIPTION = "description";
 			public static final String LIKE = "like";
-			public static final String DISLIKE = "dislike";
+			public static final String MYLIKE = "mylike";
 			public static final String VIEWCOUNT = "viewcount";
 			public static final String MYVIEWCOUNT = "myviewcount";
 			public static final String STATUS = "status";

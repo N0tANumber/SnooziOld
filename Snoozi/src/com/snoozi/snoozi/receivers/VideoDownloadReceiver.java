@@ -134,9 +134,13 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 							request.setAllowedOverRoaming(false);
 							if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
 								request.setAllowedOverMetered(false); //TODO : mettre un param de config qui permet de demander si la personne souhaite de download via son forfait
-							//request.setVisibleInDownloadsUi(false);
 							//Uri dest = Uri.parse(localUrl);
-							//request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
+							if(!SnooziUtility.DEV_MODE)
+							{
+								//If in dev mode, we want to see downloading file.
+								request.setVisibleInDownloadsUi(false);
+								request.setNotificationVisibility(Request.VISIBILITY_HIDDEN);
+							}
 							request.setDestinationUri(Uri.parse(localUrl));
 							//request.setDestinationUri(this.getContext(), Environment.DIRECTORY_MOVIES,video.getId() + ".mp4");
 							filedownloadid = dm.enqueue(request);

@@ -23,7 +23,7 @@ public class MyVideo {
 	private String localurl;
 	private String description;
 	private int like;
-	private int dislike;
+	private int mylike;
 	private int viewcount;
 	private int myviewcount;
 	private String status;
@@ -34,7 +34,6 @@ public class MyVideo {
 	private Long userid;
 
 	private int addedLike;
-	private int addedDislike;
 	private int addedViewcount;
 	
 	private boolean hasChanged;
@@ -46,7 +45,7 @@ public class MyVideo {
 		url = "";
 		localurl = "";
 		like = 0;
-		dislike = 0;
+		mylike = 0;
 		viewcount = 0;
 		myviewcount = 0;
 		status = "UNSET"; 
@@ -54,7 +53,6 @@ public class MyVideo {
 		userid = 1l;
 		level = 0;
 		addedLike = 0;
-		addedDislike = 0;
 		addedViewcount = 0;
 		hasChanged = false;
 		
@@ -74,7 +72,7 @@ public class MyVideo {
 			this.setLocalurl(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LOCALURL)));
 			this.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.DESCRIPTION)));
 			this.setLike(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LIKE)));
-			this.setDislike(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.DISLIKE)));
+			this.setMylike(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.MYLIKE)));
 			this.setViewcount(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.VIEWCOUNT)));
 			this.setMyviewcount(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.MYVIEWCOUNT)));
 			this.setStatus(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.STATUS)));
@@ -93,7 +91,8 @@ public class MyVideo {
 	
 
 	public void addViewcount(int _videoViewCount) {
-		this.setViewcount(this.getViewcount() + _videoViewCount);
+		
+		this.setMyviewcount(this.getMyviewcount() + _videoViewCount);
 		this.addedViewcount = _videoViewCount;
 		// TODO : voir comment faire pour envoyer le viewcount au serveur
 		hasChanged = true;
@@ -101,8 +100,7 @@ public class MyVideo {
 
 
 	public void addLike(int i) {
-		this.setLike(this.getLike() + i);
-		this.addedDislike = 0;
+		this.setMylike(i);
 		this.addedLike = i;
 		hasChanged = true;
 		
@@ -110,14 +108,6 @@ public class MyVideo {
 
 	}
 
-	public void addDislike(int i) {
-		this.setDislike(this.getDislike() + i);
-		this.addedLike = 0;
-		this.addedDislike = i;
-		hasChanged = true;
-		
-		// TODO : voir comment faire pour envoyer le viewcount au serveur
-	}
 
 	/**
 	 * Save this Objet onto local Database
@@ -138,7 +128,7 @@ public class MyVideo {
 			//SAVE THE VIDEO IN THE LOCAL DATABASE
 			ContentValues values = new ContentValues();
 			values.put(SnooziContract.videos.Columns.LIKE,getLike() );
-			values.put(SnooziContract.videos.Columns.DISLIKE,getDislike() );
+			values.put(SnooziContract.videos.Columns.MYLIKE,getMylike() );
 			values.put(SnooziContract.videos.Columns.VIEWCOUNT,getViewcount() );
 			values.put(SnooziContract.videos.Columns.MYVIEWCOUNT,getMyviewcount() );
 			
@@ -195,7 +185,6 @@ public class MyVideo {
 			
 				
 				addedLike = 0;
-				addedDislike = 0;
 				addedViewcount = 0;
 			
 		}
@@ -266,6 +255,11 @@ public class MyVideo {
 	
 	
 
+	@Override
+	public String toString() {
+		return "MyVideo [url=" + url + ", description=" + description + "]";
+	}
+
 	public int getId() {
 		return id;
 	}
@@ -290,9 +284,10 @@ public class MyVideo {
 		return like;
 	}
 
-	public int getDislike() {
-		return dislike;
+	public int getMylike() {
+		return mylike;
 	}
+
 
 	public int getViewcount() {
 		return viewcount;
@@ -350,9 +345,10 @@ public class MyVideo {
 		this.like = like;
 	}
 
-	public void setDislike(int dislike) {
-		this.dislike = dislike;
+	public void setMylike(int mylike) {
+		this.mylike = mylike;
 	}
+	
 
 	public void setViewcount(int viewcount) {
 		this.viewcount = viewcount;

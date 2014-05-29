@@ -241,7 +241,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	public boolean retrieveRecentVideo(ContentProviderClient provider)
 	{
 		boolean success = true;
-		int maxDownloadedVideo = 10 ;
+		int maxDownloadedVideo = 7 ;
 		
 		//We check how many video are still waiting not viewed
 		Cursor playedcursor = null;
@@ -292,7 +292,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				ContentValues values = new ContentValues();
 				values.put(SnooziContract.videos.Columns.DESCRIPTION,video.getDescription() );
 				values.put(SnooziContract.videos.Columns.LIKE,video.getLike() );
-				values.put(SnooziContract.videos.Columns.DISLIKE,video.getDislike() );
 				values.put(SnooziContract.videos.Columns.VIEWCOUNT,video.getViewcount() );
 				values.put(SnooziContract.videos.Columns.STATUS,video.getStatus() );
 				values.put(SnooziContract.videos.Columns.LEVEL,video.getLevel() );

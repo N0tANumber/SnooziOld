@@ -338,7 +338,7 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.videos.Columns.LOCALURL + " TEXT, " +
 		     SnooziContract.videos.Columns.DESCRIPTION + " TEXT, " +
 		     SnooziContract.videos.Columns.LIKE + " INTEGER default 0, " +
-		     SnooziContract.videos.Columns.DISLIKE + " INTEGER default 0, " +
+		     SnooziContract.videos.Columns.MYLIKE + " INTEGER default 0, " +
 		     SnooziContract.videos.Columns.VIEWCOUNT + " INTEGER default 0, " +
 		     SnooziContract.videos.Columns.MYVIEWCOUNT + " INTEGER default 0, " +
 		     SnooziContract.videos.Columns.STATUS + " TEXT, " +

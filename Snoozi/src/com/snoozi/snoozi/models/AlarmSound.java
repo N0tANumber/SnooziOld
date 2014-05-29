@@ -26,7 +26,7 @@ public class AlarmSound
 	private Context m_context;
 	
 	private int m_alarmVolume;
-	private int m_oldVolume;
+	private int m_mainStreamVolume;
 	
 	private int m_currentVolume;
 	private AudioManager m_audioManager;
@@ -42,9 +42,10 @@ public class AlarmSound
 		m_context = context;
 		m_audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		
-		m_oldVolume = m_audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		m_mainStreamVolume = m_audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		SharedPreferences prefs = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		m_alarmVolume =  prefs.getInt("volume", m_audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
+		
+		m_alarmVolume =  prefs.getInt("volume", m_mainStreamVolume);
 		m_audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, m_alarmVolume, 0);
 		
 	}
@@ -130,17 +131,16 @@ public class AlarmSound
 		
 		if (m_mediaPlayer.isPlaying()) 
 			m_mediaPlayer.stop();
-		int streamVolume = m_audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		if(streamVolume == m_alarmVolume)
-		{
-			//If the main stream volume hasn't change, we replace the old stream volume
-			m_audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, m_oldVolume, 0);
-		}
 		m_currentVolume = 0;
 	}
 	
 	public void release()
 	{
+		
+		
+		// we replace the old stream volume
+		m_audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, m_mainStreamVolume, 0);
+		
 		if(m_mediaPlayer != null)
 			m_mediaPlayer.release();
 	}

@@ -271,3 +271,4 @@ int styleable MapAttrs_useViewLifecycle 12
 int styleable MapAttrs_zOrderOnTop 13
 int xml authenticator 0x7f040000
 int xml syncadapter 0x7f040001
+int xml wakeful 0x7f040002

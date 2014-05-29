@@ -6,12 +6,10 @@ import com.snoozi.snoozi.models.MyVideo;
 import com.snoozi.snoozi.utils.TrackingEventType;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.TrackingSender;
+import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
@@ -51,9 +49,9 @@ public class VideoActivity extends Activity {
 	private int duration = 0;
 	public int current = 0;
 	private myAsync _progresstask = null;
-	private AudioManager audioManager;
-	private int _musicVol;
-	private int _oldmusicVol;
+	//private AudioManager audioManager;
+	//private int _musicVol;
+	//private int _oldmusicVol;
 	public int _videoViewCount = 0;
 	
 	private boolean _isActivityPaused = false;
@@ -81,12 +79,12 @@ public class VideoActivity extends Activity {
 		
 		mVideoView.setVideoURI(Uri.parse(currentVideo.getLocalurl()));
 		
-		audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-		_oldmusicVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		//audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+		//_oldmusicVol = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		
-		SharedPreferences prefs = this.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		_musicVol =  prefs.getInt("volume", _oldmusicVol);
-		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, _musicVol, 0);
+		//SharedPreferences prefs = this.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+		//_musicVol =  prefs.getInt("volume", _oldmusicVol);
+		//audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, _musicVol, 0);
 		
 		mProgressBar = (ProgressBar) findViewById(R.id.Progressbar);
 		mProgressBar.setProgress(0);
@@ -150,10 +148,13 @@ public class VideoActivity extends Activity {
 
 	@Override
 	protected void onStop() {
+		super.onStop();
 		// TODO Auto-generated method stub
+		try {
+			
 		stopPlaying();
-		audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, _oldmusicVol, 0);
-		mVideoView.getCurrentPosition();
+		//audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, _oldmusicVol, 0);
+		//mVideoView.getCurrentPosition();
 		
 		TrackingSender sender = new TrackingSender(getApplicationContext());
 		if(_videoViewCount >0)
@@ -181,7 +182,7 @@ public class VideoActivity extends Activity {
 		}
 		else if(radioDislike.isChecked())
 		{
-			currentVideo.addDislike(1);
+			currentVideo.addLike(-1);
 			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "-1", currentVideo.getVideoid());
 		}			
 		
@@ -190,10 +191,14 @@ public class VideoActivity extends Activity {
 		SnooziUtility.unsetVideo( );
 		currentVideo = null;
 		
-		Intent returnIntent = new Intent();
-		setResult(RESULT_CANCELED, returnIntent);  
 		
-		super.onStop();
+		Intent returnIntent = new Intent();
+		setResult(RESULT_OK, returnIntent);  
+		
+		} catch (Exception e) {
+			SnooziUtility.trace(this, TRACETYPE.ERROR,"VideoActivity.onStop Error : "+ e.toString());
+			
+		}
 		
 		finish();
 	}

@@ -2,19 +2,16 @@ package com.snoozi.snoozi.models;
 
 import java.util.Calendar;
 
-import com.snoozi.snoozi.*;
-import com.snoozi.snoozi.UI.AlarmReceiverActivity;
-import com.snoozi.snoozi.receivers.WakeupBootReceiver;
+import com.snoozi.snoozi.R;
+import com.snoozi.snoozi.receivers.OnAlarmReceiver;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 
 /**
  * Singleton class for planning a new alarm or for retrieving the next alarm launch
@@ -22,7 +19,7 @@ import android.content.pm.PackageManager;
  * @author CtrlX
  *
  */
-public class AlarmPlanifier {
+public class AlarmPlanifier  {
 
 	/**
 	 * Planify next launch of the alarm
@@ -39,16 +36,16 @@ public class AlarmPlanifier {
 			Calendar calendar = getNextLaunchCalendar(context,secondFromNow);
 
 			//planning an alarm with a PendingIntent
-			Intent intent = new Intent(context, AlarmReceiverActivity.class);
+			Intent intent = new Intent(context, OnAlarmReceiver.class);
 			//12345 is the alarm id. using the same alarm id overwritte previous planification of this alarm
-			PendingIntent alarmIntent = PendingIntent.getActivity(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+			PendingIntent alarmIntent = PendingIntent.getBroadcast(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 			AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 			alarmMgr.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(), alarmIntent);
 
 			//Activating the bootreceiver for registering alarm if device is reboot
-			ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
-			PackageManager pm = context.getPackageManager();
-			pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+			//ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
+			//PackageManager pm = context.getPackageManager();
+			//pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
 		} catch (Exception e) {
 			SnooziUtility.trace(context, TRACETYPE.ERROR, e.toString());
@@ -65,6 +62,7 @@ public class AlarmPlanifier {
 	public static boolean checkAndPlanifyNextAlarm(Context context)
 	{
 		//We check if alarm is still enabled
+		SnooziUtility.trace(context, TRACETYPE.INFO,"checkAndPlanifyNextAlarm ");
 		SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		if(settings.getBoolean("activate", false))
 			return planifyNextAlarm(context, 0);
@@ -82,15 +80,15 @@ public class AlarmPlanifier {
 
 			// If the alarm has been set, cancel it.
 			AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-			Intent intent = new Intent(context, AlarmReceiverActivity.class);
+			Intent intent = new Intent(context, OnAlarmReceiver.class);
 			PendingIntent alarmIntent = PendingIntent.getActivity(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 			alarmMgr.cancel(alarmIntent);
 
 			//Disabling reboot alarm receiver
-			ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
-			PackageManager pm = context.getPackageManager();
+			//ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
+			//PackageManager pm = context.getPackageManager();
 
-			pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,  PackageManager.DONT_KILL_APP);
+			//pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,  PackageManager.DONT_KILL_APP);
 		} catch (Exception e) {
 			SnooziUtility.trace(context, TRACETYPE.ERROR, e.toString());
 		}
