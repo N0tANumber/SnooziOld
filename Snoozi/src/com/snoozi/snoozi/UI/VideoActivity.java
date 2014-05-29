@@ -1,10 +1,12 @@
 package com.snoozi.snoozi.UI;
 
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.MyVideo;
-import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.utils.TrackingEventAction;
 import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.TrackingEventCategory;
 import com.snoozi.snoozi.utils.TrackingSender;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
@@ -22,6 +24,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -80,6 +84,8 @@ public class VideoActivity extends Activity {
 		TextView txtdate = (TextView) findViewById(R.id.txtDate);
 		txtdate.setText(currentVideo.getPublishDate());
 		
+		
+		
 		mVideoView.setVideoURI(Uri.parse(currentVideo.getLocalurl()));
 		
 		//audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
@@ -126,9 +132,59 @@ public class VideoActivity extends Activity {
             	 mp.start();
              }
          });
+         
+         
+         // Like / Dislike
+         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup1);        
+         radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() 
+         {
+             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                 // checkedId is the RadioButton selected
+            	 switch (checkedId) {
+            	 case R.id.radioLike:
+ 					currentVideo.addLike(1);
+ 					break;
+            	 case R.id.radioDislike:
+ 					currentVideo.addLike(-1);
+ 					break;
 
+				default:
+					break;
+				}
+            	 refreshInfotext();
+         		
+             }
+         });
+
+         refreshInfotext();
+ 		
+         
         startPlaying();
         
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		try {
+			EasyTracker.getInstance().activityStart(this);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void refreshInfotext() {
+		String info = "";
+		info = (currentVideo.getViewcount() + currentVideo.getMyviewcount()) + " wakeup - ";
+		info += (currentVideo.getLike() + currentVideo.getMylike()) + " like(s)";
+		
+		TextView txtinfo = (TextView) findViewById(R.id.txtinfo);
+		txtinfo.setText(info);
 	}
 
 	
@@ -158,39 +214,46 @@ public class VideoActivity extends Activity {
 		stopPlaying();
 		//audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, _oldmusicVol, 0);
 		//mVideoView.getCurrentPosition();
+		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
 		
-		TrackingSender sender = new TrackingSender(getApplicationContext());
+		
 		if(_videoViewCount >0)
 		{
 			currentVideo.addViewcount(_videoViewCount);
 			currentVideo.setMyviewcount(currentVideo.getMyviewcount() + _videoViewCount);
-			
-			sender.sendUserEvent(TrackingEventType.VIDEO_VIEWED,_videoViewCount + " time(s)", currentVideo.getVideoid());
+			currentVideo.saveAndSync(this);
+		
+			sender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.VIEWED,_videoViewCount + " time(s)", currentVideo.getVideoid());
 		}
 		else
 		{
 			currentVideo.addViewcount(1);
 			currentVideo.setMyviewcount(currentVideo.getMyviewcount() + 1);
+			currentVideo.saveAndSync(this);
 			
-			sender.sendUserEvent(TrackingEventType.VIDEO_CANCELED,"canceled at " + Math.round(current/1000.0f) +"s./" + Math.round(duration/1000.0f) + "s.", currentVideo.getVideoid()  );
+			sender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.CANCELED,"canceled at " + Math.round(current/1000.0f) +"s./" + Math.round(duration/1000.0f) + "s.", currentVideo.getVideoid()  );
 		}
 		
+		if(currentVideo.getMylike() != 0)
+			sender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.RATING, currentVideo.getMylike() +"", currentVideo.getVideoid());
+		
+		
+		
+		/*
 		RadioButton radioLike = (RadioButton) findViewById(R.id.radioLike);
 		RadioButton radioDislike = (RadioButton) findViewById(R.id.radioDislike);
 		sender = new TrackingSender(getApplicationContext());
 		if(radioLike.isChecked())
 		{
-			currentVideo.addLike(1);
 			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "1", currentVideo.getVideoid());
 		}
 		else if(radioDislike.isChecked())
 		{
-			currentVideo.addLike(-1);
 			sender.sendUserEvent(TrackingEventType.VIDEO_RATING, "-1", currentVideo.getVideoid());
-		}			
+		}	
+		*/		
 		
 		//prepare next video
-		currentVideo.saveAndSync(this);
 		SnooziUtility.unsetVideo( );
 		currentVideo = null;
 		
@@ -198,14 +261,18 @@ public class VideoActivity extends Activity {
 		Intent returnIntent = new Intent();
 		setResult(RESULT_OK, returnIntent);  
 		
+		EasyTracker.getInstance().activityStop(this);
 		} catch (Exception e) {
 			SnooziUtility.trace(this, TRACETYPE.ERROR,"VideoActivity.onStop Error : "+ e.toString());
 			
 		}
 		
+		
 		finish();
 	}
 	
+	
+
 	public void startPlaying()
 	{
 		mVideoView.start();

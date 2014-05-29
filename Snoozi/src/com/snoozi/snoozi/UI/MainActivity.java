@@ -9,16 +9,21 @@ import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.snoozi.snoozi.*;
+import com.snoozi.snoozi.database.SnooziContract;
 import com.snoozi.snoozi.models.MyVideo;
+import com.snoozi.snoozi.models.SyncAdapter;
 import com.snoozi.snoozi.utils.SnooziUtility;
-import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.utils.TrackingEventAction;
+import com.snoozi.snoozi.utils.TrackingEventCategory;
 import com.snoozi.snoozi.utils.TrackingSender;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -76,18 +81,32 @@ public class MainActivity extends Activity {
 	
 	
 	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		try {
+			EasyTracker.getInstance().activityStop(this);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		} 
+	}
+
+
+
+	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
 		// FirstLaunch tracking
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		boolean isFirstLaunch = settings.getBoolean("firstLaunch", true);
-		TrackingSender sender = new TrackingSender(getApplicationContext());
+		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
 		if(isFirstLaunch)
 		{
 			SnooziUtility.trace(this,TRACETYPE.INFO,"First APP_LAUNCH ");
 			
-			sender.sendUserEvent(TrackingEventType.APP_FIRSTLAUNCH);
+			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.FIRSTLAUNCH);
 			//Save firstlaunch state
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean("firstLaunch", false);
@@ -95,10 +114,25 @@ public class MainActivity extends Activity {
 			
 			//We insert the 3 dummy video into BDD
 			createDummyVideo();
+			
+			//We ask for next video to be downloaded
+			 Bundle settingsBundle = new Bundle();
+        	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+ 	        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+ 	        settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
+  	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
+
 		}
 		else
-			sender.sendUserEvent(TrackingEventType.APP_LAUNCH);
+			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
 
+		try {
+			
+			EasyTracker.getInstance().activityStart(this);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		//We copy the local BDD / Only on DEV MODE
 		exportLocalDatabase();
 	}
@@ -167,7 +201,7 @@ public class MainActivity extends Activity {
 				InputStream in = new FileInputStream(file);
 		        OutputStream out = null;
 		        
-				File outFile = new File("/storage/extSdCard/Android/Snoozi.db");
+		        File outFile = new File("/storage/emulated/0/Android/Snoozi.db");
 				out = new FileOutputStream(outFile);
 		       
 		        byte[] buffer = new byte[1024];
@@ -183,9 +217,10 @@ public class MainActivity extends Activity {
 		        
 		        out = null;
 		        
-				SnooziUtility.trace(this, TRACETYPE.DEBUG, outFile.getAbsolutePath());
+				SnooziUtility.trace(this, TRACETYPE.DEBUG,  "Database exported : " + outFile.getAbsolutePath());
 			} catch (Exception e) {
 				// TODO: handle exception
+				SnooziUtility.trace(this, TRACETYPE.DEBUG, "Database export error : "+ e.toString());
 			}
 		}
 	}

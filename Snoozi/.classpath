@@ -20,5 +20,6 @@
 	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v2/messageEndpoint/messageendpoint-v2-generated-source"/>
 	<classpathentry kind="src" path="endpoint-libs/libtrackingeventendpoint-v2/trackingeventendpoint/trackingeventendpoint-v2-generated-source"/>
 	<classpathentry kind="src" path="endpoint-libs/libvideoendpoint-v2/videoendpoint/videoendpoint-v2-generated-source"/>
+	<classpathentry exported="true" kind="lib" path="/Users/CtrlX/Documents/Developpement/sdk/extras/google/analytics_sdk_v2/libGoogleAnalyticsV2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

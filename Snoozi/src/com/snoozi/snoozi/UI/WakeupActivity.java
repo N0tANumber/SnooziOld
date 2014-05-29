@@ -3,13 +3,15 @@ package com.snoozi.snoozi.UI;
 
 import com.fima.glowpadview.GlowPadView;
 import com.fima.glowpadview.GlowPadView.OnTriggerListener;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.AlarmPlanifier;
 import com.snoozi.snoozi.models.AlarmSound;
 import com.snoozi.snoozi.models.MyVideo;
 import com.snoozi.snoozi.services.WakeupLaunchService;
-import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.utils.TrackingEventAction;
 import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.TrackingEventCategory;
 import com.snoozi.snoozi.utils.TrackingSender;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
@@ -32,7 +34,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	private AlarmSound mMediaPlayer = null;
 	private GlowPadView mGlowPadView;
 	
-	private TrackingEventType _alarmEvent = TrackingEventType.ALARM_KILLED;
+	private TrackingEventAction _alarmEvent = TrackingEventAction.KILLED;
 	private Vibrator _vibrator = null;
 	//private long _launchtime = 0;
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
@@ -61,8 +63,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		currentVideo = SnooziUtility.getCurrentAlarmVideo(this);
 		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.oncreateAlarm with video " +  currentVideo.getLocalurl());
 		
-		TrackingSender sender = new TrackingSender(getApplicationContext());
-		sender.sendUserEvent(TrackingEventType.ALARM_LAUNCH,"",currentVideo.getVideoid());
+		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
+		sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.LAUNCH,"",currentVideo.getVideoid());
 		
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		
@@ -124,7 +126,12 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		super.onStart();
 		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onStartAlarm");
 		
-		
+		try {
+			EasyTracker.getInstance().activityStart(this);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 	
 	@Override
@@ -185,7 +192,11 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		// TODO Auto-generated method stub
 		super.onStop();
 		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onStop");
-		
+		try {
+			EasyTracker.getInstance().activityStop(this);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	@Override
@@ -219,12 +230,12 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			//SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity Stop Alarm");
 			//stopRinginAlarm();
 			
-			if (_alarmEvent == TrackingEventType.ALARM_KILLED) 
+			if (_alarmEvent == TrackingEventAction.KILLED) 
 			{
 				SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity Alarm Killed");
 				//Reporting alarm killed
-				TrackingSender sender = new TrackingSender(getApplicationContext());
-				sender.sendUserEvent(_alarmEvent,"",currentVideo.getVideoid());
+				TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
+				sender.sendUserEvent(TrackingEventCategory.ALARM, _alarmEvent,"",currentVideo.getVideoid());
 				
 			}
 			WakeupLaunchService.isrunning = false;
@@ -260,19 +271,19 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	@Override
 	public void onTrigger(View v, int target) {
 		final int resId = mGlowPadView.getResourceIdForTarget(target);
-		TrackingSender sender = new TrackingSender(getApplicationContext());
+		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
 		switch (resId) {
 		case R.drawable.ic_item_snooze:
-			_alarmEvent = TrackingEventType.ALARM_SNOOZE;
-			sender.sendUserEvent(_alarmEvent,"",  currentVideo.getVideoid());
+			_alarmEvent = TrackingEventAction.SNOOZE;
+			sender.sendUserEvent(TrackingEventCategory.ALARM, _alarmEvent,"",  currentVideo.getVideoid());
 			AlarmPlanifier.planifyNextAlarm(this,5*60);
 			Toast.makeText(this,getResources().getString(R.string.snoozeinfivemin) , Toast.LENGTH_LONG).show();
 			finish();
 			break;
 
 		case R.drawable.ic_item_wakeup:
-			_alarmEvent = TrackingEventType.ALARM_WAKEUP;
-			sender.sendUserEvent(_alarmEvent,"",  currentVideo.getVideoid());
+			_alarmEvent = TrackingEventAction.WAKEUP;
+			sender.sendUserEvent(TrackingEventCategory.ALARM,_alarmEvent,"",  currentVideo.getVideoid());
 			stopRingingAlarm();
 			Intent intent = new Intent(this, VideoActivity.class);
 			startActivityForResult(intent, 1);

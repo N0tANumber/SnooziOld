@@ -7,6 +7,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.snoozi.snoozi.models.MyVideo;
 
@@ -15,9 +17,12 @@ public class SnooziUtility {
 	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
 	public static final boolean DEV_MODE = true;
 
+	 
+	
 	private static String m_username = "";
 	
 	private static MyVideo m_video = null;
+	
 	
 	public class SYNC_ACTION{
 		public static final String NEW_VIDEO_AVAILABLE = "NEW_VIDEO_AVAILABLE";
@@ -145,5 +150,7 @@ public class SnooziUtility {
 		*/
 		return Uri.parse(video.getLocalurl());
 	}
+	
+	
 	
 }

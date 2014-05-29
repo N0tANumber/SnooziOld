@@ -4,10 +4,15 @@ package com.snoozi.snoozi.utils;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.snoozi.snoozi.MyApplication;
+import com.snoozi.snoozi.MyApplication.TrackerName;
 import com.snoozi.snoozi.database.SnooziContract;
 import com.snoozi.snoozi.models.SyncAdapter;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
+import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,17 +30,20 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	
 	
 	private Context m_appContext;
+	private Application m_apps;
 	//private TrackingEvent _trackingEvent;
 	private Long m_videoid;
-	private String m_type;
+	private String m_category;
+	private String m_action;
 	private String m_description;
 	private long m_timestamp;
 	private String m_timestring;
 	
 	
-	public TrackingSender(Context thecontext){
+	public TrackingSender(Context thecontext, Application apps){
 		
 		this.m_appContext = thecontext;
+		this.m_apps = apps;
 		//this._userAccount = null;
 		
 	}
@@ -43,12 +51,12 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	
 	/**
 	 * Send a Event made by the current User
-	 * @param theType
+	 * @param theAction
 	 * 			SET_ALARM,UNSET_ALARM, SNOOZE, VIEW_VIDEO, LIKE_VIDEO, DISLIKE_VIDEO
 	 * @param theDescription
 	 * 			description of the event
 	 */
-	public void sendUserEvent(TrackingEventType theType, String theDescription,Long videoid){
+	public void sendUserEvent(TrackingEventCategory theCat, TrackingEventAction theAction, String theDescription,Long videoid){
 		//if(this._userAccount == null)
 		//	this._userAccount = SnooziUtility.getAccountNames(this._appContext);
 		
@@ -56,7 +64,8 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 		Date currentLocalTime = cal.getTime();
 		
 		this.m_description = theDescription;
-		this.m_type = theType.toString();
+		this.m_category = theCat.toString();
+		this.m_action = theAction.toString();
 		this.m_timestamp = System.currentTimeMillis();
 		this.m_timestring = currentLocalTime.toString();
 		this.m_videoid = videoid;
@@ -72,14 +81,14 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	 * @param theDescription
 	 * 			description of the event
 	 */
-	public void sendUserEvent(TrackingEventType theType, String theDescription){
-		sendUserEvent( theType, theDescription,0l);
+	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType, String theDescription){
+		sendUserEvent( theCat, theType, theDescription,0l);
 	}
 	
 	
 	
-	public void sendUserEvent(TrackingEventType theType){
-		sendUserEvent( theType, "");
+	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType){
+		sendUserEvent(theCat, theType, "");
 	}
 	
 	
@@ -89,8 +98,21 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	{
 		try 
 		{
+			// Get tracker.
+			
+	        Tracker t = ((MyApplication)this.m_apps).getTracker(
+	            TrackerName.APP_TRACKER);
+	        // Build and send an Event.
+	        t.send(new HitBuilders.EventBuilder()
+	            .setCategory(this.m_category)
+	            .setAction(this.m_action)
+	            .setLabel(this.m_description)
+	            .setValue(this.m_videoid)
+	            .build());
+	        
+	        /*
 			ContentValues values = new ContentValues();
-			values.put(SnooziContract.trackingevents.Columns.TYPE,this.m_type );
+			values.put(SnooziContract.trackingevents.Columns.TYPE,this.m_action );
 			values.put(SnooziContract.trackingevents.Columns.DESCRIPTION,this.m_description );
 			values.put(SnooziContract.trackingevents.Columns.TIMESTAMP,this.m_timestamp );
 			values.put(SnooziContract.trackingevents.Columns.TIMESTRING,this.m_timestring );
@@ -106,7 +128,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this.m_appContext), SnooziContract.AUTHORITY, settingsBundle);
 			
-			
+			*/
 		} catch (Exception e) {
 			SnooziUtility.trace(this.m_appContext,TRACETYPE.ERROR,"CONTENTRESOLVER Error " + e.toString());
 			

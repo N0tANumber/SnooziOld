@@ -138,6 +138,8 @@ public class MyVideo {
 		 - dislike
 		 - like
 			 */
+			try {
+				
 			//SAVE THE VIDEO IN THE LOCAL DATABASE
 			ContentValues values = new ContentValues();
 			values.put(SnooziContract.videos.Columns.LIKE,getLike() );
@@ -165,12 +167,16 @@ public class MyVideo {
 				this.setId(result);
 			}else
 			{
-				
+			
 				result = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, getId()), values,null,null);
 			}
 			
 			
 			SnooziUtility.trace(context,TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
+			} catch (Exception e) {
+				SnooziUtility.trace(context,TRACETYPE.ERROR,"Save Video ERROR" + e.toString());
+				
+			}
 			
 		}
 		return result;

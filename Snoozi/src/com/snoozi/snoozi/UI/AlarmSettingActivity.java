@@ -3,10 +3,12 @@ package com.snoozi.snoozi.UI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.AlarmPlanifier;
-import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.utils.TrackingEventAction;
 import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.TrackingEventCategory;
 import com.snoozi.snoozi.utils.TrackingSender;
 
 import android.app.Activity;
@@ -59,9 +61,26 @@ public class AlarmSettingActivity extends Activity {
 
 
 	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		try {
+			EasyTracker.getInstance().activityStart(this);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+		try {
+			EasyTracker.getInstance().activityStop(this);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		finish();
 		
 	}
@@ -85,7 +104,7 @@ public class AlarmSettingActivity extends Activity {
 				SavePref();
 
 				//Build the event for the server
-				TrackingSender sender = new TrackingSender(getApplicationContext());
+				TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
 				StringBuilder evtDescr = new StringBuilder();
 				evtDescr.append(" at ");
 				evtDescr.append(picker.getCurrentHour());
@@ -99,7 +118,7 @@ public class AlarmSettingActivity extends Activity {
 				{
 					if(SnooziUtility.DEV_MODE)
 						AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
-					sender.sendUserEvent(TrackingEventType.ALARM_SET,"set" + evtDescr.toString());
+					sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.SET,"set" + evtDescr.toString());
 					
 					
 					//We display a toast message
@@ -114,7 +133,7 @@ public class AlarmSettingActivity extends Activity {
 				}
 				else
 				{
-					sender.sendUserEvent(TrackingEventType.ALARM_UNSET,"unset" + evtDescr.toString());
+					sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.UNSET,"unset" + evtDescr.toString());
 					AlarmPlanifier.CancelAlarm(getApplicationContext());
 				}
 

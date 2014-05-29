@@ -1,5 +1,6 @@
 package com.snoozi.snoozi.models;
 
+import java.io.File;
 import java.io.IOException;
 
 import android.accounts.Account;
@@ -130,7 +131,65 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			long videoid = extras.getLong("videoid");
 			
 			this.sendRatingData(videoid, addedViewcount, addedLike);
+			
+			this.cleanupOldVideo(provider);
 		}
+	}
+
+
+	
+	private boolean cleanupOldVideo(ContentProviderClient provider) {
+		Cursor cursor = null;
+		int maxKeptVideo = 5;
+		boolean success = false;
+		try {
+			//We check all tracking event in Contentproviders
+			cursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ID, SnooziContract.videos.Columns.MYVIEWCOUNT + " > 0 AND " + SnooziContract.videos.Columns.FILESTATUS + " != ?",new String[]{"DUMMY"},  SnooziContract.videos.SORT_ORDER_DEFAULT);
+
+			int counter = 0;
+			if (cursor.moveToFirst()) 
+			{
+				counter++;
+				if(counter > maxKeptVideo)
+				{
+					//We dont delete the first maxKeptVideo videos
+					do {
+						int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
+						String localurl = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LOCALURL));
+					
+						File file = new File(localurl);
+						file.delete(); 
+						
+						if(counter > 50)
+						{
+							//We delete the database entry
+							// Deleting the old Video 
+							provider.delete(SnooziContract.videos.CONTENT_URI, SnooziContract.trackingevents.Columns._ID + " = ? ", new String[]{String.valueOf(id)});
+							SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"cleanupOldVideo - Permanently Deleted video :  " +  id);
+						}else
+						{
+							// We only place the video filestatus as "DELETED"
+							ContentValues values = new ContentValues();
+							values.put(SnooziContract.videos.Columns.FILESTATUS,"DELETED" );
+							provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, id), values,null,null);
+							
+							SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"cleanupOldVideo - Deleted video :  " +  id);
+						}
+
+					} while (cursor.moveToNext());
+				}
+			}
+			success = true;
+
+		} catch (Exception e) {
+			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter Exception :  " +  e.toString());
+		}finally{
+			if(cursor != null)
+				cursor.close();
+		}
+
+		return success;
+		
 	}
 
 
