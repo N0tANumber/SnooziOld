@@ -15,8 +15,11 @@
 			<attribute name="javadoc_location" value="file:/Users/CtrlX/Documents/Developpement/sdk/extras/google/google_play_services/libproject/google-play-services_lib/libs/../../../docs/reference/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="endpoint-libs/libdeviceinfoendpoint-v1/deviceinfoendpoint/deviceinfoendpoint-v1-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v1/messageEndpoint/messageendpoint-v1-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libtrackingeventendpoint-v1/trackingeventendpoint/trackingeventendpoint-v1-generated-source"/>
+	<classpathentry kind="con" path="com.google.gdt.eclipse.managedapis.MANAGED_API_CONTAINER/storage-v1r2lv1.16.0-rc"/>
+	<classpathentry kind="src" path="endpoint-libs/libdeviceinfoendpoint-v2/deviceinfoendpoint/deviceinfoendpoint-v2-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v2/messageEndpoint/messageendpoint-v2-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libtrackingeventendpoint-v2/trackingeventendpoint/trackingeventendpoint-v2-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libvideoendpoint-v2/videoendpoint/videoendpoint-v2-generated-source"/>
+	<classpathentry exported="true" kind="lib" path="/Users/CtrlX/Documents/Developpement/sdk/extras/google/analytics_sdk_v2/libGoogleAnalyticsV2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

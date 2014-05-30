@@ -4,17 +4,20 @@ package com.snoozi.snoozi.utils;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.snoozi.snoozi.UI.MainActivity;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+import com.snoozi.snoozi.MyApplication;
+import com.snoozi.snoozi.MyApplication.TrackerName;
 import com.snoozi.snoozi.database.SnooziContract;
 import com.snoozi.snoozi.models.SyncAdapter;
+import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
 
+import android.app.Application;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 
 /**
@@ -27,30 +30,35 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	
 	
 	private Context m_appContext;
+	private Application m_apps;
 	//private TrackingEvent _trackingEvent;
-	private int m_videoid;
-	private String m_type;
+	private Long m_videoid;
+	private String m_category;
+	private String m_action;
 	private String m_description;
 	private long m_timestamp;
 	private String m_timestring;
 	
+	private boolean isRunning;
 	
-	public TrackingSender(Context thecontext){
+	public TrackingSender(Context thecontext, Application apps){
 		
 		this.m_appContext = thecontext;
+		this.m_apps = apps;
 		//this._userAccount = null;
+		isRunning = false;
 		
 	}
 	
 	
 	/**
 	 * Send a Event made by the current User
-	 * @param theType
+	 * @param theAction
 	 * 			SET_ALARM,UNSET_ALARM, SNOOZE, VIEW_VIDEO, LIKE_VIDEO, DISLIKE_VIDEO
 	 * @param theDescription
 	 * 			description of the event
 	 */
-	public void sendUserEvent(TrackingEventType theType, String theDescription,int videoid){
+	public void sendUserEvent(TrackingEventCategory theCat, TrackingEventAction theAction, String theDescription,Long videoid){
 		//if(this._userAccount == null)
 		//	this._userAccount = SnooziUtility.getAccountNames(this._appContext);
 		
@@ -58,13 +66,14 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 		Date currentLocalTime = cal.getTime();
 		
 		this.m_description = theDescription;
-		this.m_type = theType.toString();
+		this.m_category = theCat.toString();
+		this.m_action = theAction.toString();
 		this.m_timestamp = System.currentTimeMillis();
 		this.m_timestring = currentLocalTime.toString();
 		this.m_videoid = videoid;
 		
-		
-		this.execute(m_appContext);
+		if(!isRunning)
+			this.execute(m_appContext);
 	}
 	
 	/**
@@ -74,14 +83,14 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	 * @param theDescription
 	 * 			description of the event
 	 */
-	public void sendUserEvent(TrackingEventType theType, String theDescription){
-		sendUserEvent( theType, theDescription,0);
+	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType, String theDescription){
+		sendUserEvent( theCat, theType, theDescription,0l);
 	}
 	
 	
 	
-	public void sendUserEvent(TrackingEventType theType){
-		sendUserEvent( theType, "");
+	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType){
+		sendUserEvent(theCat, theType, "");
 	}
 	
 	
@@ -91,26 +100,52 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	{
 		try 
 		{
-			ContentValues values = new ContentValues();
-			values.put(SnooziContract.trackingevents.Columns.TYPE,this.m_type );
-			values.put(SnooziContract.trackingevents.Columns.DESCRIPTION,this.m_description );
-			values.put(SnooziContract.trackingevents.Columns.TIMESTAMP,this.m_timestamp );
-			values.put(SnooziContract.trackingevents.Columns.TIMESTRING,this.m_timestring );
-			values.put(SnooziContract.trackingevents.Columns.VIDEOID,this.m_videoid );
-
-			ContentResolver resolver = this.m_appContext.getContentResolver();
-			Uri theResult = resolver.insert(SnooziContract.trackingevents.CONTENT_URI, values);
-			//Log.i("CONTENTRESOLVER",theResult.toString());
+			// Get tracker.
+			isRunning = true;
+	        Tracker t = ((MyApplication)this.m_apps).getTracker(
+	            TrackerName.APP_TRACKER);
+	        int theValue = 0;
+	        if(this.m_action.equals(TrackingEventAction.SET.toString()))
+	        	theValue = 1;
+        	else if(this.m_action.equals(TrackingEventAction.UNSET.toString()))
+        		theValue = -1;
+        	
+	        // Build and send an Event.
+	        t.send(new HitBuilders.EventBuilder()
+	            .setCategory(this.m_category)
+	            .setAction(this.m_action)
+	            .setLabel(this.m_description)
+	            .setValue(theValue)
+	            .build());
+	        
+	        
+	        if(this.m_category.equals(TrackingEventCategory.ALARM.toString()))
+	        {
+	        	
+				ContentValues values = new ContentValues();
+				values.put(SnooziContract.trackingevents.Columns.TYPE,this.m_action );
+				values.put(SnooziContract.trackingevents.Columns.DESCRIPTION,this.m_description );
+				values.put(SnooziContract.trackingevents.Columns.TIMESTAMP,this.m_timestamp );
+				values.put(SnooziContract.trackingevents.Columns.TIMESTRING,this.m_timestring );
+				values.put(SnooziContract.trackingevents.Columns.VIDEOID,this.m_videoid );
+	
+				ContentResolver resolver = this.m_appContext.getContentResolver();
+				resolver.insert(SnooziContract.trackingevents.CONTENT_URI, values);
+				//Log.i("CONTENTRESOLVER",theResult.toString());
+				
+				//On demande une synchro avec le server
+				Bundle settingsBundle = new Bundle();
+		        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this.m_appContext), SnooziContract.AUTHORITY, settingsBundle);
 			
-			//On demande une synchro avec le server
-			Bundle settingsBundle = new Bundle();
-	        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-	        settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this.m_appContext), SnooziContract.AUTHORITY, settingsBundle);
-			
+	        }
 			
 		} catch (Exception e) {
-			Log.e("CONTENTRESOLVER",e.toString());
+			SnooziUtility.trace(this.m_appContext,TRACETYPE.ERROR,"CONTENTRESOLVER Error " + e.toString());
+			
+		}finally{
+			isRunning = false;
 		}
 		
 		/*

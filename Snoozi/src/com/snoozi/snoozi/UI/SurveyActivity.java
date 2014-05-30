@@ -1,8 +1,9 @@
 package com.snoozi.snoozi.UI;
 
 import com.snoozi.snoozi.*;
-import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.utils.TrackingEventAction;
 import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.TrackingEventCategory;
 import com.snoozi.snoozi.utils.TrackingSender;
 
 import android.app.Activity;
@@ -41,8 +42,8 @@ public class SurveyActivity extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				String comm = _commenttxt.getText().toString();
-				sender = new TrackingSender(getApplicationContext());
-				sender.sendUserEvent(TrackingEventType.APP_COMMENT, comm);
+				sender = new TrackingSender(getApplicationContext(),getApplication());
+				sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.COMMENT, comm);
 				
 				String nextString = getResources().getString(R.string.sendthanks);
 				Toast.makeText(getApplicationContext(),nextString , Toast.LENGTH_LONG).show();
@@ -63,8 +64,11 @@ public class SurveyActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 		int rating = _ratingBar.getProgress();
-		sender = new TrackingSender(getApplicationContext());
-		sender.sendUserEvent(TrackingEventType.APP_RATING, rating + "");
+		if(rating > 0)
+		{	
+			sender = new TrackingSender(getApplicationContext(),getApplication());
+			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.RATING, rating + "");
+		}
 		finish();
 	}
 	

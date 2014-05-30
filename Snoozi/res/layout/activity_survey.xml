@@ -19,7 +19,7 @@
                 android:text="@string/thankyou" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/txtDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -36,7 +36,7 @@
                 android:stepSize="1" />
 
             <TextView
-                android:id="@+id/TextView01"
+                android:id="@+id/txtinfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

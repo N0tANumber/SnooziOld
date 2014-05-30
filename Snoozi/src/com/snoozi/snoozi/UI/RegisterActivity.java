@@ -7,8 +7,8 @@ import com.snoozi.messageEndpoint.model.CollectionResponseMessageData;
 import com.snoozi.messageEndpoint.model.MessageData;
 import com.snoozi.snoozi.*;
 import com.snoozi.snoozi.models.CloudEndpointUtils;
-import com.snoozi.snoozi.services.GCMIntentService;
-import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.utils.TrackingEventAction;
+import com.snoozi.snoozi.utils.TrackingEventCategory;
 import com.snoozi.snoozi.utils.TrackingSender;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
@@ -134,8 +134,8 @@ public class RegisterActivity extends Activity {
 			switch (event.getAction() & MotionEvent.ACTION_MASK) {
 			case MotionEvent.ACTION_DOWN:
 				TextView txt = (TextView) findViewById(R.id.editTextComment);
-				TrackingSender sender = new TrackingSender(getApplicationContext());
-				sender.sendUserEvent(TrackingEventType.DEBUGGING, txt.getText().toString());
+				TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
+				sender.sendUserEvent(TrackingEventCategory.DEBUGGING,TrackingEventAction.DEBUGGING, txt.getText().toString());
 				break;
 
 			default:

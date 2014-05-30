@@ -3,10 +3,12 @@ package com.snoozi.snoozi.UI;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.analytics.tracking.android.EasyTracker;
 import com.snoozi.snoozi.*;
-import com.snoozi.snoozi.models.AlarmLauncher;
-import com.snoozi.snoozi.utils.TrackingEventType;
+import com.snoozi.snoozi.models.AlarmPlanifier;
+import com.snoozi.snoozi.utils.TrackingEventAction;
 import com.snoozi.snoozi.utils.SnooziUtility;
+import com.snoozi.snoozi.utils.TrackingEventCategory;
 import com.snoozi.snoozi.utils.TrackingSender;
 
 import android.app.Activity;
@@ -56,31 +58,29 @@ public class AlarmSettingActivity extends Activity {
 	private SeekBar volumebar;
 	private AudioManager audioManager; 
 
+
+
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		// FirstLaunch tracking
-		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		boolean isFirstLaunch = settings.getBoolean("firstLaunch", true);
-		TrackingSender sender = new TrackingSender(getApplicationContext());
-		if(isFirstLaunch)
-		{
-			sender.sendUserEvent(TrackingEventType.APP_FIRSTLAUNCH);
-			//Save firstlaunch state
-			SharedPreferences.Editor editor = settings.edit();
-			editor.putBoolean("firstLaunch", false);
-			editor.commit();
+		try {
+			EasyTracker.getInstance().activityStart(this);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
-		else
-			sender.sendUserEvent(TrackingEventType.APP_LAUNCH);
-
 	}
-
 	@Override
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
+		try {
+			EasyTracker.getInstance().activityStop(this);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		finish();
 		
 	}
@@ -104,24 +104,46 @@ public class AlarmSettingActivity extends Activity {
 				SavePref();
 
 				//Build the event for the server
-				TrackingSender sender = new TrackingSender(getApplicationContext());
+				TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
 				StringBuilder evtDescr = new StringBuilder();
 				evtDescr.append(" at ");
 				evtDescr.append(picker.getCurrentHour());
 				evtDescr.append(":");
 				evtDescr.append(picker.getCurrentMinute());
 				evtDescr.append(" on ");
-				evtDescr.append(txtdays.getText().toString());
+				String dayString = "";
+				SharedPreferences prefs = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+				ArrayList<String> theDayList = new ArrayList<String>();
+				if(prefs.getBoolean("monday",false))
+					theDayList.add("monday");
+				if(prefs.getBoolean("tuesday",false))
+					theDayList.add("tuesday");
+				if(prefs.getBoolean("wednesday",false))
+					theDayList.add("wednesday");
+				if(prefs.getBoolean("thursday",false))
+					theDayList.add("thursday");
+				if(prefs.getBoolean("friday",false))
+					theDayList.add("friday");
+				if(prefs.getBoolean("saturday",false))
+					theDayList.add("saturday");
+				if(prefs.getBoolean("sunday",false))
+					theDayList.add("sunday");
+				
+				if(theDayList.size() == 0 || theDayList.size() == 7)
+					dayString = "EveryDay";
+				else
+					dayString = theDayList.toString();
+				evtDescr.append(dayString);
 
 				//Dispatch event to the server
 				if(isChecked)
 				{
-					AlarmLauncher.checkAndPlanifyNextAlarm(getApplicationContext());
-					sender.sendUserEvent(TrackingEventType.ALARM_SET,"set" + evtDescr.toString());
+					AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
+					sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.SET,"set" + evtDescr.toString());
 					
 					
 					//We display a toast message
-					String nextString = AlarmLauncher.getNextAlarmAsString(getApplicationContext());
+					String nextString = AlarmPlanifier.getNextAlarmAsString(getApplicationContext());
 					if(nextString.length() > 0)
 					{
 						nextString = getResources().getString(R.string.alarnIsSet) + " " + nextString;
@@ -132,8 +154,8 @@ public class AlarmSettingActivity extends Activity {
 				}
 				else
 				{
-					sender.sendUserEvent(TrackingEventType.ALARM_UNSET,"unset" + evtDescr.toString());
-					AlarmLauncher.CancelAlarm(getApplicationContext());
+					sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.UNSET,"unset" + evtDescr.toString());
+					AlarmPlanifier.CancelAlarm(getApplicationContext());
 				}
 
 
@@ -346,7 +368,7 @@ public class AlarmSettingActivity extends Activity {
 		audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 		int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		volumebar.setMax(maxVol);
-		volumebar.setProgress(settings.getInt("volume", (int)Math.floor(maxVol*0.60)));
+		volumebar.setProgress(settings.getInt("volume", (int)Math.floor(maxVol*0.50)));
 		
 		volumebar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() 
         {
@@ -382,7 +404,7 @@ public class AlarmSettingActivity extends Activity {
 	 */
 	private void SavePref()
 	{
-		this.getApplicationContext();
+		//this.getApplicationContext();
 		SharedPreferences prefs = this.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean("activate", chkactivate.isChecked());
