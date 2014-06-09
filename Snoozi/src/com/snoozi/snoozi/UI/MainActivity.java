@@ -69,7 +69,8 @@ public class MainActivity extends Activity {
 			public void run() 
 			{   
 				//after 1s, launch the setting activity
-				launchSettingActivity();
+				launchHomeActivity();
+				//launchSettingActivity();
 			}
 		};
 
@@ -140,6 +141,14 @@ public class MainActivity extends Activity {
 	private void launchSettingActivity()
 	{
 		 Intent intent = new Intent(this, AlarmSettingActivity.class);
+		startActivity(intent);
+		//for now finish main activity after launching the AlarmSettingActivity
+		finish();
+	}
+	
+	private void launchHomeActivity()
+	{
+		 Intent intent = new Intent(this, HomeActivity.class);
 		startActivity(intent);
 		//for now finish main activity after launching the AlarmSettingActivity
 		finish();

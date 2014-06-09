@@ -54,15 +54,24 @@
             android:name="com.snoozi.snoozi.UI.RegisterActivity"
             android:launchMode="singleTop" />
         
+        
         <activity
             android:name="com.snoozi.snoozi.UI.AlarmSettingActivity"
-            android:theme="@style/TitleBarTheme" >
+            android:theme="@style/TitleBarTheme"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.snoozi.snoozi.UI.HomeActivity"
+            android:theme="@style/TitleBarTheme"
+            android:screenOrientation="portrait" >
         </activity>
         
         <activity
             android:name="com.snoozi.snoozi.UI.VideoActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/TitleBarTheme" >
+            android:theme="@style/TitleBarTheme"
+             >
         </activity>
         
         <activity
@@ -76,6 +85,7 @@
        <activity
             android:name="com.snoozi.snoozi.UI.SurveyActivity"
              android:theme="@style/TitleBarTheme"
+             android:screenOrientation="portrait"
              android:excludeFromRecents="true"
             android:noHistory="true"  >
         </activity>

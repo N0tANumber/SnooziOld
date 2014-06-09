@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.snoozi.snoozi"
+    android:versionCode="4"
+    android:versionName="0.3">
+
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="com.snoozi.snoozi.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+      
+    <permission
+        android:name="com.snoozi.snoozi.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" 
+        android:name="com.snoozi.snoozi.MyApplication">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        
+        
+         <activity
+            android:name="com.snoozi.snoozi.UI.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Splash" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+		
+        <activity
+            android:name="com.snoozi.snoozi.UI.RegisterActivity"
+            android:launchMode="singleTop" />
+        
+        
+        <activity
+            android:name="com.snoozi.snoozi.UI.AlarmSettingActivity"
+            android:theme="@style/TitleBarTheme"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.snoozi.snoozi.UI.HomeActivity"
+            android:theme="@style/TitleBarTheme"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.snoozi.snoozi.UI.VideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TitleBarTheme"
+             >
+        </activity>
+        
+        <activity
+            android:name="com.snoozi.snoozi.UI.WakeupActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true" 
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait" >
+        </activity>
+        
+       <activity
+            android:name="com.snoozi.snoozi.UI.SurveyActivity"
+             android:theme="@style/TitleBarTheme"
+             android:screenOrientation="portrait"
+             android:excludeFromRecents="true"
+            android:noHistory="true"  >
+        </activity>
+        
+		
+		
+		
+		
+		
+        <service android:name="com.snoozi.snoozi.GCMIntentService"/>
+        
+        <service android:name="com.snoozi.snoozi.services.AuthenticatorService" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+        
+        <service
+            android:name="com.snoozi.snoozi.services.SyncService"
+            android:exported="true"
+            android:process=":sync" >
+            <intent-filter>
+					com.snoozi.provider
+                <action android:name="android.content.SyncAdapter" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
+        </service>
+        
+        <service android:name="com.snoozi.snoozi.services.WakeupLaunchService">
+		</service>
+        
+        
+        
+        
+        
+        
+		<receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.snoozi" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="com.snoozi" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.snoozi.snoozi.receivers.WakeupBootReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
+            <meta-data
+				android:name="com.commonsware.cwac.wakeful"
+				android:resource="@xml/wakeful"/>
+        </receiver>
+        
+        <receiver android:name="com.snoozi.snoozi.receivers.OnAlarmReceiver">
+		</receiver>
+		
+		<receiver
+            android:name="com.snoozi.snoozi.receivers.VideoDownloadReceiver"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" >
+                </action>
+            </intent-filter>
+        </receiver>
+        
+		
+		
+		
+        <provider
+            android:name="com.snoozi.snoozi.database.MyDataProvider"
+            android:authorities="com.snoozi.provider"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:label="SnooziProvider"
+            android:readPermission="com.snoozi.provider.READ"
+            android:syncable="true"
+            android:writePermission="com.snoozi.provider.WRITE" />
+        <!--  -->
+        
+    </application>
+
+</manifest>
