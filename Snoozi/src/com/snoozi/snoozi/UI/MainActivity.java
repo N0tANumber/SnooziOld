@@ -138,13 +138,7 @@ public class MainActivity extends Activity {
 		exportLocalDatabase();
 	}
 	
-	private void launchSettingActivity()
-	{
-		 Intent intent = new Intent(this, AlarmSettingActivity.class);
-		startActivity(intent);
-		//for now finish main activity after launching the AlarmSettingActivity
-		finish();
-	}
+	
 	
 	private void launchHomeActivity()
 	{

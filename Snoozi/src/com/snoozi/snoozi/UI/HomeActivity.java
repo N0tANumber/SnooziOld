@@ -2,6 +2,9 @@ package com.snoozi.snoozi.UI;
 
 import com.snoozi.snoozi.R;
 
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -21,10 +25,13 @@ public class HomeActivity extends FragmentActivity {
 	/**
      * The number of pages to show
      */
-    private static final int NUM_PAGES = 3;
-     private static final int WORLDFEED_POSITION = 1;
+    private static int NUM_PAGES = 3;
+    private static final int ALARM_POSITION = 0;
+    private static final int FEED_POSITION = 1;
     private static final int GALLERY_POSITION = 2;
-    
+     private static final int VIDEO_POSITION = 3;
+     
+     
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
@@ -36,26 +43,113 @@ public class HomeActivity extends FragmentActivity {
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
-	private boolean mShowingBack;
+	private boolean mShowingDetail;
+	
+	private FragmentClock mAlarmView = null;
+	private FragmentFeed mFeedView = null;
+	private FragmentGallery mGalleryView = null;
+	private FragmentDetail mDetailView = null;
+	//private ActionBar actionBar = null;
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+        //requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+       // requestWindowFeature(Window.FEATURE_ACTION_BAR);
+       // requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
         setContentView(R.layout.activity_home);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitlebar);
-
+        // getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitlebar);
+        //getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitlebar);
+        
+		
+	    
+	    
+	    
+	    
         // Instantiate a ViewPager and a PagerAdapter.
-		//FrameLayout layout = (FrameLayout) findViewById(R.id.viewcontainer);
-		//mPager = new ViewPager(this);
-        mPager = (ViewPager) findViewById(R.id.pager);
+		mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         mPager.setPageTransformer(true, new DepthPageTransformer());
         //mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        mPager.setOnPageChangeListener(new OnPageChangeListener() {
+			
+			@Override
+			public void onPageSelected(int position) {
+				// TODO Auto-generated method stub
+				// When swiping between pages, select the
+                // corresponding tab.
+				if(position < getActionBar().getTabCount())
+					getActionBar().setSelectedNavigationItem(position);
+			}
+			
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onPageScrollStateChanged(int state) {
+				// TODO Auto-generated method stub
+				if(state == ViewPager.SCROLL_STATE_IDLE)
+				{
+					if(mPager.getCurrentItem() < VIDEO_POSITION)
+					{
+						if(mShowingDetail)
+			        	{
+							mShowingDetail = false;
+							mPager.removeView(mDetailView.getView());
+							mPagerAdapter.notifyDataSetChanged();
+							
+						}
+					}
+				}
+				
+			}
+		});
         
-        //layout.addView(mPager);
         
+        
+        
+        final ActionBar actionBar = getActionBar();
+		// Specify that tabs should be displayed in the action bar.
+	    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	    
+	    // Create a tab listener that is called when the user changes tabs.
+	    ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+
+			@Override
+			public void onTabReselected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+				mPager.setCurrentItem(tab.getPosition());
+			}
+
+			@Override
+			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+				// TODO Auto-generated method stub
+				
+			}
+	      
+	    };
+
+	    // Add 3 tabs, specifying the tab's text and TabListener
+	    for (int i = 0; i < 3; i++) {
+	        actionBar.addTab(
+	                actionBar.newTab()
+	                        .setText(getResources().getStringArray(R.array.hometabs)[i])
+	                        .setTabListener(tabListener));
+	    }
+	    
+	    
+	    
     }
     
 
@@ -65,55 +159,20 @@ public class HomeActivity extends FragmentActivity {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
-        } else if (mShowingBack) {
-        	hideVideo();
-         }else
+        } else 
          {   	 
             // Otherwise, select the previous step.
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+        	mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            
         }
     }
     
     
-    public void hideVideo() {
-            getFragmentManager().popBackStack();
-            mShowingBack = false;
-    }
     
-    public void showVideo() {
-        if (mShowingBack) {
-        	hideVideo();
-            return;
-        }
-       
-        // Flip to the back.
-        mShowingBack = true;
-
-        // Create and commit a new fragment transaction that adds the fragment for the back of
-        // the card, uses custom animations, and is part of the fragment manager's back stack.
-        
-        getFragmentManager()
-                .beginTransaction()
-
-                // Replace the default fragment animations with animator resources representing
-                // rotations when switching to the back of the card, as well as animator
-                // resources representing rotations when flipping back to the front (e.g. when
-                // the system Back button is pressed).
-                .setCustomAnimations(
-                        R.animator.card_flip_right_in, R.animator.card_flip_right_out,
-                        R.animator.card_flip_left_in, R.animator.card_flip_left_out)
-
-                // Replace any fragments currently in the container view with a fragment
-                // representing the next page (indicated by the just-incremented currentPage
-                // variable).
-                .replace(R.id.pager, new VideoFragment())
-
-                // Add this transaction to the back stack, allowing users to press Back
-                // to get to the front of the card.
-                .addToBackStack(null)
-
-                // Commit the transaction.
-                .commit();
+    public void showDetailView()
+    {
+    	mShowingDetail = true;
+    	mPager.setCurrentItem(VIDEO_POSITION);
     }
     
 
@@ -130,23 +189,56 @@ public class HomeActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
+        	Fragment theResult = null;
         	switch (position) {
-        	case WORLDFEED_POSITION:
-				 return new WorldFeedFragment();
-			case GALLERY_POSITION:
-				 return new GalleryFragment();
-			default:
-				return new ClockFragment();
+        	case ALARM_POSITION:
+        		if(mAlarmView == null)
+        		  mAlarmView = new FragmentClock();
+        		theResult = mAlarmView;
+        		break;
+        	case FEED_POSITION:
+        		if(mFeedView == null)
+        			mFeedView = new FragmentFeed();
+          		theResult = mFeedView;
+          		break;
+        	case GALLERY_POSITION:
+        		if(mGalleryView == null)
+        			mGalleryView = new FragmentGallery();
+          		theResult = mGalleryView;
+          		break;
+        	case VIDEO_POSITION:
+        		if(mDetailView == null)
+        			mDetailView = new FragmentDetail();
+          		theResult = mDetailView;
+          		break;
+			
 			}
         	
-           
+           return theResult;
         }
 
         @Override
         public int getCount() {
-            return NUM_PAGES;
+        	if(mShowingDetail)
+        		return NUM_PAGES+1;
+        	else
+        		return NUM_PAGES;
+        }
+        @Override
+        public int getItemPosition(Object object){
+        	if(object == mAlarmView)
+        		return PagerAdapter.POSITION_UNCHANGED;
+        	else if(object == mFeedView)
+        		return PagerAdapter.POSITION_UNCHANGED;
+        	else if(object == mGalleryView)
+        		return PagerAdapter.POSITION_UNCHANGED;
+        	else
+        		return PagerAdapter.POSITION_NONE;
+            	
+        		
         }
     }
+    
     
     
     public class DepthPageTransformer implements ViewPager.PageTransformer {

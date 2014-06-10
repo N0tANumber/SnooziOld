@@ -23,7 +23,10 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-      
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />  
+    
     <permission
         android:name="com.snoozi.snoozi.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -63,8 +66,12 @@
         
         <activity
             android:name="com.snoozi.snoozi.UI.HomeActivity"
-            android:theme="@style/TitleBarTheme"
             android:screenOrientation="portrait" >
+        </activity>
+        
+        <activity
+            android:name="com.snoozi.snoozi.UI.RecordActivity"
+            android:screenOrientation="landscape" >
         </activity>
         
         <activity

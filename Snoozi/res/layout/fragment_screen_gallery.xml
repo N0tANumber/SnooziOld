@@ -2,13 +2,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragmentgallery"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f00" >
+    android:layout_height="match_parent" >
 
-    <Button
-        android:id="@+id/btntestVideo"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Button" />
+        android:layout_height="wrap_content"
+         >
+
+         <Button
+             android:id="@+id/btnRecord"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_alignParentBottom="true"
+             android:text="@string/record" />
+
+    </RelativeLayout>
 
 </ScrollView>

@@ -52,6 +52,11 @@
         <item> Sat.</item>
         <item> Sun.</item>
     </string-array>
+    <string-array name="hometabs">
+        <item> Alarm</item>
+        <item> Happening</item>
+        <item> My Gallery</item>
+    </string-array>
     <string-array name="snooziphrase">
         <item>Advantage of being an Unemployed Dad</item>
         <item>Rick Rolled by Snoozi !</item>
@@ -66,5 +71,9 @@
     <string name="sendbtn">Send with Love</string>
     <string name="finalthanks">All these informations will be carefully studied and used to improve our product!</string>
 <string name="sendthanks">Thank you for your comments</string>
+<string name="setAlarm">Set an alarm</string>
+<string name="record">Record Video</string>
+<string name="startrecord">Start Recording</string>
+  <string name="stoprecord">Stop Recording</string>
     
 </resources>
