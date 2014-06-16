@@ -795,11 +795,12 @@ textarea {
 /*	 Footer Newsletter Form
 /*------------------------------------------*/
 
+
 .subscribe-form {
 	margin: 5px auto 0;
     position: relative;
     z-index: 10;
-	width: 90%;
+	width: 50%;
 }
 
 #newsletter_form p {
