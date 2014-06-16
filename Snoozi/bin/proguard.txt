@@ -4,57 +4,57 @@
 # view res/layout/activity_wakescreen.xml #generated:8
 -keep class com.fima.glowpadview.GlowPadView { <init>(...); }
 
-# view AndroidManifest.xml #generated:139
+# view AndroidManifest.xml #generated:140
 -keep class com.google.android.gcm.GCMBroadcastReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:105
+# view AndroidManifest.xml #generated:106
 -keep class com.snoozi.snoozi.GCMIntentService { <init>(...); }
 
-# view AndroidManifest.xml #generated:34
+# view AndroidManifest.xml #generated:35
 -keep class com.snoozi.snoozi.MyApplication { <init>(...); }
 
-# view AndroidManifest.xml #generated:61
+# view AndroidManifest.xml #generated:62
 -keep class com.snoozi.snoozi.UI.AlarmSettingActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:67
+# view AndroidManifest.xml #generated:68
 -keep class com.snoozi.snoozi.UI.HomeActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:45
+# view AndroidManifest.xml #generated:46
 -keep class com.snoozi.snoozi.UI.MainActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:72
+# view AndroidManifest.xml #generated:73
 -keep class com.snoozi.snoozi.UI.RecordActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:56
+# view AndroidManifest.xml #generated:57
 -keep class com.snoozi.snoozi.UI.RegisterActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:92
+# view AndroidManifest.xml #generated:93
 -keep class com.snoozi.snoozi.UI.SurveyActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:77
+# view AndroidManifest.xml #generated:78
 -keep class com.snoozi.snoozi.UI.VideoActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:84
+# view AndroidManifest.xml #generated:85
 -keep class com.snoozi.snoozi.UI.WakeupActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:180
+# view AndroidManifest.xml #generated:181
 -keep class com.snoozi.snoozi.database.MyDataProvider { <init>(...); }
 
-# view AndroidManifest.xml #generated:165
+# view AndroidManifest.xml #generated:166
 -keep class com.snoozi.snoozi.receivers.OnAlarmReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:168
+# view AndroidManifest.xml #generated:169
 -keep class com.snoozi.snoozi.receivers.VideoDownloadReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:153
+# view AndroidManifest.xml #generated:154
 -keep class com.snoozi.snoozi.receivers.WakeupBootReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:107
+# view AndroidManifest.xml #generated:108
 -keep class com.snoozi.snoozi.services.AuthenticatorService { <init>(...); }
 
-# view AndroidManifest.xml #generated:117
+# view AndroidManifest.xml #generated:118
 -keep class com.snoozi.snoozi.services.SyncService { <init>(...); }
 
-# view AndroidManifest.xml #generated:131
+# view AndroidManifest.xml #generated:132
 -keep class com.snoozi.snoozi.services.WakeupLaunchService { <init>(...); }
 

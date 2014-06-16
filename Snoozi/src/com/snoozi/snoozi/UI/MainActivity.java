@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
 			}
 		};
 
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 100);
 		
 		
 	}
