@@ -47,7 +47,7 @@ public class FragmentGallery extends Fragment {
 		if(checkCameraHardware(this.getActivity()))
 		{
 			
-		 Intent intent = new Intent(this.getActivity(), RecordActivity.class);
+		 Intent intent = new Intent(this.getActivity(), RecordActivitySnap.class);
 		startActivity(intent);
 		}
 		

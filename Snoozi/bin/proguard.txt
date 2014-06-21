@@ -23,7 +23,7 @@
 -keep class com.snoozi.snoozi.UI.MainActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:73
--keep class com.snoozi.snoozi.UI.RecordActivity { <init>(...); }
+-keep class com.snoozi.snoozi.UI.RecordActivitySnap { <init>(...); }
 
 # view AndroidManifest.xml #generated:57
 -keep class com.snoozi.snoozi.UI.RegisterActivity { <init>(...); }

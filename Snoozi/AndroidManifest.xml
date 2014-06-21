@@ -71,7 +71,7 @@
         </activity>
         
         <activity
-            android:name="com.snoozi.snoozi.UI.RecordActivity"
+            android:name="com.snoozi.snoozi.UI.RecordActivitySnap"
             android:screenOrientation="portrait" >
         </activity>
         

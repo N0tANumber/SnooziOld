@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.snoozi.snoozi.R;
 import com.snoozi.snoozi.R.id;
+import com.snoozi.snoozi.models.CameraPreviewSnap;
 import com.snoozi.snoozi.models.CameraPreview;
 import com.snoozi.snoozi.utils.SnooziUtility;
 import com.snoozi.snoozi.utils.SnooziUtility.TRACETYPE;
@@ -44,11 +45,11 @@ public class RecordActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_record);
+		setContentView(R.layout.activity_recordold);
 
 		// Create our Preview view and set it as the content of our activity.
 		mPreview = new CameraPreview(this);
-		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_previewold);
 	 	//preview.setClipBounds(new Rect(0, 0, preview.getWidth(), preview.getWidth())); 
 		preview.addView(mPreview);
 
@@ -63,7 +64,7 @@ public class RecordActivity extends Activity {
 		}
 
 		// Add a listener to the Capture button
-		captureButton = (Button) findViewById(id.button_capture);
+		captureButton = (Button) findViewById(id.button_captureold);
 		captureButton.setOnClickListener(
 				new View.OnClickListener() {
 					@Override
@@ -156,7 +157,7 @@ public class RecordActivity extends Activity {
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		SnooziUtility.trace(this, TRACETYPE.DEBUG, "RecordActivity.onstart");
+		SnooziUtility.trace(this, TRACETYPE.DEBUG, "RecordActivitySnap.onstart");
 
 		try {
 			// Create an instance of Camera
