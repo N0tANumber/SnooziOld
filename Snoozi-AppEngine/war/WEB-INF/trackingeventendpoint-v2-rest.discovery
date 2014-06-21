@@ -1,0 +1,238 @@
+{
+ "kind": "discovery#restDescription",
+ "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/ttThbOziHKbbUMq8hCcjo7HuZq4\"",
+ "discoveryVersion": "v1",
+ "id": "trackingeventendpoint:v2",
+ "name": "trackingeventendpoint",
+ "version": "v2",
+ "description": "This is an API",
+ "ownerDomain": "snoozi.com",
+ "ownerName": "snoozi.com",
+ "icons": {
+  "x16": "http://www.google.com/images/icons/product/search-16.gif",
+  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+ },
+ "protocol": "rest",
+ "baseUrl": "https://evident-quasar-565.appspot.com/_ah/api/trackingeventendpoint/v2/",
+ "basePath": "/_ah/api/trackingeventendpoint/v2/",
+ "rootUrl": "https://evident-quasar-565.appspot.com/_ah/api/",
+ "servicePath": "trackingeventendpoint/v2/",
+ "batchPath": "batch",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "CollectionResponse_TrackingEvent": {
+   "id": "CollectionResponse_TrackingEvent",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "TrackingEvent"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "TrackingEvent": {
+   "id": "TrackingEvent",
+   "type": "object",
+   "properties": {
+    "androidVersion": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "apkVersion": {
+     "type": "string"
+    },
+    "description": {
+     "type": "string"
+    },
+    "deviceInformation": {
+     "type": "string"
+    },
+    "key": {
+     "type": "string",
+     "format": "int64"
+    },
+    "string": {
+     "type": "string"
+    },
+    "timeString": {
+     "type": "string"
+    },
+    "timestamp": {
+     "type": "string",
+     "format": "int64"
+    },
+    "type": {
+     "type": "string"
+    },
+    "userid": {
+     "type": "string"
+    },
+    "videoid": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  }
+ },
+ "methods": {
+  "getTrackingEvent": {
+   "id": "trackingeventendpoint.getTrackingEvent",
+   "path": "trackingevent/{id}",
+   "httpMethod": "GET",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "response": {
+    "$ref": "TrackingEvent"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "insertTrackingEvent": {
+   "id": "trackingeventendpoint.insertTrackingEvent",
+   "path": "trackingevent",
+   "httpMethod": "POST",
+   "request": {
+    "$ref": "TrackingEvent",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "TrackingEvent"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "listTrackingEvent": {
+   "id": "trackingeventendpoint.listTrackingEvent",
+   "path": "trackingevent",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursor": {
+     "type": "string",
+     "location": "query"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "CollectionResponse_TrackingEvent"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "removeErrorLoggerEvent": {
+   "id": "trackingeventendpoint.removeErrorLoggerEvent",
+   "path": "errorloggerevent",
+   "httpMethod": "DELETE",
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "removeTrackingEvent": {
+   "id": "trackingeventendpoint.removeTrackingEvent",
+   "path": "trackingevent/{id}",
+   "httpMethod": "DELETE",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "updateTrackingEvent": {
+   "id": "trackingeventendpoint.updateTrackingEvent",
+   "path": "trackingevent",
+   "httpMethod": "PUT",
+   "request": {
+    "$ref": "TrackingEvent",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "TrackingEvent"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}
