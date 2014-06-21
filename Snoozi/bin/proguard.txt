@@ -8,53 +8,53 @@
 -keep class com.google.android.gcm.GCMBroadcastReceiver { <init>(...); }
 
 # view AndroidManifest.xml #generated:106
--keep class com.snoozi.snoozi.GCMIntentService { <init>(...); }
+-keep class com.wake.wank.GCMIntentService { <init>(...); }
 
 # view AndroidManifest.xml #generated:35
--keep class com.snoozi.snoozi.MyApplication { <init>(...); }
+-keep class com.wake.wank.MyApplication { <init>(...); }
 
 # view AndroidManifest.xml #generated:62
--keep class com.snoozi.snoozi.UI.AlarmSettingActivity { <init>(...); }
+-keep class com.wake.wank.UI.AlarmSettingActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:68
--keep class com.snoozi.snoozi.UI.HomeActivity { <init>(...); }
+-keep class com.wake.wank.UI.HomeActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:46
--keep class com.snoozi.snoozi.UI.MainActivity { <init>(...); }
+-keep class com.wake.wank.UI.MainActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:73
--keep class com.snoozi.snoozi.UI.RecordActivitySnap { <init>(...); }
+-keep class com.wake.wank.UI.RecordActivitySnap { <init>(...); }
 
 # view AndroidManifest.xml #generated:57
--keep class com.snoozi.snoozi.UI.RegisterActivity { <init>(...); }
+-keep class com.wake.wank.UI.RegisterActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:93
--keep class com.snoozi.snoozi.UI.SurveyActivity { <init>(...); }
+-keep class com.wake.wank.UI.SurveyActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:78
--keep class com.snoozi.snoozi.UI.VideoActivity { <init>(...); }
+-keep class com.wake.wank.UI.VideoActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:85
--keep class com.snoozi.snoozi.UI.WakeupActivity { <init>(...); }
+-keep class com.wake.wank.UI.WakeupActivity { <init>(...); }
 
 # view AndroidManifest.xml #generated:181
--keep class com.snoozi.snoozi.database.MyDataProvider { <init>(...); }
+-keep class com.wake.wank.database.MyDataProvider { <init>(...); }
 
 # view AndroidManifest.xml #generated:166
--keep class com.snoozi.snoozi.receivers.OnAlarmReceiver { <init>(...); }
+-keep class com.wake.wank.receivers.OnAlarmReceiver { <init>(...); }
 
 # view AndroidManifest.xml #generated:169
--keep class com.snoozi.snoozi.receivers.VideoDownloadReceiver { <init>(...); }
+-keep class com.wake.wank.receivers.VideoDownloadReceiver { <init>(...); }
 
 # view AndroidManifest.xml #generated:154
--keep class com.snoozi.snoozi.receivers.WakeupBootReceiver { <init>(...); }
+-keep class com.wake.wank.receivers.WakeupBootReceiver { <init>(...); }
 
 # view AndroidManifest.xml #generated:108
--keep class com.snoozi.snoozi.services.AuthenticatorService { <init>(...); }
+-keep class com.wake.wank.services.AuthenticatorService { <init>(...); }
 
 # view AndroidManifest.xml #generated:118
--keep class com.snoozi.snoozi.services.SyncService { <init>(...); }
+-keep class com.wake.wank.services.SyncService { <init>(...); }
 
 # view AndroidManifest.xml #generated:132
--keep class com.snoozi.snoozi.services.WakeupLaunchService { <init>(...); }
+-keep class com.wake.wank.services.WakeupLaunchService { <init>(...); }
 

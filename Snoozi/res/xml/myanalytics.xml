@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
 tools:ignore="TypographyDashes">
-    <string name="ga_trackingId">UA-51005614-3</string>
+    <string name="ga_trackingId">UA-51005614-4</string>
     
     <integer name="ga_sessionTimeout">300</integer>
     <bool name="ga_autoActivityTracking">true</bool>
@@ -10,17 +10,17 @@ tools:ignore="TypographyDashes">
  	 <bool name="ga_reportUncaughtExceptions">true</bool>
   
  	 
-    <screenName name="com.snoozi.snoozi.UI.MainActivity">
+    <screenName name="com.wake.wank.UI.MainActivity">
         Splash screen
     </screenName>
-    <screenName name="com.snoozi.snoozi.UI.AlarmSettingActivity">
+    <screenName name="com.wake.wank.UI.AlarmSettingActivity">
         Alarm Setting screen
     </screenName>
     
-     <screenName name="com.snoozi.snoozi.UI.VideoActivity">
+     <screenName name="com.wake.wank.UI.VideoActivity">
         Video watching screen
     </screenName>
-     <screenName name="com.snoozi.snoozi.UI.WakeupActivity">
+     <screenName name="com.wake.wank.UI.WakeupActivity">
         Wakeup screen
     </screenName>
 

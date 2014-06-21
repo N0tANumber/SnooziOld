@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <string name="app_name">Snoozi</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="menu_settings">Paramètres</string>
-    <string name="welcome">Snoozi est une toute nouvelle expérience de reveil. Programmez votre alarme, et laissez Snoozi faire le reste!</string>
+        <string name="app_name">Wake&amp;Wank</string>
+     <string name="menu_settings">Paramètres</string>
+    <string name="welcome"></string>
     <string name="activate">Activate Alarm</string>
     <string name="Hour">Heure</string>
     <string name="Repeat">Repéter</string>
@@ -20,7 +19,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="like">J\'aime</string>
     <string name="dislike">Je n\'aime pas</string>
-    <string name="snooziTeam">Snoozi Team</string>
+    <string name="snooziTeam">Wake Team</string>
     <string name="fakedate">08 May 14</string>
     <string name="blank"></string>
     <string name="alarnIsSet">L\'alarme est programmée dans</string>
@@ -51,22 +50,11 @@
         <item> Sam.</item>
         <item> Dim.</item>
     </string-array>
-    <string-array name="snooziphrase">
-        <item>Advantage of being an Unemployed Dad</item>
-        <item>Annoying People on the plane</item>
-        <item>Average Tuesday Night</item>
-        <item>Rick Rolled by Snoozi !</item>
-        <item>Never go Full Retard</item>
-        <item>Have fun with your morning wood!</item>
-        <item>They wish they hadnt skipped Gym Class</item>
-        <item>I can Play better</item>
-        <item>Luckly You have Snoozi</item>
-        <item>Get a room already</item>
-    </string-array>
+   
 
     <string name="volume">Volume de l\'alarme</string>
     <string name="title_activity_survey">SurveyActivity</string>
-    <string name="thankyou">"Félicitations! Vous avez réussi à regarder toutes les vidéos! Merci de votre soutient! "</string>
+    <string name="thankyou">"Félicitations! Vous avez réussi à regarder toutes les vidéos! Merci de votre soutien! "</string>
     <string name="howrating">Quelle note mettriez-vous a ce que vous avez testez?</string>
     <string name="sendcomment">Nous serions ravi d\'avoir vos commentaires, suggestions ou feedbacks:</string>
     <string name="sendbtn">Envoyer avec Amour</string>
