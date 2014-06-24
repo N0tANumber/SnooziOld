@@ -30,23 +30,49 @@
             android:layout_marginBottom="60dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                >
+            android:id="@+id/BtnSetAlarm"
+             android:clickable="true"
+                  android:focusable="true"
+                           >
 
             <CheckBox
                 android:id="@+id/checkBoxActiv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/alarmon" />
-
-            <Button
-                android:id="@+id/btnsetAlarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/setAlarm" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center_vertical" />
+
+             <View
+                  android:layout_height="fill_parent"
+                  android:layout_width="1dp"
+                  android:background="@android:color/darker_gray" />
+
+              <LinearLayout
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginLeft="10dp"
+                  android:orientation="vertical" >
+
+                  <TextView
+                      android:id="@+id/TxtTime"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="10dp"
+                      android:text="@string/blank"
+                      android:textAppearance="?android:attr/textAppearanceMedium"
+                      android:textColor="#ffffff" />
+
+                  <TextView
+                      android:id="@+id/Txtdays"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="10dp"
+                      android:text="@string/Everyday"
+                      android:textAppearance="?android:attr/textAppearanceSmall"
+                      android:textColor="#ddd" />
+              </LinearLayout>
 
         </LinearLayout>
 

@@ -15,6 +15,7 @@ import com.wake.wank.utils.TrackingEventCategory;
 import com.wake.wank.utils.TrackingSender;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -49,8 +51,8 @@ public class FragmentClock extends Fragment {
 		 rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_screen_clock, container, false);
 		
-		Button testbtn = (Button) rootView.findViewById(R.id.btnsetAlarm);
-        testbtn.setOnTouchListener(new OnTouchListener() {
+		 LinearLayout setAlarmBtn = (LinearLayout) rootView.findViewById(R.id.BtnSetAlarm);
+		 setAlarmBtn.setOnTouchListener(new OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -95,7 +97,15 @@ public class FragmentClock extends Fragment {
    			//alarm is set, so we disable all other controls
    			chkactivate.setChecked(isActivated);
    		}
+   		
+		String theDayString = settings.getString("dayString",getResources().getString(R.string.Everyday));
+		int thehour = settings.getInt("hour",7);
+		int themin = settings.getInt("minute",30);
 
+		TextView txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
+		txtTime.setText(thehour+":"+themin);
+		TextView txtday = (TextView)rootView.findViewById(R.id.Txtdays);
+		txtday.setText(theDayString);
 
 		/*Activate setup*/
 		activateListener = new OnCheckedChangeListener() {
@@ -126,11 +136,15 @@ public class FragmentClock extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == 1) 
+		if (resultCode == Activity.RESULT_OK) 
 		{
 			SnooziUtility.trace(getActivity(), TRACETYPE.INFO,".....onAlarmSettingResult RESULT OK");
-			chkactivate.setChecked(true);
-		  }
+			Boolean activ = data.getBooleanExtra("activated", false);
+
+			chkactivate.setChecked(activ);
+		}
+			  
+		
 	}
 
 
@@ -141,12 +155,15 @@ public class FragmentClock extends Fragment {
 		SharedPreferences prefs = rootView.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean("activate", isActivated);
-		editor.commit();
+		editor.apply();
 		int thehour = prefs.getInt("hour",7);
 		int themin = prefs.getInt("minute",30);
 		String theDayString = prefs.getString("dayString",getResources().getString(R.string.Everyday));
 		
-		
+		TextView txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
+		txtTime.setText(thehour+":"+themin);
+		TextView txtday = (TextView)rootView.findViewById(R.id.Txtdays);
+		txtday.setText(theDayString);
 		
 		//Build the event for the server
 		TrackingSender sender = new TrackingSender(rootView.getContext(),getActivity().getApplication());

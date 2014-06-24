@@ -8,7 +8,7 @@
 -keep class com.google.android.gms.ads.AdActivity { <init>(...); }
 
 # view res/layout/activity_video.xml #generated:90
-# view res/layout/fragment_screen_clock.xml #generated:56
+# view res/layout/fragment_screen_clock.xml #generated:82
 -keep class com.google.android.gms.ads.AdView { <init>(...); }
 
 # view AndroidManifest.xml #generated:109

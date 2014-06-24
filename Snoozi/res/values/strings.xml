@@ -8,8 +8,9 @@
     <string name="Repeat">Repeat</string>
     <string name="Vibration">Vibration</string>
     <string name="dotline">---</string>
+    <string name="cancel">Cancel</string>
     <string name="done">I\'m done !</string>
-    <string name="preversion"></string>
+    <string name="preversion">Alarm Settings</string>
     <string name="Everyday">Everyday</string>
     <string name="alarmon">Alarm is ON</string>
     <string name="alarmoff">Alarm is OFF</string>

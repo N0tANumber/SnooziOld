@@ -8,8 +8,9 @@
     <string name="Repeat">重复</string>
     <string name="Vibration">振动</string>
     <string name="dotline">---</string>
+    <string name="cancel">Cancel</string>
     <string name="done">I\'m done !</string>
-    <string name="preversion"></string>
+    <string name="preversion">Alarm Settings</string>
     <string name="Everyday">每天</string>
     <string name="alarmon">闹钟 ON</string>
     <string name="alarmoff">闹钟 OFF</string>

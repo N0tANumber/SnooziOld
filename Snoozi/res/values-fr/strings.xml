@@ -2,13 +2,14 @@
 <resources>
         <string name="app_name">Wake&amp;Wank</string>
      <string name="menu_settings">Paramètres</string>
-    <string name="activate">Activate Alarm</string>
+    <string name="activate">Activer l\'alarme</string>
     <string name="Hour">Heure</string>
     <string name="Repeat">Repéter</string>
     <string name="Vibration">Vibration</string>
     <string name="dotline">---</string>
-    <string name="done">J\'ai fini !</string>
-    <string name="preversion"></string>
+    <string name="cancel">Annuler</string>
+    <string name="done">OK</string>
+    <string name="preversion">Réglage de l\'alarme</string>
     <string name="Everyday">Tous les jours</string>
     <string name="alarmon">Alarme Activée</string>
     <string name="alarmoff">Alarm Désactivée</string>

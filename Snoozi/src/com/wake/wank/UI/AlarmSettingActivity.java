@@ -15,12 +15,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -43,7 +46,7 @@ public class AlarmSettingActivity extends Activity {
 	private static final int TIME_PICKER_INTERVAL=5;
 	private boolean mIgnoreEvent=false;
 
-	private ToggleButton chkactivate;
+	private CheckedTextView chkactivate;
 	
 	private TimePicker picker;
 	private TextView txtdays;
@@ -55,7 +58,10 @@ public class AlarmSettingActivity extends Activity {
 	private OnClickListener repeatListener = null;
 	private AlertDialog repeatdialog;
 	private SeekBar volumebar;
-	private AudioManager audioManager; 
+	private AudioManager audioManager;
+	private OnClickListener activateListener;
+	private TextView BtnDone;
+	private TextView BtnCancel; 
 
 
 
@@ -95,19 +101,30 @@ public class AlarmSettingActivity extends Activity {
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, 0);
 
 		
+		   chkactivate = (CheckedTextView) findViewById(R.id.chk_activate);
+		   chkactivate.setChecked(settings.getBoolean("activate", false));
+			activateListener	 = new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					chkactivate.toggle();
+					//SavePref();
 
-
+				}
+			};
+			chkactivate.setOnClickListener(activateListener);
 
 		/* Time picker setup */
 		picker = (TimePicker) findViewById(R.id.timePicker);
 		//Update Picker state from Pref
 		picker.setCurrentHour(settings.getInt("hour", 7));
 		picker.setCurrentMinute(settings.getInt("minute", 30));
+		
+		/*
 		TimePicker.OnTimeChangedListener mTimePickerListener=new TimePicker.OnTimeChangedListener(){
 			public void onTimeChanged(TimePicker timePicker, int hourOfDay, int minute){
 				if (mIgnoreEvent)
 					return;
-				/* 5 minutes steps
+				// 5 minutes steps
 				if (minute%TIME_PICKER_INTERVAL!=0){
 					int minuteFloor=minute-(minute%TIME_PICKER_INTERVAL);
 					minute=minuteFloor + (minute==minuteFloor+1 ? TIME_PICKER_INTERVAL : 0);
@@ -117,7 +134,7 @@ public class AlarmSettingActivity extends Activity {
 					timePicker.setCurrentMinute(minute);
 					mIgnoreEvent=false;
 				}
-*/
+
 				
 				if(! mIgnoreEvent)
 				{
@@ -127,7 +144,7 @@ public class AlarmSettingActivity extends Activity {
 			}
 		};
 		picker.setOnTimeChangedListener(mTimePickerListener);
-
+*/
 
 		/*Day setup */
 		txtdays = (TextView) findViewById(R.id.txtdays);
@@ -137,7 +154,7 @@ public class AlarmSettingActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				repeatdialog.show();
-				SavePref();
+				//SavePref();
 			}
 		};
 
@@ -245,7 +262,7 @@ public class AlarmSettingActivity extends Activity {
 					dayString = android.text.TextUtils.join(",",slist.toArray());
 				txtdays.setText(dayString);
 
-				SavePref();
+				//SavePref();
 
 			}
 		})
@@ -265,11 +282,11 @@ public class AlarmSettingActivity extends Activity {
 
 
 		/*Vibrate setup*/
-		vibrateListener = new OnClickListener() {
+	vibrateListener	 = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				chkvibrate.toggle();
-				SavePref();
+				//SavePref();
 
 			}
 		};
@@ -301,15 +318,36 @@ public class AlarmSettingActivity extends Activity {
             public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) 
             {
                 audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_PLAY_SOUND);
-                SavePref();
+                //SavePref();
             }
         });
 		//audioManager.setStreamVolume(AudioManager.STREAM_ALARM, audioManager
         //        .getStreamMaxVolume(AudioManager.STREAM_ALARM),  AudioManager.FLAG_PLAY_SOUND);
 
-		
-		
-
+		BtnDone = (TextView)findViewById(R.id.BtnDone);
+		BtnDone.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				SavePref();
+				Intent returnIntent = new Intent();
+				returnIntent.putExtra("activated", chkactivate.isChecked());
+				setResult(RESULT_OK, returnIntent);
+				finish();
+			}
+		});
+		BtnCancel = (TextView)findViewById(R.id.BtnCancel);
+		BtnCancel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent returnIntent = new Intent();
+				setResult(RESULT_CANCELED, returnIntent);  
+				finish();
+			}
+		});
 
 	}
 
@@ -338,8 +376,8 @@ public class AlarmSettingActivity extends Activity {
 		editor.putBoolean("vibrate", chkvibrate.isChecked());
 		editor.putInt("volume", volumebar.getProgress());
 		
-		editor.commit();
-
+		editor.apply();
+		
 
 	}
 
