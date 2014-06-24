@@ -1,60 +1,67 @@
-# view res/layout/activity_home.xml #generated:2
--keep class android.support.v4.view.ViewPager { <init>(...); }
-
 # view res/layout/activity_wakescreen.xml #generated:8
 -keep class com.fima.glowpadview.GlowPadView { <init>(...); }
 
-# view AndroidManifest.xml #generated:140
+# view AndroidManifest.xml #generated:143
 -keep class com.google.android.gcm.GCMBroadcastReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:106
+# view AndroidManifest.xml #generated:45
+-keep class com.google.android.gms.ads.AdActivity { <init>(...); }
+
+# view res/layout/activity_video.xml #generated:90
+# view res/layout/fragment_screen_clock.xml #generated:56
+-keep class com.google.android.gms.ads.AdView { <init>(...); }
+
+# view AndroidManifest.xml #generated:109
 -keep class com.wake.wank.GCMIntentService { <init>(...); }
 
 # view AndroidManifest.xml #generated:35
 -keep class com.wake.wank.MyApplication { <init>(...); }
 
-# view AndroidManifest.xml #generated:62
+# view AndroidManifest.xml #generated:64
 -keep class com.wake.wank.UI.AlarmSettingActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:68
+# view res/layout/activity_home.xml #generated:8
+-keep class com.wake.wank.UI.FragmentClock { <init>(...); }
+
+# view AndroidManifest.xml #generated:70
 -keep class com.wake.wank.UI.HomeActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:46
+# view AndroidManifest.xml #generated:48
 -keep class com.wake.wank.UI.MainActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:73
+# view AndroidManifest.xml #generated:76
 -keep class com.wake.wank.UI.RecordActivitySnap { <init>(...); }
 
-# view AndroidManifest.xml #generated:57
+# view AndroidManifest.xml #generated:59
 -keep class com.wake.wank.UI.RegisterActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:93
+# view AndroidManifest.xml #generated:96
 -keep class com.wake.wank.UI.SurveyActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:78
+# view AndroidManifest.xml #generated:81
 -keep class com.wake.wank.UI.VideoActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:85
+# view AndroidManifest.xml #generated:88
 -keep class com.wake.wank.UI.WakeupActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:181
+# view AndroidManifest.xml #generated:184
 -keep class com.wake.wank.database.MyDataProvider { <init>(...); }
 
-# view AndroidManifest.xml #generated:166
+# view AndroidManifest.xml #generated:169
 -keep class com.wake.wank.receivers.OnAlarmReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:169
+# view AndroidManifest.xml #generated:172
 -keep class com.wake.wank.receivers.VideoDownloadReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:154
+# view AndroidManifest.xml #generated:157
 -keep class com.wake.wank.receivers.WakeupBootReceiver { <init>(...); }
 
-# view AndroidManifest.xml #generated:108
+# view AndroidManifest.xml #generated:111
 -keep class com.wake.wank.services.AuthenticatorService { <init>(...); }
 
-# view AndroidManifest.xml #generated:118
+# view AndroidManifest.xml #generated:121
 -keep class com.wake.wank.services.SyncService { <init>(...); }
 
-# view AndroidManifest.xml #generated:132
+# view AndroidManifest.xml #generated:135
 -keep class com.wake.wank.services.WakeupLaunchService { <init>(...); }
 

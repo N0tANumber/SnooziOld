@@ -4,6 +4,7 @@ package com.wake.wank.utils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 
@@ -15,7 +16,7 @@ import com.wake.wank.models.MyVideo;
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.wake.wank";
 	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
-	public static final boolean DEV_MODE = true;
+	public static final boolean DEV_MODE = false;
 
 	 
 	
@@ -26,8 +27,9 @@ public class SnooziUtility {
 	
 	public class SYNC_ACTION{
 		public static final String NEW_VIDEO_AVAILABLE = "NEW_VIDEO_AVAILABLE";
+		public static final String GCM_REGISTERED = "GCM_REGISTERED";
 		public static final String SEND_RATING = "SEND_RATING";
-		public static final String SEND_DATA = "SEND_DATA";
+			public static final String SEND_DATA = "SEND_DATA";
 		}
 	
 	public static enum TRACETYPE{

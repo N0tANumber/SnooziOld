@@ -68,6 +68,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     GCMRegistrar.checkDevice(mContext);
     GCMRegistrar.checkManifest(mContext);
     GCMRegistrar.register(mContext, PROJECT_NUMBER);
+    SyncAdapter.isRegistationPending = true;
   }
 
   /**
@@ -104,6 +105,7 @@ public class GCMIntentService extends GCMBaseIntentService {
   @Override
   public void onError(Context context, String errorId) {
 	  SnooziUtility.trace(context, TRACETYPE.ERROR, "Registration with Google Cloud Messaging FAILED : " + errorId);
+	  SyncAdapter.isRegistationPending = false;
   }
 
   /**
@@ -189,14 +191,16 @@ public class GCMIntentService extends GCMBaseIntentService {
       }
       
       SnooziUtility.trace(context, TRACETYPE.DEBUG,"GCM registered  with id :  " +  registration);
-		
-	    //Saving registration State
-	    SharedPreferences settings =context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = settings.edit();
-		editor.putBoolean("isRegistered", true);
-		editor.commit();
-		//	SnooziUtility.trace(context, TRACETYPE.ERROR,"isRegistered not commiting " );
-		
+     
+    //Saving registration State
+	    Bundle settingsBundle = new Bundle();
+  		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+       //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+       settingsBundle.putString("action", SnooziUtility.SYNC_ACTION.GCM_REGISTERED);
+        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(context), SnooziContract.AUTHORITY, settingsBundle);
+
+        
+	   
     } catch (IOException e) {
     	String msg = "Exception received when attempting to register with server at "
                 + endpoint.getRootUrl() + " : " + e.toString();

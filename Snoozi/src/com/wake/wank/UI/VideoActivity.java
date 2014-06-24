@@ -2,6 +2,8 @@ package com.wake.wank.UI;
 
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.ads.*;
+import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.wake.wank.*;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.utils.SnooziUtility;
@@ -78,13 +80,30 @@ public class VideoActivity extends Activity {
         
 		currentVideo = SnooziUtility.getCurrentAlarmVideo(this);
 		
-		TextView videoTitle = (TextView) findViewById(R.id.videoTitle);
+		TextView videoTitle = (TextView) findViewById(R.id.txtinfo);
 		videoTitle.setText(currentVideo.getDescription());
 		
-		TextView txtdate = (TextView) findViewById(R.id.txtDate);
-		txtdate.setText(currentVideo.getPublishDate());
 		
-		
+		// Recherchez AdView comme ressource et chargez une demande.
+		Bundle bundle = new Bundle();
+		bundle.putString("color_bg", "641213");
+		bundle.putString("color_bg_top", "641213");
+		bundle.putString("color_border", "333333");
+		bundle.putString("color_link", "FFFFFF");
+		bundle.putString("color_text", "cccccc");
+		bundle.putString("color_url", "cc9933");
+
+		AdMobExtras extras = new AdMobExtras(bundle);
+		AdView adView = (AdView)this.findViewById(R.id.adView);
+	    AdRequest adRequest = new AdRequest.Builder()
+			    .addNetworkExtras(extras)
+			    .tagForChildDirectedTreatment(false)
+	    		.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // Émulateur
+	    	    .addTestDevice("88D53265ED709666EA324C27AAE13FC1")
+	    	    .addTestDevice("BFCEAEB7FADA53A2A79A6F7C4DD211AB")
+	    	    .build();
+	    adView.loadAd(adRequest);
+	    
 		
 		mVideoView.setVideoURI(Uri.parse(currentVideo.getLocalurl()));
 		
@@ -106,7 +125,8 @@ public class VideoActivity extends Activity {
             
 			public void onPrepared(MediaPlayer mp) {
                 duration = mVideoView.getDuration();
-                
+
+                startPlaying();
             }
          });
          mVideoView.setOnTouchListener(new View.OnTouchListener() {
@@ -159,7 +179,6 @@ public class VideoActivity extends Activity {
          refreshInfotext();
  		
          
-        startPlaying();
         
 	}
 

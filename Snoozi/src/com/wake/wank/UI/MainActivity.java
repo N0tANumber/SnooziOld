@@ -117,13 +117,14 @@ public class MainActivity extends Activity {
 			//We insert the 3 dummy video into BDD
 			createDummyVideo();
 			
-			//We ask for next video to be downloaded
-			 Bundle settingsBundle = new Bundle();
-        	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
- 	        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
- 	        settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
-  	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
 
+			//We ask for next video to be downloaded
+			Bundle settingsBundle = new Bundle();
+			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
+			ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
+			
 		}
 		else
 			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
@@ -134,7 +135,6 @@ public class MainActivity extends Activity {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
 		//We copy the local BDD / Only on DEV MODE
 		exportLocalDatabase();
 	}

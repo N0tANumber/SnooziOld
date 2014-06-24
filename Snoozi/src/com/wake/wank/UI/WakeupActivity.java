@@ -223,9 +223,12 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		{
 			SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onDestroy with Finishing");
 			stopRingingAlarm();
-			mMediaPlayer.stop();
-			mMediaPlayer.release();
-			mMediaPlayer = null;
+			if(mMediaPlayer != null)
+			{
+				mMediaPlayer.stop();
+				mMediaPlayer.release();
+				mMediaPlayer = null;
+			}
 			_vibrator = null;
 			//SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity Stop Alarm");
 			//stopRinginAlarm();
@@ -285,6 +288,10 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			_alarmEvent = TrackingEventAction.WAKEUP;
 			sender.sendUserEvent(TrackingEventCategory.ALARM,_alarmEvent,"",  currentVideo.getVideoid());
 			stopRingingAlarm();
+			mMediaPlayer.stop();
+			mMediaPlayer.release();
+			mMediaPlayer = null;
+			_vibrator = null;
 			Intent intent = new Intent(this, VideoActivity.class);
 			startActivityForResult(intent, 1);
 			

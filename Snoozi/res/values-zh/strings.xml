@@ -3,14 +3,13 @@
     <string name="app_name">Wake&amp;Wank</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">设定</string>
-    <string name="welcome"></string>
     <string name="activate">确定</string>
     <string name="Hour">响铃时间</string>
     <string name="Repeat">重复</string>
     <string name="Vibration">振动</string>
     <string name="dotline">---</string>
     <string name="done">I\'m done !</string>
-    <string name="preversion">这只是一个原型,其他功能将在不久推出</string>
+    <string name="preversion"></string>
     <string name="Everyday">每天</string>
     <string name="alarmon">闹钟 ON</string>
     <string name="alarmoff">闹钟 OFF</string>
@@ -18,8 +17,8 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="like">顶</string>
-    <string name="dislike">踩</string>
+    <string name="like">+1</string>
+    <string name="dislike">-1</string>
     <string name="snooziTeam">Wake Team</string>
     <string name="fakedate">08 May 14</string>
     <string name="blank"></string>

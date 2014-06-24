@@ -2,14 +2,13 @@
 <resources>
         <string name="app_name">Wake&amp;Wank</string>
      <string name="menu_settings">Paramètres</string>
-    <string name="welcome"></string>
     <string name="activate">Activate Alarm</string>
     <string name="Hour">Heure</string>
     <string name="Repeat">Repéter</string>
     <string name="Vibration">Vibration</string>
     <string name="dotline">---</string>
     <string name="done">J\'ai fini !</string>
-    <string name="preversion">Cette version est un prototype,beaucoup de fonctionnalités et de relooking sont à venir!</string>
+    <string name="preversion"></string>
     <string name="Everyday">Tous les jours</string>
     <string name="alarmon">Alarme Activée</string>
     <string name="alarmoff">Alarm Désactivée</string>
@@ -17,8 +16,8 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="like">J\'aime</string>
-    <string name="dislike">Je n\'aime pas</string>
+    <string name="like">+1</string>
+    <string name="dislike">-1</string>
     <string name="snooziTeam">Wake Team</string>
     <string name="fakedate">08 May 14</string>
     <string name="blank"></string>

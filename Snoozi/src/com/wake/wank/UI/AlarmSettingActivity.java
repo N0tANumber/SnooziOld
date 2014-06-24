@@ -44,8 +44,7 @@ public class AlarmSettingActivity extends Activity {
 	private boolean mIgnoreEvent=false;
 
 	private ToggleButton chkactivate;
-	private OnCheckedChangeListener activateListener = null;
-
+	
 	private TimePicker picker;
 	private TextView txtdays;
 	private ArrayList<Integer> currentDays;
@@ -95,93 +94,7 @@ public class AlarmSettingActivity extends Activity {
 
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, 0);
 
-
-		/*Activate setup*/
-		activateListener = new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-
-				SavePref();
-
-				//Build the event for the server
-				TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
-				StringBuilder evtDescr = new StringBuilder();
-				evtDescr.append(" at ");
-				evtDescr.append(picker.getCurrentHour());
-				evtDescr.append(":");
-				evtDescr.append(picker.getCurrentMinute());
-				evtDescr.append(" on ");
-				String dayString = "";
-				SharedPreferences prefs = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-				ArrayList<String> theDayList = new ArrayList<String>();
-				if(prefs.getBoolean("monday",false))
-					theDayList.add("monday");
-				if(prefs.getBoolean("tuesday",false))
-					theDayList.add("tuesday");
-				if(prefs.getBoolean("wednesday",false))
-					theDayList.add("wednesday");
-				if(prefs.getBoolean("thursday",false))
-					theDayList.add("thursday");
-				if(prefs.getBoolean("friday",false))
-					theDayList.add("friday");
-				if(prefs.getBoolean("saturday",false))
-					theDayList.add("saturday");
-				if(prefs.getBoolean("sunday",false))
-					theDayList.add("sunday");
-				
-				if(theDayList.size() == 0 || theDayList.size() == 7)
-					dayString = "EveryDay";
-				else
-					dayString = theDayList.toString();
-				evtDescr.append(dayString);
-
-				//Dispatch event to the server
-				if(isChecked)
-				{
-					AlarmPlanifier.checkAndPlanifyNextAlarm(getApplicationContext());
-					sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.SET,"set" + evtDescr.toString());
-					
-					
-					//We display a toast message
-					String nextString = AlarmPlanifier.getNextAlarmAsString(getApplicationContext());
-					if(nextString.length() > 0)
-					{
-						nextString = getResources().getString(R.string.alarnIsSet) + " " + nextString;
-						Toast.makeText(getApplicationContext(),nextString , Toast.LENGTH_LONG).show();
-					}
-					
-					
-				}
-				else
-				{
-					sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.UNSET,"unset" + evtDescr.toString());
-					AlarmPlanifier.CancelAlarm(getApplicationContext());
-				}
-
-
-				//when alarm is set, we disable all other controls
-				LinearLayout layout = (LinearLayout) findViewById(R.id.inputlayout);
-				for (int i = 0; i < layout.getChildCount(); i++) {
-					View child = layout.getChildAt(i);
-					child.setEnabled(!isChecked);
-				}
-			}
-
-		};
-		chkactivate = (ToggleButton) findViewById(R.id.chk_activate);
-		//Update Button state from Pref
-		boolean isActivated = settings.getBoolean("activate", false);
-		if(isActivated)
-		{
-			//alarm is set, so we disable all other controls
-			chkactivate.setChecked(isActivated);
-			LinearLayout layout = (LinearLayout) findViewById(R.id.inputlayout);
-			for (int i = 0; i < layout.getChildCount(); i++) {
-				View child = layout.getChildAt(i);
-				child.setEnabled(!isActivated);
-			}
-		}
-		chkactivate.setOnCheckedChangeListener(activateListener);
+		
 
 
 
@@ -194,6 +107,7 @@ public class AlarmSettingActivity extends Activity {
 			public void onTimeChanged(TimePicker timePicker, int hourOfDay, int minute){
 				if (mIgnoreEvent)
 					return;
+				/* 5 minutes steps
 				if (minute%TIME_PICKER_INTERVAL!=0){
 					int minuteFloor=minute-(minute%TIME_PICKER_INTERVAL);
 					minute=minuteFloor + (minute==minuteFloor+1 ? TIME_PICKER_INTERVAL : 0);
@@ -203,7 +117,8 @@ public class AlarmSettingActivity extends Activity {
 					timePicker.setCurrentMinute(minute);
 					mIgnoreEvent=false;
 				}
-
+*/
+				
 				if(! mIgnoreEvent)
 				{
 					//Saving the current hour / minute
