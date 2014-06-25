@@ -47,6 +47,7 @@ public class AlarmSound
 		
 		m_alarmVolume =  prefs.getInt("volume", m_mainStreamVolume);
 		m_audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, m_alarmVolume, 0);
+		//m_audioManager.setStreamVolume(AudioManager.STREAM_, m_alarmVolume, 0);
 		
 	}
 
@@ -76,7 +77,7 @@ public class AlarmSound
 	{
 		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM START PLAYING");
 		//Play music
-		if(m_mediaPlayer.isPlaying())
+		if(m_mediaPlayer ==null || m_mediaPlayer.isPlaying())
 			return;
 		
 		m_mediaPlayer.start();
@@ -113,6 +114,7 @@ public class AlarmSound
 						}
 						
 					} catch (Exception e) {
+						SnooziUtility.trace(m_context, TRACETYPE.ERROR, "ALARM timerTask error : " + e.toString());
 						timer.cancel();
 						timer.purge();
 					}
@@ -127,7 +129,7 @@ public class AlarmSound
 	{
 		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM PAUSED");
 		
-		if (m_mediaPlayer.isPlaying()) 
+		if (m_mediaPlayer !=null && m_mediaPlayer.isPlaying()) 
 			m_mediaPlayer.pause();
 	}
 	
@@ -135,7 +137,7 @@ public class AlarmSound
 	{
 		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM STOPPED");
 		
-		if (m_mediaPlayer.isPlaying()) 
+		if (m_mediaPlayer !=null && m_mediaPlayer.isPlaying()) 
 			m_mediaPlayer.stop();
 		m_currentVolume = 0;
 	}
@@ -145,7 +147,7 @@ public class AlarmSound
 		
 		
 		// we replace the old stream volume
-		m_audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, m_mainStreamVolume, 0);
+		//m_audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, m_mainStreamVolume, 0);
 		
 		if(m_mediaPlayer != null)
 			m_mediaPlayer.release();

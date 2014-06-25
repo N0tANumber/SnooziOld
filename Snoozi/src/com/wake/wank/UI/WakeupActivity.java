@@ -89,24 +89,13 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		
 		
 		
-		//Play sound
-		mMediaPlayer = new AlarmSound(this);
-		try {
-			mMediaPlayer.load(SnooziUtility.getVideoUri(this), true);
-			
-		} catch (Exception e) {
-			//TODO : Error while loading video, playing fallback sound
-			SnooziUtility.trace(this, TRACETYPE.ERROR,"AlarmReceiverActivity.onCreate Exception :  " +  e.toString());
-			
-		}
 		
-		boolean isVibrate = settings.getBoolean("vibrate", false);
-		if(isVibrate)
-			_vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		// Start without a delay
 		// Vibrate for 100 milliseconds
 		// Sleep for 1000 milliseconds
-		
+		boolean isVibrate = settings.getBoolean("vibrate", false);
+		if(isVibrate)
+			_vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		 
 		mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
 		mGlowPadView.setOnTriggerListener(this);
@@ -250,8 +239,23 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	
 	private void startRingingAlarm()
 	{
+		if(mMediaPlayer == null)
+		{
+			//Play sound
+			mMediaPlayer = new AlarmSound(this);
+			try {
+				mMediaPlayer.load(SnooziUtility.getVideoUri(this), true);
+				
+			} catch (Exception e) {
+				//TODO : Error while loading video, playing fallback sound
+				SnooziUtility.trace(this, TRACETYPE.ERROR,"AlarmReceiverActivity.startRingingAlarm Exception :  " +  e.toString());
+			}
+			
+		}
+
 		if(mMediaPlayer != null)
 			mMediaPlayer.play(3000);
+		
 		if (_vibrator !=null && _vibrator.hasVibrator())
 		{
 			long[] pattern = {0, 1000, 200};

@@ -102,8 +102,7 @@ public class FragmentClock extends Fragment {
 		int thehour = settings.getInt("hour",7);
 		int themin = settings.getInt("minute",30);
 
-		TextView txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
-		txtTime.setText(thehour+":"+themin);
+		buildTime(thehour, themin);
 		TextView txtday = (TextView)rootView.findViewById(R.id.Txtdays);
 		txtday.setText(theDayString);
 
@@ -140,11 +139,41 @@ public class FragmentClock extends Fragment {
 		{
 			SnooziUtility.trace(getActivity(), TRACETYPE.INFO,".....onAlarmSettingResult RESULT OK");
 			Boolean activ = data.getBooleanExtra("activated", false);
-
-			chkactivate.setChecked(activ);
+			
+			int thehour = data.getIntExtra("hour",7);
+			int themin = data.getIntExtra("minute",30);
+			String theDayString = data.getStringExtra("dayString");
+			
+			
+			buildTime(thehour, themin);
+			TextView txtday = (TextView)rootView.findViewById(R.id.Txtdays);
+			txtday.setText(theDayString);
+			
+			if(activ == chkactivate.isChecked())
+				SetAlarm(activ);
+			else
+				chkactivate.setChecked(activ);
 		}
 			  
 		
+	}
+
+
+	/**
+	 * @param thehour
+	 * @param themin
+	 */
+	public void buildTime(int thehour, int themin) {
+		String theTime = "";
+		if(thehour < 10)
+			theTime = "0";
+		theTime += thehour + ":";
+		if(themin < 10)
+			theTime += "0";
+		theTime += themin;
+		
+		TextView txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
+		txtTime.setText(theTime);
 	}
 
 
@@ -152,18 +181,12 @@ public class FragmentClock extends Fragment {
 	private void SetAlarm(Boolean isActivated)
 	{
 
-		SharedPreferences prefs = rootView.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+		SharedPreferences prefs = getActivity().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean("activate", isActivated);
 		editor.apply();
 		int thehour = prefs.getInt("hour",7);
 		int themin = prefs.getInt("minute",30);
-		String theDayString = prefs.getString("dayString",getResources().getString(R.string.Everyday));
-		
-		TextView txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
-		txtTime.setText(thehour+":"+themin);
-		TextView txtday = (TextView)rootView.findViewById(R.id.Txtdays);
-		txtday.setText(theDayString);
 		
 		//Build the event for the server
 		TrackingSender sender = new TrackingSender(rootView.getContext(),getActivity().getApplication());
@@ -199,9 +222,8 @@ public class FragmentClock extends Fragment {
 		//Dispatch event to the server
 		if(isActivated)
 		{
-			AlarmPlanifier.checkAndPlanifyNextAlarm(rootView.getContext());
+			AlarmPlanifier.checkAndPlanifyNextAlarm(getActivity());
 			sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.SET,"set" + evtDescr.toString());
-			
 			
 			//We display a toast message
 			String nextString = AlarmPlanifier.getNextAlarmAsString(rootView.getContext());
@@ -210,13 +232,11 @@ public class FragmentClock extends Fragment {
 				nextString = getResources().getString(R.string.alarnIsSet) + " " + nextString;
 				Toast.makeText(rootView.getContext(),nextString , Toast.LENGTH_LONG).show();
 			}
-			
-			
 		}
 		else
 		{
 			sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.UNSET,"unset" + evtDescr.toString());
-			AlarmPlanifier.CancelAlarm(rootView.getContext());
+			AlarmPlanifier.CancelAlarm(getActivity());
 		}
 	}
 	

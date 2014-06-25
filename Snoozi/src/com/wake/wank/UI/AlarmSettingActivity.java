@@ -333,6 +333,9 @@ public class AlarmSettingActivity extends Activity {
 				SavePref();
 				Intent returnIntent = new Intent();
 				returnIntent.putExtra("activated", chkactivate.isChecked());
+				returnIntent.putExtra("hour", picker.getCurrentHour());
+				returnIntent.putExtra("minute", picker.getCurrentMinute());
+				returnIntent.putExtra("dayString", txtdays.getText().toString());
 				setResult(RESULT_OK, returnIntent);
 				finish();
 			}
@@ -377,8 +380,7 @@ public class AlarmSettingActivity extends Activity {
 		editor.putInt("volume", volumebar.getProgress());
 		
 		editor.apply();
-		
 
 	}
-
+	
 }

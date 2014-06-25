@@ -160,35 +160,35 @@ public class MainActivity extends Activity {
 		int videoNumber = 0;
 		String path = "";
 
-		//FIRST VIDEO : Twin baby
+		//FIRST VIDEO :Still Dreaming?
 		videoNumber = 0;
 		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
 		videoObj.setLocalurl(path);
-		videoObj.setUrl("TwinBabies.m4v");
-		videoObj.setVideoid(5690091590647808l); // video id on the Cloud Storage for tracking like/view and others...
-		videoObj.setDescription("Advantage of being an Unemployed Dad");
+		videoObj.setUrl("Chicks.mp4");
+		videoObj.setVideoid(6421335542595584l); // video id on the Cloud Storage for tracking like/view and others...
+		videoObj.setDescription("Still Dreaming?");
 		videoObj.save(this);
 		videoObj.setId(0);
 
-		//SECOND VIDEO : Rick Rolls
+		//SECOND VIDEO : Party at my house last night!
 		videoNumber = 1;
 		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
 		videoObj.setLocalurl(path);
-		videoObj.setUrl("RickRoll.m4v");
-		videoObj.setVideoid(4777367553703936l); // video id on the Cloud Storage for tracking like/view and others...
-		videoObj.setDescription("Rick Rolled by Snoozi!");
+		videoObj.setUrl("GirlsGoneWild.m4v");
+		videoObj.setVideoid(6750768661004288l); // video id on the Cloud Storage for tracking like/view and others...
+		videoObj.setDescription("Party at my house last night!");
 		videoObj.save(this);
 		videoObj.setId(0);
 
 		//THIRD VIDEO : Elephant piano
-		videoNumber = 2;
+		/*videoNumber = 2;
 		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
 		videoObj.setLocalurl(path);
 		videoObj.setUrl("ElephantPiano.m4v");
 		videoObj.setVideoid(5207439808921600l); // video id on the Cloud Storage for tracking like/view and others...
 		videoObj.setDescription("Have fun with your morning video!");
 		videoObj.save(this);
-
+*/
 	}
 	
 	/**

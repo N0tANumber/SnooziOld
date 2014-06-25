@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/deviceinfoendpoint/v2/20140621173331/java/1.16.0-rc/snoozi.com-deviceinfoendpoint-v2-20140621173331-java-1.16.0-rc-sources.jar", 
-      "path": "snoozi.com-deviceinfoendpoint-v2-20140621173331-java-1.16.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/deviceinfoendpoint/v2/20140625033944/java/1.16.0-rc/snoozi.com-deviceinfoendpoint-v2-20140625033944-java-1.16.0-rc-sources.jar", 
+      "path": "snoozi.com-deviceinfoendpoint-v2-20140625033944-java-1.16.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2014-06-21 17:33"
+      "timestamp": "2014-06-25 03:39"
     }, 
     {
-      "path": "snoozi.com-deviceinfoendpoint-v2-20140621173331-java-1.16.0-rc.jar.properties", 
+      "path": "snoozi.com-deviceinfoendpoint-v2-20140625033944-java-1.16.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -701,5 +701,5 @@
   "version": "v2", 
   "language_version": "1.16.0-rc", 
   "id": "deviceinfoendpoint:v2", 
-  "revision": 20140621173331
+  "revision": 20140625033944
 }

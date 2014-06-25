@@ -77,13 +77,23 @@ public class AlarmPlanifier  {
 	public static void CancelAlarm(Context context)
 	{
 		try {
-
+			SnooziUtility.trace(context, TRACETYPE.INFO, "Cancelling Alarm");
+			
 			// If the alarm has been set, cancel it.
-			AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+			/*AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 			Intent intent = new Intent(context, OnAlarmReceiver.class);
 			PendingIntent alarmIntent = PendingIntent.getActivity(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-			alarmMgr.cancel(alarmIntent);
+			alarmMgr.cancel(alarmIntent);*/
 
+			
+			Intent intent = new Intent(context, OnAlarmReceiver.class);
+			//12345 is the alarm id. using the same alarm id overwritte previous planification of this alarm
+			PendingIntent alarmIntent = PendingIntent.getBroadcast(context,12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+			AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+			alarmMgr.cancel(alarmIntent);;
+
+			
+			
 			//Disabling reboot alarm receiver
 			//ComponentName receiver = new ComponentName(context, WakeupBootReceiver.class);
 			//PackageManager pm = context.getPackageManager();
