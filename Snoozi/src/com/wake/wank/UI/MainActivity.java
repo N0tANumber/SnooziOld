@@ -76,6 +76,12 @@ public class MainActivity extends Activity {
 		};
 
 		timer.schedule(timerTask, 1000);
+		//During that time We ask for next video to be downloaded
+		Bundle settingsBundle = new Bundle();
+		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+		//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+		settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
+		ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
 		
 		
 	}
@@ -118,17 +124,11 @@ public class MainActivity extends Activity {
 			createDummyVideo();
 			
 
-			//We ask for next video to be downloaded
-			Bundle settingsBundle = new Bundle();
-			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
-			ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
-			
 		}
 		else
 			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
 
+		
 		try {
 			
 			EasyTracker.getInstance().activityStart(this);

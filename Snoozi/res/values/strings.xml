@@ -18,8 +18,8 @@
     <string name="title_activity_video">VideoActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="like">+1</string>
-    <string name="dislike">-1</string>
+    <string name="like">Like</string>
+    <string name="dislike">Dislike</string>
     <string name="snooziTeam">Wake Team</string>
     <string name="fakedate">08 May 14</string>
     <string name="blank"></string>
@@ -69,5 +69,6 @@
 <string name="record">Record Video</string>
 <string name="startrecord">Start Recording</string>
   <string name="stoprecord">Stop Recording</string>
+  <string name="pleaseRate">Rate this video to improve our Video Quality :</string>
     
 </resources>

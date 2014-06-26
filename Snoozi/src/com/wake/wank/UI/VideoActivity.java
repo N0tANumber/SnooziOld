@@ -199,13 +199,7 @@ public class VideoActivity extends Activity {
 		refreshInfotext();
 
 
-		//We ask for next video to be downloaded
-		Bundle settingsBundle = new Bundle();
-		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-		//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-		settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
-		ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
-
+		
 	}
 
 	@Override

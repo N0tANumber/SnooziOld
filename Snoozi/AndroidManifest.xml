@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wake.wank"
     android:versionCode="4"
-    android:versionName="0.3">
+    android:versionName="sexy.beast">
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -23,10 +23,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />  
-    <uses-permission android:name="android.permission.STORAGE" />  
+ 
     
     <permission
         android:name="com.wake.wank.permission.C2D_MESSAGE"

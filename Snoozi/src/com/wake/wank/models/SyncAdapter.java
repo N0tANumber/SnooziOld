@@ -90,10 +90,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		String action=null;
 		if(extras != null)
 			action = extras.getString("action");
-
 		if(action==null)
 			action = SnooziUtility.SYNC_ACTION.SEND_DATA;
-		SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG, action);
+
+		SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG, "SyncAdapter.onPerformSync : "+action);
 
 
 		SharedPreferences settings =this.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
@@ -139,6 +139,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		{
 			// we send all data to the server if any
 			this.sendTrackingEvent(provider);
+			
 		}else if( action.equals(SnooziUtility.SYNC_ACTION.SEND_RATING))
 		{
 			//We send a user rating
@@ -149,6 +150,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			this.sendRatingData(videoid, addedViewcount, addedLike);
 
 			this.cleanupOldVideo(provider);
+			//We get all recent video from the server
+			this.retrieveRecentVideo(provider);
+
 		}
 	}
 
