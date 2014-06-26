@@ -355,7 +355,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			Long fromstamp = settings.getLong("newestVideoStamp", 0);
 
 
-			SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Getting from server " +  maxDownloadedVideo + " new video");
+			SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Getting from server " +  maxDownloadedVideo + " new video timestamp > " + fromstamp);
 			// we must call the serveur to get a list of all recent  video
 			//Preparing the endpoint for receiving all video
 			Videoendpoint.Builder endpointBuilder = new Videoendpoint.Builder(
@@ -397,7 +397,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						values.put(SnooziContract.videos.Columns.VIEWCOUNT,video.getViewcount() );
 						values.put(SnooziContract.videos.Columns.STATUS,video.getStatus() );
 						values.put(SnooziContract.videos.Columns.LEVEL,video.getLevel() );
-
+						//If this video is newer, we save the stamp
+						if(fromstamp < video.getTimestamp())
+							fromstamp = video.getTimestamp();
 						try 
 						{
 							// We look in the content provider if we already have that video in stock
@@ -417,9 +419,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 								Uri videouri = provider.insert(SnooziContract.videos.CONTENT_URI, values);
 								SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"INSERTED Video " + video.getId() + " : " + videouri.toString());
 
-								//If this video is newer, we save the stamp
-								if(fromstamp < video.getTimestamp())
-									fromstamp = video.getTimestamp();
+								
 
 							}else
 							{
@@ -457,9 +457,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						//We try to save the newest stamp
 						SharedPreferences.Editor editor = settings.edit();
 						editor.putLong("newestVideoStamp", fromstamp);
-						editor.apply();
+						editor.commit();
 					} catch (Exception e) {
-						// TODO: handle exception
+						SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"newestVideoStamp Exception :  " +  e.toString());
+						
 					}
 				}
 			}

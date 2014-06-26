@@ -380,6 +380,7 @@ public class AlarmSettingActivity extends Activity {
 		editor.putInt("volume", volumebar.getProgress());
 		
 		editor.apply();
+		editor.commit();
 
 	}
 	

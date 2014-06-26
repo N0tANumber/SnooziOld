@@ -185,6 +185,7 @@ public class FragmentClock extends Fragment {
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putBoolean("activate", isActivated);
 		editor.apply();
+		editor.commit();
 		int thehour = prefs.getInt("hour",7);
 		int themin = prefs.getInt("minute",30);
 		
