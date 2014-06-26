@@ -351,8 +351,20 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		if(maxDownloadedVideo >0)
 		{
-			SharedPreferences settings =this.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-			Long fromstamp = settings.getLong("newestVideoStamp", 0);
+		
+			//getting the highest video STAMP
+			Long fromstamp = 0l;
+			try {
+				playedcursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ALL, SnooziContract.videos.Columns.FILESTATUS + " != ? ",new String[]{"UNSET"},  SnooziContract.videos.SORT_ORDER_TIMESTAMP);
+				if (playedcursor.moveToFirst()) 
+				{
+					fromstamp = playedcursor.getLong(playedcursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.TIMESTAMP));
+				}
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 
 
 			SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Getting from server " +  maxDownloadedVideo + " new video timestamp > " + fromstamp);
@@ -397,9 +409,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						values.put(SnooziContract.videos.Columns.VIEWCOUNT,video.getViewcount() );
 						values.put(SnooziContract.videos.Columns.STATUS,video.getStatus() );
 						values.put(SnooziContract.videos.Columns.LEVEL,video.getLevel() );
-						//If this video is newer, we save the stamp
-						if(fromstamp < video.getTimestamp())
-							fromstamp = video.getTimestamp();
 						try 
 						{
 							// We look in the content provider if we already have that video in stock
@@ -452,15 +461,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 							if(cursor != null)
 								cursor.close();
 						}
-					}
-					try {
-						//We try to save the newest stamp
-						SharedPreferences.Editor editor = settings.edit();
-						editor.putLong("newestVideoStamp", fromstamp);
-						editor.commit();
-					} catch (Exception e) {
-						SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"newestVideoStamp Exception :  " +  e.toString());
-						
 					}
 				}
 			}

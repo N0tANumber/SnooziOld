@@ -88,6 +88,7 @@ public class SnooziContract {
 								};
 		
 		public static final String SORT_ORDER_DEFAULT = Columns.TIMESTAMP + " DESC";
+		public static final String SORT_ORDER_TIMESTAMP = Columns.TIMESTAMP + " DESC";
 		public static final String SORT_ORDER_UNVIEWED = Columns.MYVIEWCOUNT + " ASC, " + Columns.MYLIKE + " DESC";
 		
 		public final static class Columns implements BaseColumns{

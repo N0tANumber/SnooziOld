@@ -59,7 +59,7 @@ public class MyVideo {
 		viewcount = 0;
 		myviewcount = 0;
 		status = "UNSET"; 
-		timestamp = System.currentTimeMillis();
+		timestamp = 0l;
 		userid = 1l;
 		level = 0;
 		addedLike = 0;

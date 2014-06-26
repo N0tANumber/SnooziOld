@@ -76,12 +76,6 @@ public class MainActivity extends Activity {
 		};
 
 		timer.schedule(timerTask, 1000);
-		//During that time We ask for next video to be downloaded
-		Bundle settingsBundle = new Bundle();
-		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-		//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-		settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
-		ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
 		
 		
 	}
@@ -123,7 +117,13 @@ public class MainActivity extends Activity {
 			//We insert the 3 dummy video into BDD
 			createDummyVideo();
 			
-
+			//During that time We ask for next video to be downloaded
+			Bundle settingsBundle = new Bundle();
+			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+			//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+			settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
+			ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
+			
 		}
 		else
 			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
@@ -157,6 +157,7 @@ public class MainActivity extends Activity {
 		MyVideo videoObj = new MyVideo();
 		videoObj.setStatus("OK");
 		videoObj.setFilestatus("DUMMY");
+		videoObj.setId(0);
 		int videoNumber = 0;
 		String path = "";
 
@@ -167,6 +168,7 @@ public class MainActivity extends Activity {
 		videoObj.setUrl("Chicks.mp4");
 		videoObj.setVideoid(6421335542595584l); // video id on the Cloud Storage for tracking like/view and others...
 		videoObj.setDescription("Still Dreaming?");
+		videoObj.setTimestamp(1401291149156l);
 		videoObj.save(this);
 		videoObj.setId(0);
 
@@ -177,6 +179,7 @@ public class MainActivity extends Activity {
 		videoObj.setUrl("GirlsGoneWild.m4v");
 		videoObj.setVideoid(6750768661004288l); // video id on the Cloud Storage for tracking like/view and others...
 		videoObj.setDescription("Party at my house last night!");
+		videoObj.setTimestamp(1401291282525l);
 		videoObj.save(this);
 		videoObj.setId(0);
 
@@ -205,7 +208,7 @@ public class MainActivity extends Activity {
 				InputStream in = new FileInputStream(file);
 		        OutputStream out = null;
 		        
-		        File outFile = new File("/storage/emulated/0/Android/backupWank.db");
+		        File outFile = new File("/mnt/sdcard/Android/backupWank.db");
 				out = new FileOutputStream(outFile);
 		       
 		        byte[] buffer = new byte[1024];
