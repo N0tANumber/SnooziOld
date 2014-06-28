@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/waSexFraq4fdnq23p3dzRSBbOt8\"",
+ "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/jItKdmrBPzWdBN9PwI2Iu3W_1iY\"",
  "discoveryVersion": "v1",
  "id": "videoendpoint:v2",
  "name": "videoendpoint",
@@ -160,6 +160,36 @@
    ],
    "returns": {
     "$ref": "Video"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "videoendpoint.getVideosFromUser": {
+   "id": "videoendpoint.getVideosFromUser",
+   "allowGet": true,
+   "parameters": {
+    "cursor": {
+     "type": "string"
+    },
+    "fromstamp": {
+     "type": "string",
+     "format": "int64"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "status": {
+     "type": "string"
+    },
+    "userid": {
+     "type": "string",
+     "format": "int64"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

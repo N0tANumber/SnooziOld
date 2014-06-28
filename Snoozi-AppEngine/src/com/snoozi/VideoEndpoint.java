@@ -9,6 +9,8 @@ import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.datanucleus.query.JDOCursorHelper;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -178,7 +180,7 @@ public class VideoEndpoint {
 	 ****************** CUSTOM METHOD & PATH ******************
 	 */
 	
-	
+
 	/**
 	 * Get all recent video posted
 	 * @param cursorString  point to start	
@@ -220,6 +222,70 @@ public class VideoEndpoint {
 				status = "OK";
 
 			execute = (List<Video>) query.execute(status);
+			cursor = JDOCursorHelper.getCursor(execute);
+			if (cursor != null)
+				cursorString = cursor.toWebSafeString();
+
+			// Tight loop for fetching all entities from datastore and accomodate
+			// for lazy fetch.
+			for (Video obj : execute)
+				;
+		} finally {
+			mgr.close();
+		}
+
+		return CollectionResponse.<Video> builder().setItems(execute)
+				.setNextPageToken(cursorString).build();
+	}
+	
+
+	/**
+	 * Get all recent video posted
+	 * @param cursorString  point to start	
+	 * @param limit record count
+	 * @param status status of type VIDEO_STATUS (OK, REPORT,DELETE...)
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "unused" })
+	@ApiMethod(name = "getVideosFromUser", path="getVideosFromUser")
+	public CollectionResponse<Video> getVideosFromUser(
+			@Nullable @Named("cursor") String cursorString,
+			@Nullable @Named("limit") Integer limit,
+			@Nullable @Named("userid") Long userid,
+			@Nullable @Named("fromstamp") Long fromstamp,
+			@Nullable @Named("status") String status) {
+
+		PersistenceManager mgr = null;
+		Cursor cursor = null;
+		List<Video> execute = null;
+
+		try {
+			mgr = getPersistenceManager();
+			Query query = mgr.newQuery(Video.class);
+			query.setFilter("userid == useridParam && status ==  statusParam && timestamp > timeParam");
+			query.declareParameters("Long useridParam, String statusParam, Long timeParam");
+			
+			
+			query.setOrdering("timestamp asc");
+			if (cursorString != null && cursorString != "") {
+				cursor = Cursor.fromWebSafeString(cursorString);
+				HashMap<String, Object> extensionMap = new HashMap<String, Object>();
+				extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+				query.setExtensions(extensionMap);
+			}
+
+			if (limit != null) {
+				if(limit > 30)
+					limit = 30;
+				query.setRange(0, limit);
+			}else
+				query.setRange(0, 5);
+					
+			
+			if(status == null)
+				status = "OK";
+
+			execute = (List<Video>) query.execute(userid, status,fromstamp);
 			cursor = JDOCursorHelper.getCursor(execute);
 			if (cursor != null)
 				cursorString = cursor.toWebSafeString();

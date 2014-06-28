@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/waSexFraq4fdnq23p3dzRSBbOt8\"",
+ "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/jItKdmrBPzWdBN9PwI2Iu3W_1iY\"",
  "discoveryVersion": "v1",
  "id": "videoendpoint:v2",
  "name": "videoendpoint",
@@ -164,6 +164,42 @@
    ],
    "response": {
     "$ref": "Video"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getVideosFromUser": {
+   "id": "videoendpoint.getVideosFromUser",
+   "path": "getVideosFromUser",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursor": {
+     "type": "string",
+     "location": "query"
+    },
+    "fromstamp": {
+     "type": "string",
+     "format": "int64",
+     "location": "query"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32",
+     "location": "query"
+    },
+    "status": {
+     "type": "string",
+     "location": "query"
+    },
+    "userid": {
+     "type": "string",
+     "format": "int64",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "CollectionResponse_Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

@@ -41,6 +41,22 @@
         "body" : "empty"
       }
     },
+    "trackingeventendpoint.insertTrackingEvent" : {
+      "path" : "trackingevent",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.TrackingEventEndpoint.insertTrackingEvent",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "trackingeventendpoint.getTrackingEvent" : {
       "path" : "trackingevent/{id}",
       "httpMethod" : "GET",
@@ -57,22 +73,6 @@
           }
         },
         "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "trackingeventendpoint.insertTrackingEvent" : {
-      "path" : "trackingevent",
-      "httpMethod" : "POST",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.TrackingEventEndpoint.insertTrackingEvent",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
       },
       "response" : {
         "body" : "autoTemplate(backendResponse)"
@@ -204,15 +204,15 @@
     "methods" : {
       "com.snoozi.TrackingEventEndpoint.removeErrorLoggerEvent" : {
       },
-      "com.snoozi.TrackingEventEndpoint.getTrackingEvent" : {
-        "response" : {
-          "$ref" : "TrackingEvent"
-        }
-      },
       "com.snoozi.TrackingEventEndpoint.insertTrackingEvent" : {
         "request" : {
           "$ref" : "TrackingEvent"
         },
+        "response" : {
+          "$ref" : "TrackingEvent"
+        }
+      },
+      "com.snoozi.TrackingEventEndpoint.getTrackingEvent" : {
         "response" : {
           "$ref" : "TrackingEvent"
         }

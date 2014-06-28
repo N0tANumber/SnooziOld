@@ -42,6 +42,31 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "videoendpoint.listVideo" : {
+      "path" : "video",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.VideoEndpoint.listVideo",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "videoendpoint.rateVideo" : {
       "path" : "rateVideo",
       "httpMethod" : "PUT",
@@ -63,31 +88,6 @@
           "likevalue" : {
             "type" : "int32",
             "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "videoendpoint.listVideo" : {
-      "path" : "video",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.VideoEndpoint.listVideo",
-      "request" : {
-        "parameters" : {
-          "cursor" : {
-            "type" : "string",
-            "required" : false
-          },
-          "limit" : {
-            "type" : "int32",
-            "required" : false
           }
         },
         "body" : "empty"
@@ -182,6 +182,43 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "videoendpoint.getVideosFromUser" : {
+      "path" : "getVideosFromUser",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.VideoEndpoint.getVideosFromUser",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          },
+          "userid" : {
+            "type" : "int64",
+            "required" : false
+          },
+          "fromstamp" : {
+            "type" : "int64",
+            "required" : false
+          },
+          "status" : {
+            "type" : "string",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
@@ -252,14 +289,14 @@
           "$ref" : "Video"
         }
       },
-      "com.snoozi.VideoEndpoint.rateVideo" : {
-        "response" : {
-          "$ref" : "Video"
-        }
-      },
       "com.snoozi.VideoEndpoint.listVideo" : {
         "response" : {
           "$ref" : "CollectionResponse_Video"
+        }
+      },
+      "com.snoozi.VideoEndpoint.rateVideo" : {
+        "response" : {
+          "$ref" : "Video"
         }
       },
       "com.snoozi.VideoEndpoint.getVideo" : {
@@ -280,6 +317,11 @@
         },
         "response" : {
           "$ref" : "Video"
+        }
+      },
+      "com.snoozi.VideoEndpoint.getVideosFromUser" : {
+        "response" : {
+          "$ref" : "CollectionResponse_Video"
         }
       }
     }
