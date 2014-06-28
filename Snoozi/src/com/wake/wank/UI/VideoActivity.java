@@ -2,8 +2,8 @@ package com.wake.wank.UI;
 
 
 import com.google.analytics.tracking.android.EasyTracker;
-import com.google.android.gms.ads.*;
-import com.google.android.gms.ads.mediation.admob.AdMobExtras;
+//import com.google.android.gms.ads.*;
+//import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.wake.wank.*;
 import com.wake.wank.database.SnooziContract;
 import com.wake.wank.models.MyVideo;
@@ -88,7 +88,7 @@ public class VideoActivity extends Activity {
 
 
 		// Recherchez AdView comme ressource et chargez une demande.
-		Bundle bundle = new Bundle();
+/*		Bundle bundle = new Bundle();
 		bundle.putString("color_bg", "641213");
 		bundle.putString("color_bg_top", "641213");
 		bundle.putString("color_border", "333333");
@@ -106,7 +106,7 @@ public class VideoActivity extends Activity {
 		.addTestDevice("BFCEAEB7FADA53A2A79A6F7C4DD211AB")
 		.build();
 		adView.loadAd(adRequest);
-
+*/
 		
 		
 		try {

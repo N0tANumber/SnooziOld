@@ -4,9 +4,9 @@ package com.wake.wank.UI;
 
 import java.util.ArrayList;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.mediation.admob.AdMobExtras;
+//import com.google.android.gms.ads.AdRequest;
+//import com.google.android.gms.ads.AdView;
+//import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.wake.wank.R;
 import com.wake.wank.models.AlarmPlanifier;
 import com.wake.wank.utils.SnooziUtility;
@@ -68,7 +68,7 @@ public class FragmentClock extends Fragment {
         
         
      // Recherchez AdView comme ressource et chargez une demande.
-     		Bundle bundle = new Bundle();
+     /*		Bundle bundle = new Bundle();
      		bundle.putString("color_bg", "641213");
      		bundle.putString("color_bg_top", "641213");
      		bundle.putString("color_border", "641213");
@@ -86,7 +86,7 @@ public class FragmentClock extends Fragment {
      	    	    .addTestDevice("BFCEAEB7FADA53A2A79A6F7C4DD211AB")
      	    	    .build();
      	    adView.loadAd(adRequest);
-     	    
+     	    */
      	    
      	   SharedPreferences settings = rootView.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, 0);
      	   chkactivate = (CheckBox) rootView.findViewById(R.id.checkBoxActiv);
