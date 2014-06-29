@@ -44,6 +44,16 @@ public class MainActivity extends Activity {
 
 	
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//Facebook install tracking
+		com.facebook.AppEventsLogger.activateApp(this, "250270258502553");
+	}
+
+
+
 	@SuppressWarnings("unused")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
