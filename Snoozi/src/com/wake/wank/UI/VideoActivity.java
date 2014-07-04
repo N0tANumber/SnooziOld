@@ -207,7 +207,8 @@ public class VideoActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStart();
 		try {
-			EasyTracker.getInstance().activityStart(this);
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStart(this);
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -296,7 +297,8 @@ public class VideoActivity extends Activity {
 			SnooziUtility.unsetVideo( );
 			currentVideo = null;
 
-			EasyTracker.getInstance().activityStop(this);
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStop(this);
 
 			stopPlaying();
 

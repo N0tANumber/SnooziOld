@@ -37,8 +37,8 @@ public class SnooziContract {
 		public static final String CONTENT_PATH = "trackingevents";
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(SnooziContract.CONTENT_URI,CONTENT_PATH);
 		
-		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.wake.wankprovider_trackingevents";
-		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.wake.wankprovider_trackingevents";
+		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
 		
 		public static final String TABLE = "trackingevent";
 		
@@ -58,14 +58,14 @@ public class SnooziContract {
 			
 		}
 	}
-	
+
 	public static final class videos
 	{
 		public static final String CONTENT_PATH = "videos";
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(SnooziContract.CONTENT_URI,CONTENT_PATH);
 		
-		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.com.wake.wankprovider_videos";
-		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.com.wake.wankprovider_videos";
+		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
 		
 		public static final String TABLE = "video";
 		
@@ -110,6 +110,67 @@ public class SnooziContract {
 			public static final String DOWNLOADID = "downloadid";
 			
 		}
+		
 	}
+	
+	
+	
 
+	public static final class alarms
+	{
+		public static final String CONTENT_PATH = "alarms";
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(SnooziContract.CONTENT_URI,CONTENT_PATH);
+		
+		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		
+		public static final String TABLE = "alarm";
+		
+		public static final String[] PROJECTION_ID = {Columns._ID};
+		public static final String[] PROJECTION_ALL = {Columns._ID,
+								Columns.ACTIVATE,
+								Columns.ALARMID,
+								Columns.HOUR,
+								Columns.MINUTE,
+								Columns.DAYSTRING,
+								Columns.MONDAY,
+								Columns.TUESDAY,
+								Columns.WEDNESDAY,
+								Columns.THURSDAY,
+								Columns.FRIDAY,
+								Columns.SATURDAY,
+								Columns.SUNDAY,
+								Columns.VIBRATE,
+								Columns.VOLUME,
+								Columns.VIDEOID
+								};
+		
+		public static final String SORT_ORDER_DEFAULT = Columns._ID + " ASC";
+				
+		public final static class Columns implements BaseColumns{
+			private Columns(){}
+			
+			public static final String ACTIVATE = "activate";
+			public static final String ALARMID = "alarmid";
+			public static final String HOUR = "hour";
+			public static final String MINUTE = "minute";
+			public static final String DAYSTRING = "daystring";
+			public static final String MONDAY = "monday";
+			public static final String TUESDAY = "tuesday";
+			public static final String WEDNESDAY = "wednesday";
+			public static final String THURSDAY = "thursday";
+			public static final String FRIDAY = "friday";
+			public static final String SATURDAY = "saturday";
+			public static final String SUNDAY = "sunday";
+			public static final String VIBRATE = "vibrate";
+			public static final String VOLUME = "volume";
+			public static final String VIDEOID = "videoid";
+			
+		}
+		
+	}
+	
+	
+	
+	
 }

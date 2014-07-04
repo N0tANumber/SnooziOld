@@ -34,6 +34,9 @@ public class MyDataProvider extends ContentProvider {
     private static final int VIDEO = 3;
     private static final int VIDEO_ID = 4;
 	
+    private static final int ALARM = 5;
+    private static final int ALARM_ID = 6;
+	
 	
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);;
 	static
@@ -42,6 +45,8 @@ public class MyDataProvider extends ContentProvider {
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.trackingevents.CONTENT_PATH + "/#", TRACKING_ID);	
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.videos.CONTENT_PATH, VIDEO);
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.videos.CONTENT_PATH + "/#", VIDEO_ID);	
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.alarms.CONTENT_PATH, ALARM);
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.alarms.CONTENT_PATH + "/#", ALARM_ID);	
 	}
 	
 	@Override
@@ -70,6 +75,10 @@ public class MyDataProvider extends ContentProvider {
 			return SnooziContract.videos.CONTENT_MIME_TYPE;
 		case VIDEO_ID:
 			return SnooziContract.videos.CONTENT_MIME_ITEM_TYPE;
+		case ALARM:
+			return SnooziContract.alarms.CONTENT_MIME_TYPE;
+		case ALARM_ID:
+			return SnooziContract.alarms.CONTENT_MIME_ITEM_TYPE;
 		default:
 			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.getType  Unsupported URI : " + uri);
 			return null;
@@ -135,6 +144,18 @@ public class MyDataProvider extends ContentProvider {
 				// SELECT ONE VIDEO
 				builder.setTables(SnooziContract.videos.TABLE);
 				builder.appendWhere(SnooziContract.videos.Columns._ID + " = " + uri.getLastPathSegment());
+			
+			case ALARM:
+				//SELECT ALL THE ALARMS
+				builder.setTables(SnooziContract.alarms.TABLE);
+				if (TextUtils.isEmpty(sortOrder)) 
+					sortOrder = SnooziContract.alarms.SORT_ORDER_DEFAULT;
+				break;
+				
+			case ALARM_ID :
+				// SELECT ONE ALARM
+				builder.setTables(SnooziContract.alarms.TABLE);
+				builder.appendWhere(SnooziContract.alarms.Columns._ID + " = " + uri.getLastPathSegment());
 				
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -181,6 +202,10 @@ public class MyDataProvider extends ContentProvider {
 			{
 				long id = db.insert( SnooziContract.videos.TABLE,null, values);
 				result = getUriForId(id, uri);
+			}else if (match == ALARM)
+			{
+				long id = db.insert( SnooziContract.alarms.TABLE,null, values);
+				result = getUriForId(id, uri);
 			}else
 				throw new Exception("Unsupported URI for insertion : " + uri);
 
@@ -221,6 +246,18 @@ public class MyDataProvider extends ContentProvider {
 				table = SnooziContract.videos.TABLE;
 				idStr = uri.getLastPathSegment();
 				where = SnooziContract.videos.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				break;
+			case ALARM:
+				table = SnooziContract.alarms.TABLE;
+				where = selection;
+				break;
+			case ALARM_ID:
+				table = SnooziContract.alarms.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.alarms.Columns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -285,6 +322,18 @@ public class MyDataProvider extends ContentProvider {
 					where += " AND " + selection;
 				}
 				break;
+			case ALARM:
+				table = SnooziContract.alarms.TABLE;
+				where = selection;
+				break;
+			case ALARM_ID:
+				table = SnooziContract.alarms.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.alarms.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				break;
 			default:
 				// no support for updating photos or entities!
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -317,7 +366,7 @@ public class MyDataProvider extends ContentProvider {
 
 		// A string that defines the SQL statement for creating a table
 		private static final String DBNAME = "WankDB.db";
-		private static final int DB_VERSION = 2;
+		private static final int DB_VERSION = 3;
 		 
 		private static final String SQL_CREATE_TRACKINGEVENT = "CREATE TABLE IF NOT EXISTS " +
         		SnooziContract.trackingevents.TABLE +  // Table's name
@@ -348,6 +397,26 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.videos.Columns.DOWNLOADID + " LONG default 0, " +
 		     SnooziContract.videos.Columns.USERID + " LONG )";
 		
+		private static final String SQL_CREATE_ALARM = "CREATE TABLE IF NOT EXISTS " +
+        		SnooziContract.alarms.TABLE +  // Table's name
+		    "(" +                           // The columns in the table
+		     SnooziContract.alarms.Columns._ID + "  INTEGER PRIMARY KEY, " +
+		     SnooziContract.alarms.Columns.ACTIVATE + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.ALARMID + " LONG, " +
+		     SnooziContract.alarms.Columns.HOUR + " INTEGER default 7, " +
+		     SnooziContract.alarms.Columns.MINUTE + " INTEGER default 30, " +
+		     SnooziContract.alarms.Columns.DAYSTRING + " TEXT, " +
+		     SnooziContract.alarms.Columns.MONDAY + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.TUESDAY + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.WEDNESDAY + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.THURSDAY + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.FRIDAY + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.SATURDAY + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.SUNDAY + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.VIBRATE + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.VOLUME + " INTEGER default 0, " +
+		     SnooziContract.alarms.Columns.VIDEOID + " LONG )";
+		
 		
 	    
 	    /*
@@ -367,12 +436,12 @@ public class MyDataProvider extends ContentProvider {
 	        // Creates the main table
 	    	db.execSQL(SQL_CREATE_TRACKINGEVENT);
 	    	db.execSQL(SQL_CREATE_VIDEO);
+	    	db.execSQL(SQL_CREATE_ALARM);
 	    	
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			// TODO : Make it better ( not by deleting table )
 			db.beginTransaction();
 			
 			// This allows you to upgrade from any version to the next most 
@@ -388,13 +457,20 @@ public class MyDataProvider extends ContentProvider {
 	    	        SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 2");
 					
 	            }
-	            /*
+	            
 	            if(oldVersion<3){
 	                // Upgrade database structure from Version 2 to 3
-	                String alterTable = "ALTER ....";
-
-	                db.execSQL(alterTable);
-	                Log.i("DATABASE","Successfully upgraded to Version 3");
+	            	db.execSQL(SQL_CREATE_ALARM);
+	            	SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 3");
+	            }
+	            
+	            /*
+	            if(oldVersion<4){
+	            	// Upgrade database structure from Version 3 to 4
+	            	String alterTable = "ALTER ....";
+	            	
+	            	db.execSQL(alterTable);
+	            	SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 4");
 	            }*/
 
 	            // Only when this code is executed, the changes will be applied 

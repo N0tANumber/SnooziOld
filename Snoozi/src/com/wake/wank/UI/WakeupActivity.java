@@ -116,7 +116,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onStartAlarm");
 		
 		try {
-			EasyTracker.getInstance().activityStart(this);
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStart(this);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -129,6 +130,14 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		super.onResume();
 		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onResumeAlarm");
 		startRingingAlarm();
+		
+		try {
+			
+			com.facebook.AppEventsLogger.activateApp(this, "250270258502553");
+		} catch (Exception e) {
+			SnooziUtility.trace(this, TRACETYPE.ERROR, "Facebook registration error : " + e.toString());
+			
+		}
 	}
 
 
@@ -182,7 +191,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		super.onStop();
 		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.onStop");
 		try {
-			EasyTracker.getInstance().activityStop(this);
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStop(this);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

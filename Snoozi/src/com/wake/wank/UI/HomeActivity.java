@@ -55,7 +55,8 @@ public class HomeActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onStart();
 		try {
-			EasyTracker.getInstance().activityStart(this);
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStart(this);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -66,7 +67,8 @@ public class HomeActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onStop();
 		try {
-			EasyTracker.getInstance().activityStop(this);
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStop(this);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -74,7 +76,21 @@ public class HomeActivity extends FragmentActivity {
 		
 	}
 
-
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		//Facebook install tracking
+		try {
+			
+			com.facebook.AppEventsLogger.activateApp(this, "250270258502553");
+		} catch (Exception e) {
+			SnooziUtility.trace(this, TRACETYPE.ERROR, "Facebook registration error : " + e.toString());
+			
+		}
+	}
+	
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub

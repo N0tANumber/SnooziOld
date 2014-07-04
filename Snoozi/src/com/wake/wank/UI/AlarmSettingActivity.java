@@ -5,35 +5,25 @@ import java.util.List;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wake.wank.*;
-import com.wake.wank.models.AlarmPlanifier;
+import com.wake.wank.models.MyAlarm;
 import com.wake.wank.utils.SnooziUtility;
-import com.wake.wank.utils.TrackingEventAction;
-import com.wake.wank.utils.TrackingEventCategory;
-import com.wake.wank.utils.TrackingSender;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.CheckBox;
 import android.widget.CheckedTextView;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 /**
  * Class to manage the Alarm panel setting and save it to the userpref. 
@@ -43,11 +33,9 @@ import android.widget.ToggleButton;
  *
  */
 public class AlarmSettingActivity extends Activity {
-	private static final int TIME_PICKER_INTERVAL=5;
-	private boolean mIgnoreEvent=false;
-
-	private CheckedTextView chkactivate;
 	
+	private CheckedTextView chkactivate;
+
 	private TimePicker picker;
 	private TextView txtdays;
 	private ArrayList<Integer> currentDays;
@@ -61,7 +49,9 @@ public class AlarmSettingActivity extends Activity {
 	private AudioManager audioManager;
 	private OnClickListener activateListener;
 	private TextView BtnDone;
-	private TextView BtnCancel; 
+	private TextView BtnCancel;
+	
+	private MyAlarm currentAlarm; 
 
 
 
@@ -70,8 +60,9 @@ public class AlarmSettingActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStart();
 		try {
-			EasyTracker.getInstance().activityStart(this);
-			
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStart(this);
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -81,13 +72,14 @@ public class AlarmSettingActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 		try {
-			EasyTracker.getInstance().activityStop(this);
-			
+			if(!SnooziUtility.DEV_MODE)
+				EasyTracker.getInstance().activityStop(this);
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		finish();
-		
+
 	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,58 +90,36 @@ public class AlarmSettingActivity extends Activity {
 		setContentView(R.layout.activity_alarmsetting);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitlebar);
 
-		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, 0);
+		Intent data = getIntent();
+		currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
 
-		
-		   chkactivate = (CheckedTextView) findViewById(R.id.chk_activate);
-		   chkactivate.setChecked(settings.getBoolean("activate", false));
-			activateListener	 = new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					chkactivate.toggle();
-					//SavePref();
 
-				}
-			};
-			chkactivate.setOnClickListener(activateListener);
+
+
+		chkactivate = (CheckedTextView) findViewById(R.id.chk_activate);
+		chkactivate.setChecked(currentAlarm.getActivate());
+		activateListener	 = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				chkactivate.toggle();
+				//SavePref();
+
+			}
+		};
+		chkactivate.setOnClickListener(activateListener);
 
 		/* Time picker setup */
 		picker = (TimePicker) findViewById(R.id.timePicker);
 		//Update Picker state from Pref
-		picker.setCurrentHour(settings.getInt("hour", 7));
-		picker.setCurrentMinute(settings.getInt("minute", 30));
-		
-		/*
-		TimePicker.OnTimeChangedListener mTimePickerListener=new TimePicker.OnTimeChangedListener(){
-			public void onTimeChanged(TimePicker timePicker, int hourOfDay, int minute){
-				if (mIgnoreEvent)
-					return;
-				// 5 minutes steps
-				if (minute%TIME_PICKER_INTERVAL!=0){
-					int minuteFloor=minute-(minute%TIME_PICKER_INTERVAL);
-					minute=minuteFloor + (minute==minuteFloor+1 ? TIME_PICKER_INTERVAL : 0);
-					if (minute==60)
-						minute=0;
-					mIgnoreEvent=true;
-					timePicker.setCurrentMinute(minute);
-					mIgnoreEvent=false;
-				}
+		picker.setCurrentHour(currentAlarm.getHour());
+		picker.setCurrentMinute(currentAlarm.getMinute());
 
-				
-				if(! mIgnoreEvent)
-				{
-					//Saving the current hour / minute
-					SavePref();
-				}
-			}
-		};
-		picker.setOnTimeChangedListener(mTimePickerListener);
-*/
+
 
 		/*Day setup */
 		txtdays = (TextView) findViewById(R.id.txtdays);
 		//Update text from Pref
-		txtdays.setText(settings.getString("dayString", getResources().getString(R.string.Everyday)));
+		txtdays.setText(currentAlarm.getDayString());
 		repeatListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -164,47 +134,47 @@ public class AlarmSettingActivity extends Activity {
 		final ArrayList<Integer> seletedDays=new ArrayList<Integer>();
 		boolean[] checkedday = {false,false,false,false,false,false,false};
 		//Update Days state from Pref
-		if(settings.getBoolean("monday", false))
+		if(currentAlarm.getMonday())
 		{
 			currentDays.add(0);
 			seletedDays.add(0);
 			checkedday[0] = true;
 		}
-		if(settings.getBoolean("tuesday", false))
+		if(currentAlarm.getTuesday())
 		{
 			currentDays.add(1);
 			seletedDays.add(1);
 			checkedday[1] = true;
 		}
-		if(settings.getBoolean("wednesday", false))
+		if(currentAlarm.getWednesday())
 		{
 			currentDays.add(2);
 			seletedDays.add(2);
 			checkedday[2] = true;
 
 		}
-		if(settings.getBoolean("thursday", false))
+		if(currentAlarm.getThursday())
 		{
 			currentDays.add(3);
 			seletedDays.add(3);
 			checkedday[3] = true;
 
 		}
-		if(settings.getBoolean("friday", false))
+		if(currentAlarm.getFriday())
 		{
 			currentDays.add(4);
 			seletedDays.add(4);
 			checkedday[4] = true;
 
 		}
-		if(settings.getBoolean("saturday", false))
+		if(currentAlarm.getSaturday())
 		{
 			currentDays.add(5);
 			seletedDays.add(5);
 			checkedday[5] = true;
 
 		}
-		if(settings.getBoolean("sunday", false))
+		if(currentAlarm.getSunday())
 		{
 			currentDays.add(6);
 			seletedDays.add(6);
@@ -246,7 +216,7 @@ public class AlarmSettingActivity extends Activity {
 					currentDays.add(day);
 					iday[day] = true;
 				}
-				
+
 				for (int i = 0; i < iday.length; i++) {
 					boolean isChecked = iday[i];
 					if(isChecked)
@@ -282,7 +252,7 @@ public class AlarmSettingActivity extends Activity {
 
 
 		/*Vibrate setup*/
-	vibrateListener	 = new OnClickListener() {
+		vibrateListener	 = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				chkvibrate.toggle();
@@ -292,7 +262,7 @@ public class AlarmSettingActivity extends Activity {
 		};
 		chkvibrate = (CheckedTextView) findViewById(R.id.chk_vibrate);
 		//Update Button state from Pref
-		chkvibrate.setChecked(settings.getBoolean("vibrate", true));
+		chkvibrate.setChecked(currentAlarm.getVibrate());
 		chkvibrate.setOnClickListener(vibrateListener);
 
 		/* Alarm Volume setup */
@@ -300,49 +270,49 @@ public class AlarmSettingActivity extends Activity {
 		audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 		int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		volumebar.setMax(maxVol);
-		volumebar.setProgress(settings.getInt("volume", (int)Math.floor(maxVol*0.50)));
-		
+		if(currentAlarm.getVolume() == -1)
+			volumebar.setProgress((int)Math.floor(maxVol*0.50));
+		else
+			volumebar.setProgress(currentAlarm.getVolume());
+
 		volumebar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() 
-        {
-            @Override
-            public void onStopTrackingTouch(SeekBar arg0) 
-            {
-            }
+		{
+			@Override
+			public void onStopTrackingTouch(SeekBar arg0) 
+			{
+			}
 
-            @Override
-            public void onStartTrackingTouch(SeekBar arg0) 
-            {
-            } 
+			@Override
+			public void onStartTrackingTouch(SeekBar arg0) 
+			{
+			} 
 
-            @Override
-            public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) 
-            {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_PLAY_SOUND);
-                //SavePref();
-            }
-        });
+			@Override
+			public void onProgressChanged(SeekBar arg0, int progress, boolean arg2) 
+			{
+				audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_PLAY_SOUND);
+				//SavePref();
+			}
+		});
 		//audioManager.setStreamVolume(AudioManager.STREAM_ALARM, audioManager
-        //        .getStreamMaxVolume(AudioManager.STREAM_ALARM),  AudioManager.FLAG_PLAY_SOUND);
+				//        .getStreamMaxVolume(AudioManager.STREAM_ALARM),  AudioManager.FLAG_PLAY_SOUND);
 
 		BtnDone = (TextView)findViewById(R.id.BtnDone);
 		BtnDone.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				SavePref();
 				Intent returnIntent = new Intent();
-				returnIntent.putExtra("activated", chkactivate.isChecked());
-				returnIntent.putExtra("hour", picker.getCurrentHour());
-				returnIntent.putExtra("minute", picker.getCurrentMinute());
-				returnIntent.putExtra("dayString", txtdays.getText().toString());
+				returnIntent.putExtra("alarm",currentAlarm);
 				setResult(RESULT_OK, returnIntent);
 				finish();
 			}
 		});
 		BtnCancel = (TextView)findViewById(R.id.BtnCancel);
 		BtnCancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -361,27 +331,22 @@ public class AlarmSettingActivity extends Activity {
 	private void SavePref()
 	{
 		//this.getApplicationContext();
-		SharedPreferences prefs = this.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putBoolean("activate", chkactivate.isChecked());
-		editor.putInt("hour", picker.getCurrentHour());
-		editor.putInt("minute", picker.getCurrentMinute());
-		editor.putString("dayString", txtdays.getText().toString() );
+		currentAlarm.setActivate( chkactivate.isChecked());
+		currentAlarm.setHour( picker.getCurrentHour());
+		currentAlarm.setMinute( picker.getCurrentMinute());
+		currentAlarm.setDayString(txtdays.getText().toString() );
 
-		editor.putBoolean("monday",currentDays.contains(0));
-		editor.putBoolean("tuesday",currentDays.contains(1));
-		editor.putBoolean("wednesday",currentDays.contains(2));
-		editor.putBoolean("thursday",currentDays.contains(3));
-		editor.putBoolean("friday",currentDays.contains(4));
-		editor.putBoolean("saturday",currentDays.contains(5));
-		editor.putBoolean("sunday",currentDays.contains(6));
+		currentAlarm.setMonday( currentDays.contains(0));
+		currentAlarm.setTuesday( currentDays.contains(1));
+		currentAlarm.setWednesday( currentDays.contains(2));
+		currentAlarm.setThursday( currentDays.contains(3));
+		currentAlarm.setFriday( currentDays.contains(4));
+		currentAlarm.setSaturday( currentDays.contains(5));
+		currentAlarm.setSunday( currentDays.contains(6));
 
-		editor.putBoolean("vibrate", chkvibrate.isChecked());
-		editor.putInt("volume", volumebar.getProgress());
-		
-		editor.apply();
-		editor.commit();
+		currentAlarm.setVibrate( chkvibrate.isChecked());
+		currentAlarm.setVolume( volumebar.getProgress());
 
 	}
-	
+
 }

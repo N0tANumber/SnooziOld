@@ -1,8 +1,6 @@
 package com.wake.wank.models;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -11,11 +9,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.json.jackson.JacksonFactory;
-import com.snoozi.videoendpoint.Videoendpoint;
 import com.wake.wank.database.SnooziContract;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
@@ -23,7 +16,6 @@ import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 
 public class MyVideo {
 
@@ -128,16 +120,11 @@ public class MyVideo {
 	 * @return
 	 */
 	public int save(Context context) {
-		// TODO Auto-generated method stub
 		int result = 1;
 
 		if(this.getId() == 0 || hasChanged)
 		{
-			/* TODO : Doit  envoyer les message au serveur pour qu'il refresh ses datas concernant :
-		 - viewcount
-		 - dislike
-		 - like
-			 */
+			
 			try {
 
 				//SAVE THE VIDEO IN THE LOCAL DATABASE
@@ -215,7 +202,7 @@ public class MyVideo {
 				}
 
 			} catch (Exception e) {
-				SnooziUtility.trace(context,TRACETYPE.ERROR,"saveAndSync ERROR" + e.toString());
+				SnooziUtility.trace(context,TRACETYPE.ERROR,"MyVideo saveAndSync ERROR" + e.toString());
 			}
 
 
