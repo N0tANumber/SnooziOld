@@ -13,6 +13,10 @@ import java.util.List;
 
 
 
+
+
+
+
 //import com.google.android.gms.ads.AdRequest;
 //import com.google.android.gms.ads.AdView;
 //import com.google.android.gms.ads.mediation.admob.AdMobExtras;
@@ -36,14 +40,18 @@ import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -51,16 +59,19 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 public class FragmentClock extends Fragment {
 
 
-	private CheckBox chkactivate;
-	private OnCheckedChangeListener activateListener = null;
+	private static final int REQUEST_SETTING = 1;
+
 	private ViewGroup rootView;
 
-	private List<MyAlarm> alarmList;
+	private List<MyAlarm> alarmList ;
 	private MyAlarm currentAlarm;
-	private TextView txtday;
-	private TextView txtTime;
+	//private CheckBox chkactivate;
+	//private TextView txtday;
+	//private TextView txtTime;
+	private OnCheckedChangeListener activateListener = null;
 
-
+	private MyAlarmAdapter mAdapter;
+	private ListView listView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,8 +81,28 @@ public class FragmentClock extends Fragment {
 		rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_screen_clock, container, false);
 
+		listView = (ListView) rootView.findViewById(R.id.listviewalarm);
 		alarmList = new ArrayList<MyAlarm>();
-
+		mAdapter = new MyAlarmAdapter(this.getActivity(), alarmList);
+		listView.setAdapter(mAdapter);
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			  @Override
+			  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				  // We must launch the setup
+					  try {
+						  launchSettingActivity(alarmList.get(position));
+						
+					} catch (Exception e) {
+						// nothing at that position, need to refresh the list
+						mAdapter.notifyDataSetChanged();
+					}
+			    
+			  }
+			});
+		
+		
+/*
 		LinearLayout setAlarmBtn = (LinearLayout) rootView.findViewById(R.id.BtnSetAlarm);
 		setAlarmBtn.setOnTouchListener(new OnTouchListener() {
 
@@ -86,22 +117,25 @@ public class FragmentClock extends Fragment {
 				return false;
 			}
 		});
+		*/
+		
 
 		// Build button list
-		txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
-		txtday = (TextView)rootView.findViewById(R.id.Txtdays);
-		chkactivate = (CheckBox) rootView.findViewById(R.id.checkBoxActiv);
+		//txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
+		//txtday = (TextView)rootView.findViewById(R.id.Txtdays);
+		//chkactivate = (CheckBox) rootView.findViewById(R.id.checkBoxActiv);
 
 
 
 		/*Activate setup*/
+		/*
 		activateListener = new OnCheckedChangeListener() {
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				SetAlarm(isChecked);
 			}
 
-		};
+		};*/
 
 
 		// Recherchez AdView comme ressource et chargez une demande.
@@ -136,18 +170,17 @@ public class FragmentClock extends Fragment {
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		chkactivate.setOnCheckedChangeListener(null);    
+		//chkactivate.setOnCheckedChangeListener(null);    
 		MyAlarm alrm = null;
-		Cursor cursor  = null;
-		//TODO : recuperation depuis la base de données des alarmes configurée
-
-		
+		// recuperation depuis la base de données des alarmes configurée
+		alarmList.clear();
+		alarmList.addAll(MyAlarm.getFromSQL(rootView.getContext()));
 		
 		if(alarmList.isEmpty())
 		{
 
 			//Pas d'alarm, on set une alarme par default
-			//Si il y a des anciennes alarmes en pref, on les recupere
+			//LEGACY : Si il y a des anciennes alarmes en pref, on les recupere
 
 			SharedPreferences settings = rootView.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, 0);
 
@@ -189,21 +222,22 @@ public class FragmentClock extends Fragment {
 
 
 		currentAlarm = alarmList.get(0);
+		mAdapter.notifyDataSetChanged();
+		
+		//txtTime.setText(currentAlarm.toTime());
+		//txtday.setText(currentAlarm.getDayString());
+		//chkactivate.setChecked(currentAlarm.getActivate());
 
-		txtTime.setText(currentAlarm.toTime());
-		txtday.setText(currentAlarm.getDayString());
-		chkactivate.setChecked(currentAlarm.getActivate());
-
-		chkactivate.setOnCheckedChangeListener(activateListener);    
+		//chkactivate.setOnCheckedChangeListener(activateListener);    
 
 	}
 
 
-	private void launchSettingActivity()
+	private void launchSettingActivity(MyAlarm alrm)
 	{
 		Intent intent = new Intent(this.getActivity(), AlarmSettingActivity.class);
-		intent.putExtra("alarm", currentAlarm);
-		startActivityForResult(intent, 1);
+		intent.putExtra("alarm", alrm);
+		startActivityForResult(intent, REQUEST_SETTING);
 
 	}
 
@@ -211,23 +245,34 @@ public class FragmentClock extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode == REQUEST_SETTING)
+		{
 		if (resultCode == Activity.RESULT_OK) 
 		{
 
 			SnooziUtility.trace(getActivity(), TRACETYPE.INFO,".....onAlarmSettingResult RESULT OK");
+			
 			currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
 
-			Boolean activ = currentAlarm.getActivate();
+			currentAlarm.save(rootView.getContext());
+			//if(position == -1)
+			//	alarmList.add(currentAlarm);
+			//else
+			//	alarmList.set(position, currentAlarm);
+			
+			//mAdapter.notifyDataSetChanged();
+			
+			//Boolean activ = currentAlarm.getActivate();
 
-			txtTime.setText(currentAlarm.toTime());
-			txtday.setText(currentAlarm.getDayString());
+			//txtTime.setText(currentAlarm.toTime());
+			//txtday.setText(currentAlarm.getDayString());
 
-			if(activ == chkactivate.isChecked())
-				SetAlarm(activ);
-			else
-				chkactivate.setChecked(activ);
+			//if(activ == chkactivate.isChecked())
+			//	SetAlarm(activ);
+			//else
+			//	chkactivate.setChecked(activ);
 		}
-
+		}
 
 	}
 

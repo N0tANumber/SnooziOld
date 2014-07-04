@@ -52,8 +52,7 @@ public class AlarmSettingActivity extends Activity {
 	private TextView BtnCancel;
 	
 	private MyAlarm currentAlarm; 
-
-
+	
 
 	@Override
 	protected void onStart() {
@@ -92,8 +91,7 @@ public class AlarmSettingActivity extends Activity {
 
 		Intent data = getIntent();
 		currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
-
-
+		
 
 
 		chkactivate = (CheckedTextView) findViewById(R.id.chk_activate);
