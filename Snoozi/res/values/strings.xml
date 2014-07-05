@@ -71,5 +71,6 @@
   <string name="stoprecord">Stop Recording</string>
   <string name="pleaseRate">Rate this video to improve our Video Quality :</string>
   <string name="addAlarm">add Alarm</string>
+  <string name="delete">Delete</string>
     
 </resources>

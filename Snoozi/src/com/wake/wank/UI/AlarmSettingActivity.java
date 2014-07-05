@@ -117,7 +117,11 @@ public class AlarmSettingActivity extends Activity {
 		/*Day setup */
 		txtdays = (TextView) findViewById(R.id.txtdays);
 		//Update text from Pref
-		txtdays.setText(currentAlarm.getDayString());
+		
+		String theDays = currentAlarm.getDayString();
+		if(theDays.equals(""))
+			theDays =  getResources().getString(R.string.Everyday);
+		txtdays.setText(theDays);
 		repeatListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {

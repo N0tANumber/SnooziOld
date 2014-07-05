@@ -2,45 +2,24 @@ package com.wake.wank.UI;
 
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
-
-
-
-
-
 
 
 //import com.google.android.gms.ads.AdRequest;
 //import com.google.android.gms.ads.AdView;
 //import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.wake.wank.R;
-import com.wake.wank.database.SnooziContract;
-import com.wake.wank.models.AlarmPlanifier;
 import com.wake.wank.models.MyAlarm;
 import com.wake.wank.utils.SnooziUtility;
-import com.wake.wank.utils.TrackingEventAction;
-import com.wake.wank.utils.TrackingEventCategory;
-import com.wake.wank.utils.TrackingSender;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,23 +27,18 @@ import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class FragmentClock extends Fragment {
 
 
 	private static final int REQUEST_SETTING = 1;
-
+	
 	private ViewGroup rootView;
 
 	private List<MyAlarm> alarmList ;
-	private MyAlarm currentAlarm;
 	//private CheckBox chkactivate;
 	//private TextView txtday;
 	//private TextView txtTime;
@@ -72,6 +46,10 @@ public class FragmentClock extends Fragment {
 
 	private MyAlarmAdapter mAdapter;
 	private ListView listView;
+
+	private Button addButton;
+
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +79,17 @@ public class FragmentClock extends Fragment {
 			  }
 			});
 		
+		addButton = (Button) rootView.findViewById(R.id.addButton);
+		addButton.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				MyAlarm newalrm = new MyAlarm();
+				launchSettingActivity(newalrm);
+				return false;
+			}
+		});
 		
 /*
 		LinearLayout setAlarmBtn = (LinearLayout) rootView.findViewById(R.id.BtnSetAlarm);
@@ -186,7 +175,7 @@ public class FragmentClock extends Fragment {
 
 			alrm = new MyAlarm();
 			alrm.setActivate(settings.getBoolean("activate", false));
-			alrm.setDayString(settings.getString("dayString",getResources().getString(R.string.Everyday)));
+			alrm.setDayString(settings.getString("dayString",""));
 			alrm.setHour(settings.getInt("hour",7));
 			alrm.setMinute(settings.getInt("minute",30));
 			alrm.setMonday(settings.getBoolean("monday", false));
@@ -221,7 +210,6 @@ public class FragmentClock extends Fragment {
 		}
 
 
-		currentAlarm = alarmList.get(0);
 		mAdapter.notifyDataSetChanged();
 		
 		//txtTime.setText(currentAlarm.toTime());
@@ -252,9 +240,11 @@ public class FragmentClock extends Fragment {
 
 			SnooziUtility.trace(getActivity(), TRACETYPE.INFO,".....onAlarmSettingResult RESULT OK");
 			
-			currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
+			MyAlarm currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
 
 			currentAlarm.save(rootView.getContext());
+			currentAlarm.checkAndPlanify(getActivity(),rootView.getContext());
+			
 			//if(position == -1)
 			//	alarmList.add(currentAlarm);
 			//else
@@ -278,7 +268,7 @@ public class FragmentClock extends Fragment {
 
 
 
-
+/*
 	private void SetAlarm(Boolean isActivated)
 	{
 
@@ -339,7 +329,7 @@ public class FragmentClock extends Fragment {
 			AlarmPlanifier.CancelAlarm(getActivity());
 		}
 	}
-
+*/
 
 
 }
