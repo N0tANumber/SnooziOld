@@ -20,8 +20,8 @@
         android:layout_weight="0.1"
         android:orientation="horizontal"
         android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
             android:layout_marginTop="10dp" >
 
         <ListView
@@ -29,7 +29,8 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:divider="#fff"
-            android:dividerHeight="1dp"
+            android:dividerHeight="0dp"
+           
              />
     </LinearLayout>
 
