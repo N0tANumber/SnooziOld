@@ -17,9 +17,11 @@
 	</classpathentry>
 	<classpathentry kind="con" path="com.google.gdt.eclipse.managedapis.MANAGED_API_CONTAINER/storage-v1r2lv1.16.0-rc"/>
 	<classpathentry exported="true" kind="lib" path="/Users/CtrlX/Documents/Developpement/sdk/extras/google/analytics_sdk_v2/libGoogleAnalyticsV2.jar"/>
-	<classpathentry kind="src" path="endpoint-libs/libdeviceinfoendpoint-v2/deviceinfoendpoint/deviceinfoendpoint-v2-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v2/messageEndpoint/messageendpoint-v2-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libtrackingeventendpoint-v2/trackingeventendpoint/trackingeventendpoint-v2-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libvideoendpoint-v2/videoendpoint/videoendpoint-v2-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libalarmendpoint-v3/alarmendpoint/alarmendpoint-v3-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libdeviceinfoendpoint-v3/deviceinfoendpoint/deviceinfoendpoint-v3-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v3/messageEndpoint/messageendpoint-v3-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libtrackingeventendpoint-v3/trackingeventendpoint/trackingeventendpoint-v3-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libuserendpoint-v3/userendpoint/userendpoint-v3-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libvideoendpoint-v3/videoendpoint/videoendpoint-v3-generated-source"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
