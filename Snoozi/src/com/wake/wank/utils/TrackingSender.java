@@ -29,7 +29,6 @@ import android.os.Bundle;
 public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	
 	
-	private Context m_appContext;
 	private Application m_apps;
 	//private TrackingEvent _trackingEvent;
 	private Long m_videoid;
@@ -41,9 +40,8 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	
 	private boolean isRunning;
 	
-	public TrackingSender(Context thecontext, Application apps){
+	public TrackingSender(Application apps){
 		
-		this.m_appContext = thecontext;
 		this.m_apps = apps;
 		//this._userAccount = null;
 		isRunning = false;
@@ -73,7 +71,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 		this.m_videoid = videoid;
 		
 		if(!isRunning)
-			this.execute(m_appContext);
+			this.execute(m_apps.getApplicationContext());
 	}
 	
 	/**
@@ -100,6 +98,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	{
 		try 
 		{
+			
 			// Get tracker.
 			isRunning = true;
 	        Tracker t = ((MyApplication)this.m_apps).getTracker(
@@ -129,7 +128,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 				values.put(SnooziContract.trackingevents.Columns.TIMESTRING,this.m_timestring );
 				values.put(SnooziContract.trackingevents.Columns.VIDEOID,this.m_videoid );
 	
-				ContentResolver resolver = this.m_appContext.getContentResolver();
+				ContentResolver resolver = m_apps.getApplicationContext().getContentResolver();
 				resolver.insert(SnooziContract.trackingevents.CONTENT_URI, values);
 				//Log.i("CONTENTRESOLVER",theResult.toString());
 				
@@ -137,7 +136,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 				Bundle settingsBundle = new Bundle();
 		        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
 		        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-		        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this.m_appContext), SnooziContract.AUTHORITY, settingsBundle);
+		        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
 			
 	        }
 			

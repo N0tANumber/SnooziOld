@@ -31,6 +31,7 @@ import com.snoozi.videoendpoint.Videoendpoint;
 import com.snoozi.videoendpoint.model.CollectionResponseVideo;
 import com.snoozi.videoendpoint.model.Video;
 import com.wake.wank.GCMIntentService;
+import com.wake.wank.MyApplication;
 import com.wake.wank.database.SnooziContract;
 import com.wake.wank.receivers.VideoDownloadReceiver;
 import com.wake.wank.utils.SnooziUtility;
@@ -503,14 +504,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 	/**
 	 * Get or Create a new dummy account for the sync adapter
-	 *
-	 * @param context The application context
 	 */
-	public static Account GetSyncAccount(Context context) {
+	public static Account GetSyncAccount() {
 		// Create the account type and default account
 		Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
 		// Get an instance of the Android account manager
-		AccountManager accountManager = (AccountManager) context.getSystemService(android.content.Context.ACCOUNT_SERVICE);
+		AccountManager accountManager = (AccountManager) MyApplication.getAppContext().getSystemService(android.content.Context.ACCOUNT_SERVICE);
 		/*
 		 * Add the account and account type, no password or user data
 		 * If successful, return the Account object, otherwise report an error.

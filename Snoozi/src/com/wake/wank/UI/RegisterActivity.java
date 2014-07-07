@@ -134,7 +134,7 @@ public class RegisterActivity extends Activity {
 			switch (event.getAction() & MotionEvent.ACTION_MASK) {
 			case MotionEvent.ACTION_DOWN:
 				TextView txt = (TextView) findViewById(R.id.editTextComment);
-				TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
+				TrackingSender sender = new TrackingSender(getApplication());
 				sender.sendUserEvent(TrackingEventCategory.DEBUGGING,TrackingEventAction.DEBUGGING, txt.getText().toString());
 				break;
 

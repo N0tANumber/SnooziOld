@@ -74,12 +74,56 @@ public class MainActivity extends Activity {
 			public void run() 
 			{   
 				//after 100ms, we do init work
+				// FirstLaunch tracking
+				SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+				SharedPreferences.Editor editor = settings.edit();
+				
+				boolean isFirstLaunch = settings.getBoolean("firstLaunch", true);
+				
+				TrackingSender sender = new TrackingSender(getApplication());
+				if(isFirstLaunch)
+				{
+					SnooziUtility.trace(TRACETYPE.INFO,"First APP_LAUNCH ");
+					
+					sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.FIRSTLAUNCH);
+					//Save firstlaunch state
+					editor.putBoolean("firstLaunch", false);
+					
+					//We insert the 3 dummy video into BDD
+					createDummyVideo();
+					
+					//During that time We ask for next video to be downloaded
+					Bundle settingsBundle = new Bundle();
+					settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+					//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+					settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
+					ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
+				}
+				else
+					sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
+
+				//User Profil information
+				int userid = settings.getInt("userid", 0);
+				if(userid == 0)
+				{
+					// We need to save userinfo and get the userid from the server
+					userid = createMyInfo();
+					//editor.putInt("userid", userid);
+					
+				}      
+				
+				editor.commit();
+				
+				//We copy the local BDD / Only on DEV MODE
+				if(SnooziUtility.DEV_MODE)
+					exportLocalDatabase();
+				
 				launchHomeActivity();
 				//launchSettingActivity();
 			}
 		};
 
-		timer.schedule(timerTask, 100);
+		timer.schedule(timerTask, 300);
 		
 		
 	}
@@ -105,46 +149,7 @@ public class MainActivity extends Activity {
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		// FirstLaunch tracking
-		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
-		SharedPreferences.Editor editor = settings.edit();
 		
-		boolean isFirstLaunch = settings.getBoolean("firstLaunch", true);
-		
-		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
-		if(isFirstLaunch)
-		{
-			SnooziUtility.trace(TRACETYPE.INFO,"First APP_LAUNCH ");
-			
-			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.FIRSTLAUNCH);
-			//Save firstlaunch state
-			editor.putBoolean("firstLaunch", false);
-			
-			//We insert the 3 dummy video into BDD
-			createDummyVideo();
-			
-			//During that time We ask for next video to be downloaded
-			Bundle settingsBundle = new Bundle();
-			settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-			//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-			settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
-			ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
-		}
-		else
-			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
-
-		//User Profil information
-		int userid = settings.getInt("userid", 0);
-		if(userid == 0)
-		{
-			// We need to save userinfo and get the userid from the server
-			userid = createMyInfo();
-			//editor.putInt("userid", userid);
-			
-		}
-		
-		
-		editor.commit();
 		try {
 			
 			if(!SnooziUtility.DEV_MODE)
@@ -152,8 +157,6 @@ public class MainActivity extends Activity {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		//We copy the local BDD / Only on DEV MODE
-		exportLocalDatabase();
 	}
 	
 	
@@ -230,8 +233,7 @@ public class MainActivity extends Activity {
 	 * used only in dev mode
 	 */
 	private void exportLocalDatabase() {
-		if(SnooziUtility.DEV_MODE)
-		{
+		
 			
 			try {
 				
@@ -260,7 +262,7 @@ public class MainActivity extends Activity {
 				// TODO: handle exception
 				SnooziUtility.trace(TRACETYPE.DEBUG, "Database export error : "+ e.toString());
 			}
-		}
+		
 	}
 	
 }

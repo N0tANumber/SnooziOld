@@ -45,6 +45,7 @@ public class MyApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }
+    
 
     public static Context getAppContext() {
     	return MyApplication.context;

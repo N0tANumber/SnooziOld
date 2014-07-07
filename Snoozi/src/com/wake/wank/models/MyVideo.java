@@ -194,7 +194,7 @@ public class MyVideo {
 					settingsBundle.putInt("addedLike", addedLike);
 					settingsBundle.putLong("videoid", getVideoid());
 					
-					ContentResolver.requestSync(SyncAdapter.GetSyncAccount(context), SnooziContract.AUTHORITY, settingsBundle);
+					ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
 
 
 					addedLike = 0;

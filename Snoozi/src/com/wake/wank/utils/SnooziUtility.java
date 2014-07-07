@@ -17,7 +17,7 @@ import com.wake.wank.models.MyVideo;
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.wake.wank";
 	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
-	public static final boolean DEV_MODE = false;
+	public static final boolean DEV_MODE = true;
 
 	 
 	
@@ -69,7 +69,7 @@ public class SnooziUtility {
 			if(!DEV_MODE) {
 				if (MyApplication.getAppContext() != null) {
 					// Logging to the server
-					//TrackingSender sender = new TrackingSender(context);
+					//TrackingSender sender = new TrackingSender(context, );
 					//sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
 				}
 			}

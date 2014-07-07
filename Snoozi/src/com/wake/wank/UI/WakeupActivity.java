@@ -70,7 +70,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		currentVideo = SnooziUtility.getCurrentAlarmVideo(this);
 		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.oncreateAlarm with video " +  currentVideo.getLocalurl());
 		
-		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
+		TrackingSender sender = new TrackingSender(getApplication());
 		sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.LAUNCH,"",currentVideo.getVideoid());
 		
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
@@ -243,7 +243,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			{
 				SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity Alarm Killed");
 				//Reporting alarm killed
-				TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
+				TrackingSender sender = new TrackingSender(getApplication());
 				sender.sendUserEvent(TrackingEventCategory.ALARM, _alarmEvent,"",currentVideo.getVideoid());
 				
 			}
@@ -295,7 +295,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	@Override
 	public void onTrigger(View v, int target) {
 		final int resId = mGlowPadView.getResourceIdForTarget(target);
-		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
+		TrackingSender sender = new TrackingSender(getApplication());
 		switch (resId) {
 		case R.drawable.ic_item_snooze:
 			_alarmEvent = TrackingEventAction.SNOOZE;

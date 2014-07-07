@@ -133,7 +133,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
  	        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
  	        settingsBundle.putString("action", message);
-  	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(context), SnooziContract.AUTHORITY, settingsBundle);
+  	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
 
           }
       }
@@ -197,7 +197,7 @@ public class GCMIntentService extends GCMBaseIntentService {
   		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
        settingsBundle.putString("action", SnooziUtility.SYNC_ACTION.GCM_REGISTERED);
-        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(context), SnooziContract.AUTHORITY, settingsBundle);
+        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
 
         
 	   

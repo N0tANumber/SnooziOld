@@ -42,7 +42,7 @@ public class SurveyActivity extends Activity {
 			public boolean onTouch(View v, MotionEvent event) {
 				// TODO Auto-generated method stub
 				String comm = _commenttxt.getText().toString();
-				sender = new TrackingSender(getApplicationContext(),getApplication());
+				sender = new TrackingSender(getApplication());
 				sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.COMMENT, comm);
 				
 				String nextString = getResources().getString(R.string.sendthanks);
@@ -66,7 +66,7 @@ public class SurveyActivity extends Activity {
 		int rating = _ratingBar.getProgress();
 		if(rating > 0)
 		{	
-			sender = new TrackingSender(getApplicationContext(),getApplication());
+			sender = new TrackingSender(getApplication());
 			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.RATING, rating + "");
 		}
 		finish();
