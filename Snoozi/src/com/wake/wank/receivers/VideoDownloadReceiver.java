@@ -1,5 +1,6 @@
 package com.wake.wank.receivers;
 
+import com.wake.wank.MyApplication;
 import com.wake.wank.database.SnooziContract;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
@@ -22,6 +23,8 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		
+		MyApplication.setAppContext(context);
 		String action = intent.getAction();
 		if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) 
 		{
@@ -51,22 +54,22 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 						case DownloadManager.STATUS_SUCCESSFUL:
 							values.put(SnooziContract.videos.Columns.FILESTATUS,"SUCCESSFUL" );
 							toUpdate = true;
-							SnooziUtility.trace(context,TRACETYPE.DEBUG,"Video Downloaded : " + downloadId );
+							SnooziUtility.trace(TRACETYPE.DEBUG,"Video Downloaded : " + downloadId );
 
 							break;
 						case DownloadManager.STATUS_FAILED:
-							SnooziUtility.trace(context,TRACETYPE.DEBUG,"Video Download Failed : " + downloadId );
+							SnooziUtility.trace(TRACETYPE.DEBUG,"Video Download Failed : " + downloadId );
 							values.put(SnooziContract.videos.Columns.FILESTATUS,"PENDING" );
 							toUpdate = true;
 							break;
 						case DownloadManager.STATUS_PAUSED:
-							SnooziUtility.trace(context,TRACETYPE.DEBUG,"Video Download Paused : " + downloadId );
+							SnooziUtility.trace(TRACETYPE.DEBUG,"Video Download Paused : " + downloadId );
 							break;
 						case DownloadManager.STATUS_PENDING:
-							SnooziUtility.trace(context,TRACETYPE.DEBUG,"Video Download Pending : " + downloadId );
+							SnooziUtility.trace(TRACETYPE.DEBUG,"Video Download Pending : " + downloadId );
 							break;
 						case DownloadManager.STATUS_RUNNING:
-							SnooziUtility.trace(context,TRACETYPE.DEBUG,"Video Download Running : " + downloadId );
+							SnooziUtility.trace(TRACETYPE.DEBUG,"Video Download Running : " + downloadId );
 							break;
 
 						default:
@@ -81,7 +84,7 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 					}
 				}
 				catch (Exception e) {
-					SnooziUtility.trace(context, TRACETYPE.ERROR,"VideoDownloadReceiver.onReceive Exception :  " +  e.toString());
+					SnooziUtility.trace(TRACETYPE.ERROR, "VideoDownloadReceiver.onReceive Exception :  " +  e.toString());
 
 				}finally{
 					if(cursor != null)
@@ -149,19 +152,19 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 							//request.setDestinationUri(this.getContext(), Environment.DIRECTORY_MOVIES,video.getId() + ".mp4");
 							filedownloadid = dm.enqueue(request);
 							values.put(SnooziContract.videos.Columns.DOWNLOADID, filedownloadid );
-							SnooziUtility.trace(context,TRACETYPE.DEBUG,"  Downloading Video " + id + " from " + url + " to " + localUrl);
+							SnooziUtility.trace(TRACETYPE.DEBUG,"  Downloading Video " + id + " from " + url + " to " + localUrl);
 						}catch (Exception e) {
-							SnooziUtility.trace(context,TRACETYPE.ERROR,"launchingPendingDownload Error Video download :  " +  e.toString());
+							SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload Error Video download :  " +  e.toString());
 							values.put(SnooziContract.videos.Columns.FILESTATUS,"ERROR" );
 						}
 						//And update the line
 						int updatecount = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, id), values,null,null);
 						if(updatecount == 0)
-							SnooziUtility.trace(context,TRACETYPE.ERROR,"launchingPendingDownload Problem in updating FileStatus");
+							SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload Problem in updating FileStatus");
 						
 
 					}catch (Exception e) {
-						SnooziUtility.trace(context,TRACETYPE.ERROR,"launchingPendingDownload cursor ERROR :  " +  e.toString());
+						SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload cursor ERROR :  " +  e.toString());
 					}
 
 				} while (cursor.moveToNext());
@@ -169,7 +172,7 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 
 
 		}catch (Exception e) {
-			SnooziUtility.trace(context,TRACETYPE.ERROR,"launchingPendingDownload ERROR :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload ERROR :  " +  e.toString());
 		}finally{
 			if(cursor != null)
 				cursor.close();

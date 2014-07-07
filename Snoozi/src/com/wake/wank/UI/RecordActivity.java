@@ -155,7 +155,7 @@ public class RecordActivity extends Activity {
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		SnooziUtility.trace(this, TRACETYPE.DEBUG, "RecordActivitySnap.onstart");
+		SnooziUtility.trace(TRACETYPE.DEBUG, "RecordActivitySnap.onstart");
 
 		try {
 			// Create an instance of Camera
@@ -282,11 +282,11 @@ public class RecordActivity extends Activity {
 			// Step 6: Prepare configured MediaRecorder
 			mMediaRecorder.prepare();
 		} catch (IllegalStateException e) {
-			SnooziUtility.trace(this, TRACETYPE.ERROR, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
+			SnooziUtility.trace(TRACETYPE.ERROR, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
 			releaseMediaRecorder();
 			return false;
 		} catch (IOException e) {
-			SnooziUtility.trace(this, TRACETYPE.ERROR, "IOException preparing MediaRecorder: " + e.getMessage());
+			SnooziUtility.trace(TRACETYPE.ERROR, "IOException preparing MediaRecorder: " + e.getMessage());
 			releaseMediaRecorder();
 			return false;
 		}
@@ -337,7 +337,7 @@ public class RecordActivity extends Activity {
 		// Create the storage directory if it does not exist
 		if (! mediaStorageDir.exists()){
 			if (! mediaStorageDir.mkdirs()){
-				SnooziUtility.trace(null, TRACETYPE.DEBUG, "failed to create directory");
+				SnooziUtility.trace(TRACETYPE.DEBUG, "failed to create directory");
 				return null;
 			}
 		}

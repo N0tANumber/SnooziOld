@@ -36,6 +36,9 @@ public class MyDataProvider extends ContentProvider {
 	
     private static final int ALARM = 5;
     private static final int ALARM_ID = 6;
+    
+    private static final int USER = 7;
+    private static final int USER_ID = 8;
 	
 	
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);;
@@ -47,6 +50,8 @@ public class MyDataProvider extends ContentProvider {
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.videos.CONTENT_PATH + "/#", VIDEO_ID);	
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.alarms.CONTENT_PATH, ALARM);
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.alarms.CONTENT_PATH + "/#", ALARM_ID);	
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.users.CONTENT_PATH, USER);
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.users.CONTENT_PATH + "/#", USER_ID);	
 	}
 	
 	@Override
@@ -79,8 +84,12 @@ public class MyDataProvider extends ContentProvider {
 			return SnooziContract.alarms.CONTENT_MIME_TYPE;
 		case ALARM_ID:
 			return SnooziContract.alarms.CONTENT_MIME_ITEM_TYPE;
+		case USER:
+			return SnooziContract.users.CONTENT_MIME_TYPE;
+		case USER_ID:
+			return SnooziContract.users.CONTENT_MIME_ITEM_TYPE;
 		default:
-			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.getType  Unsupported URI : " + uri);
+			SnooziUtility.trace(TRACETYPE.ERROR, "MyDataProvider.getType  Unsupported URI : " + uri);
 			return null;
 		}
 	}
@@ -103,7 +112,7 @@ public class MyDataProvider extends ContentProvider {
 				throw new Exception("Problem while inserting into uri: " + uri);
 
 		} catch (Exception e) {
-			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider : " + e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "MyDataProvider : " + e.toString());
 		}
 		return result;
 	}
@@ -157,6 +166,11 @@ public class MyDataProvider extends ContentProvider {
 				builder.setTables(SnooziContract.alarms.TABLE);
 				builder.appendWhere(SnooziContract.alarms.Columns._ID + " = " + uri.getLastPathSegment());
 				break;
+			case USER_ID :
+				// SELECT ONE USER
+				builder.setTables(SnooziContract.users.TABLE);
+				builder.appendWhere(SnooziContract.users.Columns._ID + " = " + uri.getLastPathSegment());
+				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 			}
@@ -182,7 +196,7 @@ public class MyDataProvider extends ContentProvider {
 			   return cursor;
 			   
 		} catch (Exception e) {
-			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.query : " + e.toString());		
+			SnooziUtility.trace(TRACETYPE.ERROR, "MyDataProvider.query : " + e.toString());		
 		}
 		return null;
 	}
@@ -206,11 +220,15 @@ public class MyDataProvider extends ContentProvider {
 			{
 				long id = db.insert( SnooziContract.alarms.TABLE,null, values);
 				result = getUriForId(id, uri);
+			}else if (match == USER)
+			{
+				long id = db.insert( SnooziContract.users.TABLE,null, values);
+				result = getUriForId(id, uri);
 			}else
 				throw new Exception("Unsupported URI for insertion : " + uri);
 
 		} catch (Exception e) {
-			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.insert : " + e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "MyDataProvider.insert : " + e.toString());
 
 		}
 		return result;
@@ -262,6 +280,18 @@ public class MyDataProvider extends ContentProvider {
 					where += " AND " + selection;
 				}
 				break;
+			case USER:
+				table = SnooziContract.users.TABLE;
+				where = selection;
+				break;
+			case USER_ID:
+				table = SnooziContract.users.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.users.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				break;
 			default:
 				// no support for updating photos or entities!
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -281,7 +311,7 @@ public class MyDataProvider extends ContentProvider {
 				getContext().getContentResolver().notifyChange(uri, null);
 			}
 		} catch (Exception e) {
-			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.update : " + e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "MyDataProvider.update : " + e.toString());
 
 		}
 		return updateCount;
@@ -334,6 +364,18 @@ public class MyDataProvider extends ContentProvider {
 					where += " AND " + selection;
 				}
 				break;
+			case USER:
+				table = SnooziContract.users.TABLE;
+				where = selection;
+				break;
+			case USER_ID:
+				table = SnooziContract.users.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.users.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				break;
 			default:
 				// no support for updating photos or entities!
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -351,7 +393,7 @@ public class MyDataProvider extends ContentProvider {
 				getContext().getContentResolver().notifyChange(uri, null);
 			}
 		} catch (Exception e) {
-			SnooziUtility.trace(getContext(), TRACETYPE.ERROR, "MyDataProvider.delete : " + e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "MyDataProvider.delete : " + e.toString());
 
 		}
 		return delCount;
@@ -366,7 +408,7 @@ public class MyDataProvider extends ContentProvider {
 
 		// A string that defines the SQL statement for creating a table
 		private static final String DBNAME = "WankDB.db";
-		private static final int DB_VERSION = 3;
+		private static final int DB_VERSION = 4;
 		 
 		private static final String SQL_CREATE_TRACKINGEVENT = "CREATE TABLE IF NOT EXISTS " +
         		SnooziContract.trackingevents.TABLE +  // Table's name
@@ -418,6 +460,20 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.alarms.Columns.VIDEOID + " LONG )";
 		
 		
+		private static final String SQL_CREATE_USER = "CREATE TABLE IF NOT EXISTS " +
+				SnooziContract.users.TABLE +  // Table's name
+				"(" +                           // The columns in the table
+				SnooziContract.users.Columns._ID + "  INTEGER PRIMARY KEY, " +
+				SnooziContract.users.Columns.PSEUDO + " TEXT, " +
+				SnooziContract.users.Columns.CITY + " TEXT, " +
+				SnooziContract.users.Columns.COUNTRY + " TEXT, " +
+				SnooziContract.users.Columns.WAKEUPCOUNT + " INTEGER default 0, " +
+				SnooziContract.users.Columns.VIDEOCOUNT + " INTEGER default 0, " +
+				SnooziContract.users.Columns.VIEWCOUNT + " INTEGER default 0, " +
+				SnooziContract.users.Columns.LIKECOUNT + " INTEGER default 0, " +
+				SnooziContract.users.Columns.USERID + " LONG )";
+		
+		
 	    
 	    /*
 	     * Instantiates an open helper for the provider's SQLite data repository
@@ -437,6 +493,7 @@ public class MyDataProvider extends ContentProvider {
 	    	db.execSQL(SQL_CREATE_TRACKINGEVENT);
 	    	db.execSQL(SQL_CREATE_VIDEO);
 	    	db.execSQL(SQL_CREATE_ALARM);
+	    	db.execSQL(SQL_CREATE_USER);
 	    	
 		}
 
@@ -454,19 +511,25 @@ public class MyDataProvider extends ContentProvider {
 	            	db.execSQL("DROP TABLE " + SnooziContract.trackingevents.TABLE + " ;");
 	            	db.execSQL(SQL_CREATE_TRACKINGEVENT);
 	    	        db.execSQL(SQL_CREATE_VIDEO);
-	    	        SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 2");
+	    	        SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 2");
 					
 	            }
 	            
 	            if(oldVersion<3){
 	                // Upgrade database structure from Version 2 to 3
 	            	db.execSQL(SQL_CREATE_ALARM);
-	            	SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 3");
+	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 3");
+	            }
+	            
+	            if(oldVersion<4){
+	                // Upgrade database structure from Version 3 to 4
+	            	db.execSQL(SQL_CREATE_USER);
+	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 4");
 	            }
 	            
 	            /*
-	            if(oldVersion<4){
-	            	// Upgrade database structure from Version 3 to 4
+	            if(oldVersion<5){
+	            	// Upgrade database structure from Version 4 to 5
 	            	String alterTable = "ALTER ....";
 	            	
 	            	db.execSQL(alterTable);

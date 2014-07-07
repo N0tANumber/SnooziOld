@@ -160,10 +160,10 @@ public class MyVideo {
 
 				hasChanged = false;
 
-				SnooziUtility.trace(context,TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
+				SnooziUtility.trace(TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
 			} catch (Exception e) {
-				SnooziUtility.trace(context,TRACETYPE.ERROR,"Save Video ERROR" + e.toString());
-				result = 0;
+				SnooziUtility.trace(TRACETYPE.ERROR,"Save Video ERROR" + e.toString());
+				result = -1;
 			}
 
 		}
@@ -202,7 +202,7 @@ public class MyVideo {
 				}
 
 			} catch (Exception e) {
-				SnooziUtility.trace(context,TRACETYPE.ERROR,"MyVideo saveAndSync ERROR" + e.toString());
+				SnooziUtility.trace(TRACETYPE.ERROR,"MyVideo saveAndSync ERROR" + e.toString());
 			}
 
 
@@ -234,7 +234,7 @@ public class MyVideo {
 			}else
 			{
 				//No video yet, getting one of the DUMMY Videos
-				SnooziUtility.trace(context, TRACETYPE.INFO,"No video yet, getting one of the DUMMY Videos");
+				SnooziUtility.trace(TRACETYPE.INFO, "No video yet, getting one of the DUMMY Videos");
 				cursor.close();
 				cursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ALL, SnooziContract.videos.Columns.FILESTATUS + " LIKE ?", new String[]{"DUMMY"},  SnooziContract.videos.SORT_ORDER_UNVIEWED);
 				if (cursor.moveToFirst()) 
@@ -244,7 +244,7 @@ public class MyVideo {
 				}else
 				{
 					// Very Wierd, no dummy video !!!
-					SnooziUtility.trace(context, TRACETYPE.ERROR,"Video.getNextUnViewedVideo NO DUMMY VIDEO PRESENT !!! ");
+					SnooziUtility.trace(TRACETYPE.ERROR, "Video.getNextUnViewedVideo NO DUMMY VIDEO PRESENT !!! ");
 
 				}
 			}
@@ -252,7 +252,7 @@ public class MyVideo {
 
 		}
 		catch (Exception e) {
-			SnooziUtility.trace(context, TRACETYPE.ERROR,"Video.getNextUnViewedVideo Exception :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "Video.getNextUnViewedVideo Exception :  " +  e.toString());
 
 		}finally{
 			if(cursor != null)

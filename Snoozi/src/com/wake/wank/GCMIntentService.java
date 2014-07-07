@@ -104,7 +104,7 @@ public class GCMIntentService extends GCMBaseIntentService {
    */
   @Override
   public void onError(Context context, String errorId) {
-	  SnooziUtility.trace(context, TRACETYPE.ERROR, "Registration with Google Cloud Messaging FAILED : " + errorId);
+	  SnooziUtility.trace(TRACETYPE.ERROR, "Registration with Google Cloud Messaging FAILED : " + errorId);
 	  SyncAdapter.isRegistationPending = false;
   }
 
@@ -190,7 +190,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setDeviceInformation(android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " " + android.os.Build.VERSION.RELEASE)).execute();
       }
       
-      SnooziUtility.trace(context, TRACETYPE.DEBUG,"GCM registered  with id :  " +  registration);
+      SnooziUtility.trace(TRACETYPE.DEBUG, "GCM registered  with id :  " +  registration);
      
     //Saving registration State
 	    Bundle settingsBundle = new Bundle();
@@ -204,7 +204,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     } catch (IOException e) {
     	String msg = "Exception received when attempting to register with server at "
                 + endpoint.getRootUrl() + " : " + e.toString();
-    	SnooziUtility.trace(context, TRACETYPE.ERROR, msg);
+    	SnooziUtility.trace(TRACETYPE.ERROR, msg);
       
       return;
     }
@@ -230,7 +230,7 @@ public class GCMIntentService extends GCMBaseIntentService {
       {
     	  String msg = "Exception received when attempting to unregister with server at "
                   + endpoint.getRootUrl() + " : " + e.toString();
-      	SnooziUtility.trace(context, TRACETYPE.ERROR, msg);
+      	SnooziUtility.trace(TRACETYPE.ERROR, msg);
         
 
         return;

@@ -14,6 +14,7 @@ import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.wake.wank.*;
 import com.wake.wank.database.SnooziContract;
 import com.wake.wank.models.MyAlarm;
+import com.wake.wank.models.MyUser;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility;
@@ -56,12 +57,10 @@ public class MainActivity extends Activity {
 		
 		if(Deviceinfoendpoint.DEFAULT_ROOT_URL == "https://evident-quasar-565.appspot.com/_ah/api/")
 		{
-			SnooziUtility.trace(this, TRACETYPE.ERROR, "You need to change all endpoint DEFAULT_ROOT_URL to match your current api version : ex : https://evident... ==> https://2-dot-evident");
+			SnooziUtility.trace(TRACETYPE.ERROR, "You need to change all endpoint DEFAULT_ROOT_URL to match your current api version : ex : https://evident... ==> https://2-dot-evident");
 			finish();
 			return;
 		}
-		
-		MyAlarm.setContext(this.getApplicationContext());
 		
 		//TEST : Start up RegisterActivity right away
 		//Intent intent = new Intent(this, RegisterActivity.class);
@@ -74,13 +73,13 @@ public class MainActivity extends Activity {
 			@Override
 			public void run() 
 			{   
-				//after 1s, launch the setting activity
+				//after 100ms, we do init work
 				launchHomeActivity();
 				//launchSettingActivity();
 			}
 		};
 
-		timer.schedule(timerTask, 1000);
+		timer.schedule(timerTask, 100);
 		
 		
 	}
@@ -108,17 +107,18 @@ public class MainActivity extends Activity {
 		super.onStart();
 		// FirstLaunch tracking
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = settings.edit();
+		
 		boolean isFirstLaunch = settings.getBoolean("firstLaunch", true);
+		
 		TrackingSender sender = new TrackingSender(getApplicationContext(),getApplication());
 		if(isFirstLaunch)
 		{
-			SnooziUtility.trace(this,TRACETYPE.INFO,"First APP_LAUNCH ");
+			SnooziUtility.trace(TRACETYPE.INFO,"First APP_LAUNCH ");
 			
 			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.FIRSTLAUNCH);
 			//Save firstlaunch state
-			SharedPreferences.Editor editor = settings.edit();
 			editor.putBoolean("firstLaunch", false);
-			editor.commit();
 			
 			//We insert the 3 dummy video into BDD
 			createDummyVideo();
@@ -129,12 +129,22 @@ public class MainActivity extends Activity {
 			//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
 			settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
 			ContentResolver.requestSync(SyncAdapter.GetSyncAccount(this), SnooziContract.AUTHORITY, settingsBundle);
-			
 		}
 		else
 			sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
 
+		//User Profil information
+		int userid = settings.getInt("userid", 0);
+		if(userid == 0)
+		{
+			// We need to save userinfo and get the userid from the server
+			userid = createMyInfo();
+			//editor.putInt("userid", userid);
+			
+		}
 		
+		
+		editor.commit();
 		try {
 			
 			if(!SnooziUtility.DEV_MODE)
@@ -148,6 +158,9 @@ public class MainActivity extends Activity {
 	
 	
 	
+
+
+
 	private void launchHomeActivity()
 	{
 		 Intent intent = new Intent(this, HomeActivity.class);
@@ -201,6 +214,17 @@ public class MainActivity extends Activity {
 */
 	}
 	
+	private int createMyInfo() {
+		MyUser me = new MyUser();
+		me.setPseudo("WankUser");
+		me.saveAndSync();
+		
+		//TODO : get country and city in an async task
+		
+		return me.getId();
+	}
+
+	
 	/**
 	 * For accessing data in the database without rooting the device, we copy the database on the sd card ( no access restriction)
 	 * used only in dev mode
@@ -231,10 +255,10 @@ public class MainActivity extends Activity {
 		        
 		        out = null;
 		        
-				SnooziUtility.trace(this, TRACETYPE.DEBUG,  "Database exported : " + outFile.getAbsolutePath());
+				SnooziUtility.trace(TRACETYPE.DEBUG, "Database exported : " + outFile.getAbsolutePath());
 			} catch (Exception e) {
 				// TODO: handle exception
-				SnooziUtility.trace(this, TRACETYPE.DEBUG, "Database export error : "+ e.toString());
+				SnooziUtility.trace(TRACETYPE.DEBUG, "Database export error : "+ e.toString());
 			}
 		}
 	}

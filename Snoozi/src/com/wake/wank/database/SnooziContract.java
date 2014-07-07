@@ -1,5 +1,6 @@
 package com.wake.wank.database;
 
+
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -114,7 +115,7 @@ public class SnooziContract {
 	}
 	
 	
-	
+
 
 	public static final class alarms
 	{
@@ -167,6 +168,47 @@ public class SnooziContract {
 			public static final String VIDEOID = "videoid";
 			
 		}
+		
+	}
+
+	public static final class users
+	{
+		public static final String CONTENT_PATH = "users";
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(SnooziContract.CONTENT_URI,CONTENT_PATH);
+		
+		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		
+		public static final String TABLE = "user";
+		
+		public static final String[] PROJECTION_ID = {Columns._ID};
+		public static final String[] PROJECTION_ALL = {Columns._ID,
+								Columns.PSEUDO,
+								Columns.CITY,
+								Columns.COUNTRY,
+								Columns.WAKEUPCOUNT,
+								Columns.VIDEOCOUNT,
+								Columns.VIEWCOUNT,
+								Columns.LIKECOUNT,
+								Columns.USERID
+								};
+		
+		public static final String SORT_ORDER_DEFAULT = Columns._ID + " ASC";
+				
+		public final static class Columns implements BaseColumns{
+			private Columns(){}
+			
+			public static final String PSEUDO = "pseudo";
+			public static final String CITY = "city";
+			public static final String COUNTRY = "country";
+			public static final String WAKEUPCOUNT = "wakeupcount";
+			public static final String VIDEOCOUNT = "videocount";
+			public static final String VIEWCOUNT = "viewcount";
+			public static final String LIKECOUNT = "likecount";
+			public static final String USERID = "userid";
+			
+		}
+		
 		
 	}
 	

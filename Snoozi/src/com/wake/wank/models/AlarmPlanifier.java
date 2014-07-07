@@ -50,7 +50,7 @@ public class AlarmPlanifier  {
 			//pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
 		} catch (Exception e) {
-			SnooziUtility.trace(context, TRACETYPE.ERROR, e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, e.toString());
 			return false;
 		}
 		return true;
@@ -67,7 +67,7 @@ public class AlarmPlanifier  {
 		//We check if alarm is still enabled
 		if(currentAlarm == null)
 			return false;
-		SnooziUtility.trace(context, TRACETYPE.INFO,"checkAndPlanifyNextAlarm ");
+		SnooziUtility.trace(TRACETYPE.INFO, "checkAndPlanifyNextAlarm ");
 		if(currentAlarm.getActivate())
 			return planifyNextAlarm(context,currentAlarm, 0);
 		else
@@ -85,7 +85,7 @@ public class AlarmPlanifier  {
 			return;
 		
 		try {
-			SnooziUtility.trace(context, TRACETYPE.INFO, "Cancelling Alarm");
+			SnooziUtility.trace(TRACETYPE.INFO, "Cancelling Alarm");
 			
 			// If the alarm has been set, cancel it.
 			/*AlarmManager alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
@@ -108,7 +108,7 @@ public class AlarmPlanifier  {
 
 			//pm.setComponentEnabledSetting(receiver, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,  PackageManager.DONT_KILL_APP);
 		} catch (Exception e) {
-			SnooziUtility.trace(context, TRACETYPE.ERROR, e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, e.toString());
 		}
 
 	}
@@ -192,7 +192,7 @@ public class AlarmPlanifier  {
 
 			}
 		} catch (Exception e) {
-			SnooziUtility.trace(context, TRACETYPE.ERROR, e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, e.toString());
 		}
 
 

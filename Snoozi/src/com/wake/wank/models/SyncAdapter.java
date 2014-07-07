@@ -93,7 +93,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		if(action==null)
 			action = SnooziUtility.SYNC_ACTION.SEND_DATA;
 
-		SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG, "SyncAdapter.onPerformSync : "+action);
+		SnooziUtility.trace(TRACETYPE.DEBUG, "SyncAdapter.onPerformSync : "+action);
 
 
 		SharedPreferences settings =this.getContext().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
@@ -116,7 +116,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			if(!isRegistered && !isRegistationPending)
 			{
-				SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"isRegistered : " + isRegistered);
+				SnooziUtility.trace(TRACETYPE.INFO,"isRegistered : " + isRegistered);
 				//Not registered yet so Registering Google cloud messaging
 				try {
 					GCMIntentService.register(this.getContext());
@@ -124,7 +124,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				} catch (Exception e) 
 				{
 					//probleme during GCM registration
-					SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"GCM Registration error :  " +  e.toString());
+					SnooziUtility.trace(TRACETYPE.ERROR, "GCM Registration error :  " +  e.toString());
 				}
 			}
 		}
@@ -185,7 +185,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 							//We delete the database entry
 							// Deleting the old Video 
 							provider.delete(SnooziContract.videos.CONTENT_URI, SnooziContract.trackingevents.Columns._ID + " = ? ", new String[]{String.valueOf(id)});
-							SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"cleanupOldVideo - Permanently Deleted video :  " +  id);
+							SnooziUtility.trace(TRACETYPE.DEBUG, "cleanupOldVideo - Permanently Deleted video :  " +  id);
 						}else
 						{
 							// We only place the video filestatus as "DELETED"
@@ -193,7 +193,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 							values.put(SnooziContract.videos.Columns.FILESTATUS,"DELETED" );
 							provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, id), values,null,null);
 
-							SnooziUtility.trace(this.getContext(), TRACETYPE.DEBUG,"cleanupOldVideo - Deleted video :  " +  id);
+							SnooziUtility.trace(TRACETYPE.DEBUG, "cleanupOldVideo - Deleted video :  " +  id);
 						}
 
 					} while (cursor.moveToNext());
@@ -202,7 +202,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			success = true;
 
 		} catch (Exception e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter Exception :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter Exception :  " +  e.toString());
 		}finally{
 			if(cursor != null)
 				cursor.close();
@@ -252,7 +252,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				try {
 					versionName = this.getContext().getPackageManager().getPackageInfo(this.getContext().getPackageName(), 0).versionName;
 				} catch (NameNotFoundException e) {
-					SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter NameNotFoundException :  " +  e.toString());
+					SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter NameNotFoundException :  " +  e.toString());
 					versionName = "—";
 				}
 				do {
@@ -280,13 +280,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 					TrackingEvent answerEvent;
 					if(SnooziUtility.DEV_MODE)
 					{
-						SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"## DEV MODE DUMMY## Tracking "+type+" synchronisation complete, id : " + id);
+						SnooziUtility.trace(TRACETYPE.INFO, "## DEV MODE DUMMY## Tracking "+type+" synchronisation complete, id : " + id);
 						answerEvent = new TrackingEvent();
 					}else
 					{
 						//Sending the tracking Event
 						answerEvent = endpoint.insertTrackingEvent(trackingEvent).execute();
-						SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Tracking "+type+" synchronisation complete, id : " + id);
+						SnooziUtility.trace(TRACETYPE.INFO, "Tracking "+type+" synchronisation complete, id : " + id);
 					}
 					if(answerEvent != null)
 					{
@@ -303,13 +303,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 		} catch (IOException e) {
 			//ne pas mettre TYPE"ERROR car sinon il va spammer le server de log error
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IOException :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter IOException :  " +  e.toString());
 		} catch (RemoteException e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter RemoteException :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter RemoteException :  " +  e.toString());
 		} catch (IllegalArgumentException e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter IllegalArgumentException :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter IllegalArgumentException :  " +  e.toString());
 		} catch (Exception e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"SyncAdapter Exception :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter Exception :  " +  e.toString());
 		}finally{
 			if(cursor != null)
 				cursor.close();
@@ -335,13 +335,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			playedcursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ID, SnooziContract.videos.Columns.MYVIEWCOUNT + " == 0 AND " + SnooziContract.videos.Columns.FILESTATUS + " != ? AND  " + SnooziContract.videos.Columns.FILESTATUS + " != ? ",new String[]{"ERROR","DUMMY"},  null);
 			int notPlayedVideoCount = playedcursor.getCount();
-			SnooziUtility.trace(getContext(),TRACETYPE.DEBUG,"in stock : " +  notPlayedVideoCount + " - maxDownloadedVideo : " + maxDownloadedVideo);
+			SnooziUtility.trace(TRACETYPE.DEBUG,"in stock : " +  notPlayedVideoCount + " - maxDownloadedVideo : " + maxDownloadedVideo);
 			maxDownloadedVideo = maxDownloadedVideo - notPlayedVideoCount;
 			// If We have enough video to play, we skill the retrieval of new video
 			if(maxDownloadedVideo < 0)
 				maxDownloadedVideo = 0;
 		} catch (Exception e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"retrieveRecentVideo Exception :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "retrieveRecentVideo Exception :  " +  e.toString());
 
 		}finally
 		{
@@ -367,7 +367,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			
 
 
-			SnooziUtility.trace(this.getContext(), TRACETYPE.INFO,"Getting from server " +  maxDownloadedVideo + " new video timestamp > " + fromstamp);
+			SnooziUtility.trace(TRACETYPE.INFO, "Getting from server " +  maxDownloadedVideo + " new video timestamp > " + fromstamp);
 			// we must call the serveur to get a list of all recent  video
 			//Preparing the endpoint for receiving all video
 			Videoendpoint.Builder endpointBuilder = new Videoendpoint.Builder(
@@ -387,7 +387,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 						.execute();
 			} catch (IOException e) {
 				videolist = null;
-				SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"GetRecentVideo IOException :  " +  e.toString());
+				SnooziUtility.trace(TRACETYPE.ERROR, "GetRecentVideo IOException :  " +  e.toString());
 				return false;
 			}
 
@@ -401,7 +401,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 				{
 					for(Video video : videoItemList) 
 					{
-						SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"looking in local BDD for video " + video.getUrl());
+						SnooziUtility.trace(TRACETYPE.INFO,"looking in local BDD for video " + video.getUrl());
 						//Preparing video data to insert or update ( both case)
 						ContentValues values = new ContentValues();
 						values.put(SnooziContract.videos.Columns.DESCRIPTION,video.getDescription() );
@@ -426,7 +426,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 								values.put(SnooziContract.videos.Columns.LOCALURL,localUrl);
 
 								Uri videouri = provider.insert(SnooziContract.videos.CONTENT_URI, values);
-								SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"INSERTED Video " + video.getId() + " : " + videouri.toString());
+								SnooziUtility.trace(TRACETYPE.INFO,"INSERTED Video " + video.getId() + " : " + videouri.toString());
 
 								
 
@@ -449,13 +449,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 									//Already present in database, we update the info ( description, like, dislike, viewcount,level)
 									int updatecount = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, id), values,null,null);
-									SnooziUtility.trace(this.getContext(),TRACETYPE.INFO,"UPDATED Video " + video.getId() + " : " + updatecount);
+									SnooziUtility.trace(TRACETYPE.INFO,"UPDATED Video " + video.getId() + " : " + updatecount);
 								}
 							}
 
 						}
 						catch (Exception e) {
-							SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"retrieveRecentVideo Exception :  " +  e.toString());
+							SnooziUtility.trace(TRACETYPE.ERROR, "retrieveRecentVideo Exception :  " +  e.toString());
 							success = false;
 						}finally{
 							if(cursor != null)
@@ -483,7 +483,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 	private boolean sendRatingData(long videoid, int addedViewcount, int addedLike)
 	{
 
-		SnooziUtility.trace(getContext(),TRACETYPE.INFO,"Sending data to server : Video " + videoid + " with addedViewcount " + addedViewcount + " with addedLike " + addedLike);
+		SnooziUtility.trace(TRACETYPE.INFO,"Sending data to server : Video " + videoid + " with addedViewcount " + addedViewcount + " with addedLike " + addedLike);
 		try {
 			Videoendpoint.Builder endpointBuilder = new Videoendpoint.Builder(
 					AndroidHttp.newCompatibleTransport(),
@@ -494,7 +494,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			Videoendpoint videoEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
 			videoEndpoint.rateVideo(videoid,addedLike,addedViewcount ).execute();
 		} catch (IOException e) {
-			SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,"sendRatingData Exception :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "sendRatingData Exception :  " +  e.toString());
 			return false;
 		}
 		return true;

@@ -2,6 +2,7 @@ package com.wake.wank.receivers;
 
 import java.util.List;
 
+import com.wake.wank.MyApplication;
 import com.wake.wank.database.SnooziContract;
 import com.wake.wank.models.AlarmPlanifier;
 import com.wake.wank.models.MyAlarm;
@@ -24,8 +25,9 @@ public class WakeupBootReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		
 		//We need to planify every activated Alarm
-		MyAlarm.setContext(context);
-		SnooziUtility.trace(context,TRACETYPE.INFO,"WakeupBootReceiver.onReceive ");
+		MyApplication.setAppContext(context);
+		
+		SnooziUtility.trace(TRACETYPE.INFO,"WakeupBootReceiver.onReceive ");
 		
 		List<MyAlarm> alrmList = MyAlarm.getListFromSQL(SnooziContract.alarms.Columns.ACTIVATE + " = ?", new String[]{"1"});
 		
@@ -35,13 +37,13 @@ public class WakeupBootReceiver extends BroadcastReceiver {
 			for (MyAlarm myAlarm : alrmList) {
 				{
 					AlarmPlanifier.checkAndPlanifyNextAlarm(myAlarm,context);
-					SnooziUtility.trace(context,TRACETYPE.INFO,"Alarm "+myAlarm.getId()+" planified : " + myAlarm.toStringDiff());
+					SnooziUtility.trace(TRACETYPE.INFO,"Alarm "+myAlarm.getId()+" planified : " + myAlarm.toStringDiff());
 					
 				}
 				
 			}
 		}else
-			SnooziUtility.trace(context,TRACETYPE.INFO,"No Alarm to planify ");
+			SnooziUtility.trace(TRACETYPE.INFO,"No Alarm to planify ");
 		
 		
         

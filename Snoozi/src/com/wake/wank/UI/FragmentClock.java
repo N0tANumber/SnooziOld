@@ -268,7 +268,7 @@ public class FragmentClock extends Fragment {
 		if (resultCode == Activity.RESULT_OK) 
 		{
 
-			SnooziUtility.trace(getActivity(), TRACETYPE.INFO,".....onAlarmSettingResult RESULT OK");
+			SnooziUtility.trace(TRACETYPE.INFO, ".....onAlarmSettingResult RESULT OK");
 			
 			MyAlarm currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
 

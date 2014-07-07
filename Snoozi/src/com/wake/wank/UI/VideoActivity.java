@@ -122,7 +122,7 @@ public class VideoActivity extends Activity {
 						
 					} catch (Exception e) {
 						// TODO: handle exception
-						SnooziUtility.trace(null, TRACETYPE.ERROR,"VideoActivity.onCreate Error : "+ e.toString());
+						SnooziUtility.trace(TRACETYPE.ERROR, "VideoActivity.onCreate Error : "+ e.toString());
 
 						finish();
 					}
@@ -152,7 +152,7 @@ public class VideoActivity extends Activity {
 				}
 			});
 		} catch (Exception e) {
-			SnooziUtility.trace(this, TRACETYPE.ERROR,"VideoActivity.onCreate Error : "+ e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "VideoActivity.onCreate Error : "+ e.toString());
 
 		}
 		
@@ -306,7 +306,7 @@ public class VideoActivity extends Activity {
 			setResult(RESULT_OK, returnIntent);  
 
 		} catch (Exception e) {
-			SnooziUtility.trace(this, TRACETYPE.ERROR,"VideoActivity.onStop Error : "+ e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "VideoActivity.onStop Error : "+ e.toString());
 
 		}
 

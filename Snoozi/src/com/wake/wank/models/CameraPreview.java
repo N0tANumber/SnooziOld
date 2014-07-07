@@ -36,7 +36,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.startPreview();
     		}
         } catch (IOException e) {
-            SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR, "Error setting camera preview: " + e.getMessage());
+            SnooziUtility.trace(TRACETYPE.ERROR, "Error setting camera preview: " + e.getMessage());
         }
     }
 
@@ -77,7 +77,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.startPreview();
 
         } catch (Exception e){
-        	SnooziUtility.trace(this.getContext(), TRACETYPE.ERROR,  "Error starting camera preview: " + e.getMessage());
+        	SnooziUtility.trace(TRACETYPE.ERROR, "Error starting camera preview: " + e.getMessage());
         }
     }
 

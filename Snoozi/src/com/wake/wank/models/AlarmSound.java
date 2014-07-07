@@ -66,7 +66,7 @@ public class AlarmSound
 		
 		m_mediaPlayer = MediaPlayer.create(m_context, m_uri);
 		m_mediaPlayer.setLooping(looping);
-		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM LOADED : " + uri.toString());
+		SnooziUtility.trace(TRACETYPE.INFO, "ALARM LOADED : " + uri.toString());
 		m_currentVolume = 0;
 	}
 
@@ -76,7 +76,7 @@ public class AlarmSound
 	 */
 	public void play( int fadeDuration)
 	{
-		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM START PLAYING");
+		SnooziUtility.trace(TRACETYPE.INFO, "ALARM START PLAYING");
 		//Play music
 		if(m_mediaPlayer ==null || m_mediaPlayer.isPlaying())
 			return;
@@ -119,7 +119,7 @@ public class AlarmSound
 						}
 						
 					} catch (Exception e) {
-						SnooziUtility.trace(m_context, TRACETYPE.ERROR, "ALARM timerTask error : " + e.toString());
+						SnooziUtility.trace(TRACETYPE.ERROR, "ALARM timerTask error : " + e.toString());
 						timer.cancel();
 						timer.purge();
 					}
@@ -132,7 +132,7 @@ public class AlarmSound
 
 	public void pause()
 	{
-		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM PAUSED");
+		SnooziUtility.trace(TRACETYPE.INFO, "ALARM PAUSED");
 		
 		if (m_mediaPlayer !=null && m_mediaPlayer.isPlaying()) 
 			m_mediaPlayer.pause();
@@ -140,7 +140,7 @@ public class AlarmSound
 	
 	public void stop()
 	{
-		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM STOPPED");
+		SnooziUtility.trace(TRACETYPE.INFO, "ALARM STOPPED");
 		
 		if (m_mediaPlayer !=null && m_mediaPlayer.isPlaying()) 
 			m_mediaPlayer.stop();

@@ -142,7 +142,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	        }
 			
 		} catch (Exception e) {
-			SnooziUtility.trace(this.m_appContext,TRACETYPE.ERROR,"CONTENTRESOLVER Error " + e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR,"CONTENTRESOLVER Error " + e.toString());
 			
 		}finally{
 			isRunning = false;

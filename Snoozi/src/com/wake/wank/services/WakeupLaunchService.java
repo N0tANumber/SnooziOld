@@ -23,7 +23,7 @@ public class WakeupLaunchService extends WakefulIntentService {
 	protected void doWakefulWork(Intent intent) {
 		isrunning = true;
 		int alarmid = intent.getIntExtra("alarmid", 0);
-		SnooziUtility.trace(this,TRACETYPE.DEBUG,"WakeupLaunchService.doWakefulWork alarmid + " + alarmid);
+		SnooziUtility.trace(TRACETYPE.DEBUG,"WakeupLaunchService.doWakefulWork alarmid + " + alarmid);
 		
 		Intent launchintent = new Intent(this, WakeupActivity.class);
 		launchintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

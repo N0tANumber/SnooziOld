@@ -7,10 +7,13 @@ import com.google.android.gms.analytics.Tracker;
 import com.wake.wank.models.MyAlarm;
 
 import android.app.Application;
+import android.content.Context;
 
 public class MyApplication extends Application {
 	
-    public static int GENERAL_TRACKER = 0;
+	private static Context context = null;
+
+	public static int GENERAL_TRACKER = 0;
 
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
@@ -23,6 +26,13 @@ public class MyApplication extends Application {
         
     }
 
+    public void onCreate(){
+        super.onCreate();
+        MyApplication.context = getApplicationContext();
+    }
+
+    
+    
     public synchronized Tracker getTracker(TrackerName trackerId) {
         if (!mTrackers.containsKey(trackerId)) 
         {
@@ -35,4 +45,12 @@ public class MyApplication extends Application {
         }
         return mTrackers.get(trackerId);
     }
+
+    public static Context getAppContext() {
+    	return MyApplication.context;
+    }
+	public static void setAppContext(Context context) {
+		if(MyApplication.context == null)
+			MyApplication.context = context;
+	}
 }

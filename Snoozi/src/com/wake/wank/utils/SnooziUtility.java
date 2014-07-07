@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.GoogleAuthUtil;
+import com.wake.wank.MyApplication;
 import com.wake.wank.models.MyVideo;
 
 public class SnooziUtility {
@@ -31,6 +32,7 @@ public class SnooziUtility {
 		public static final String SEND_RATING = "SEND_RATING";
 		public static final String SEND_DATA = "SEND_DATA";
 		public static final String UPDATE_ALARM = "UPDATE_ALARM";
+		public static final String SEND_MYPROFIL = "SEND_MYPROFIL";
 		}
 	
 	public static enum TRACETYPE{
@@ -40,7 +42,7 @@ public class SnooziUtility {
 	}
 	
 	
-	public static void trace(Context context, TRACETYPE traceType, String message)
+	public static void trace(TRACETYPE traceType, String message)
 	{
 		String stackinfo = "";
 		try {
@@ -65,7 +67,7 @@ public class SnooziUtility {
 			
 			Log.e(SNOOZI_TRACE,stackinfo);
 			if(!DEV_MODE) {
-				if (context != null) {
+				if (MyApplication.getAppContext() != null) {
 					// Logging to the server
 					//TrackingSender sender = new TrackingSender(context);
 					//sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
