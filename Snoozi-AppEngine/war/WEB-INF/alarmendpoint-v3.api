@@ -1,0 +1,243 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://evident-quasar-565.appspot.com/_ah/api",
+  "name" : "alarmendpoint",
+  "version" : "v3",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://evident-quasar-565.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "ownerDomain" : "snoozi.com",
+  "ownerName" : "snoozi.com",
+  "methods" : {
+    "alarmendpoint.insertAlarm" : {
+      "path" : "alarm",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.AlarmEndpoint.insertAlarm",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "alarmendpoint.getAlarm" : {
+      "path" : "alarm/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.AlarmEndpoint.getAlarm",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "alarmendpoint.listAlarm" : {
+      "path" : "alarm",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.AlarmEndpoint.listAlarm",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "alarmendpoint.removeAlarm" : {
+      "path" : "alarm/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.AlarmEndpoint.removeAlarm",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "alarmendpoint.updateAlarm" : {
+      "path" : "alarm",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.AlarmEndpoint.updateAlarm",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "Alarm" : {
+        "id" : "Alarm",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "hour" : {
+            "type" : "integer"
+          },
+          "minute" : {
+            "type" : "integer"
+          },
+          "volume" : {
+            "type" : "integer"
+          },
+          "daystring" : {
+            "type" : "string"
+          },
+          "monday" : {
+            "type" : "boolean"
+          },
+          "tuesday" : {
+            "type" : "boolean"
+          },
+          "wednesday" : {
+            "type" : "boolean"
+          },
+          "thursday" : {
+            "type" : "boolean"
+          },
+          "friday" : {
+            "type" : "boolean"
+          },
+          "saturday" : {
+            "type" : "boolean"
+          },
+          "sunday" : {
+            "type" : "boolean"
+          },
+          "activate" : {
+            "type" : "boolean"
+          },
+          "vibrate" : {
+            "type" : "boolean"
+          },
+          "userid" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "videoid" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "status" : {
+            "$ref" : "ALARM_STATUS"
+          }
+        }
+      },
+      "ALARM_STATUS" : {
+        "id" : "ALARM_STATUS",
+        "type" : "string",
+        "enum" : [ "UNASSIGNED", "ASSIGNED_FRIEND", "ASSIGNED_RANDOM" ]
+      },
+      "CollectionResponse_Alarm" : {
+        "id" : "CollectionResponse_Alarm",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Alarm"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "com.snoozi.AlarmEndpoint.insertAlarm" : {
+        "request" : {
+          "$ref" : "Alarm"
+        },
+        "response" : {
+          "$ref" : "Alarm"
+        }
+      },
+      "com.snoozi.AlarmEndpoint.getAlarm" : {
+        "response" : {
+          "$ref" : "Alarm"
+        }
+      },
+      "com.snoozi.AlarmEndpoint.listAlarm" : {
+        "response" : {
+          "$ref" : "CollectionResponse_Alarm"
+        }
+      },
+      "com.snoozi.AlarmEndpoint.removeAlarm" : {
+      },
+      "com.snoozi.AlarmEndpoint.updateAlarm" : {
+        "request" : {
+          "$ref" : "Alarm"
+        },
+        "response" : {
+          "$ref" : "Alarm"
+        }
+      }
+    }
+  }
+}
