@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.wake.wank.models.MyAlarm;
 
 import android.app.Application;
 
@@ -19,6 +20,7 @@ public class MyApplication extends Application {
 
     public MyApplication() {
         super();
+        
     }
 
     public synchronized Tracker getTracker(TrackerName trackerId) {

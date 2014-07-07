@@ -7,6 +7,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.wake.wank.*;
 import com.wake.wank.models.AlarmPlanifier;
 import com.wake.wank.models.AlarmSound;
+import com.wake.wank.models.MyAlarm;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.services.WakeupLaunchService;
 import com.wake.wank.utils.SnooziUtility;
@@ -39,7 +40,10 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	//private long _launchtime = 0;
 	public static final String SAVED_STATE_ACTION_BAR_HIDDEN = "saved_state_action_bar_hidden";
 	
+	private MyAlarm currentAlarm = null;
 	private MyVideo currentVideo = null;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -57,8 +61,12 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			    WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
 	            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
        	
+		MyAlarm.setContext(getApplicationContext());
+		
 		setContentView(R.layout.activity_wakescreen);
-
+		Intent data = getIntent();
+		int alarmId = data.getIntExtra("alarmid", 0);
+		currentAlarm = MyAlarm.getFromSQL(alarmId);
 		
 		currentVideo = SnooziUtility.getCurrentAlarmVideo(this);
 		SnooziUtility.trace(this, TRACETYPE.INFO,"AlarmReceiverActivity.oncreateAlarm with video " +  currentVideo.getLocalurl());
@@ -68,7 +76,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		
 		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		
-		AlarmPlanifier.checkAndPlanifyNextAlarm(this);
+		AlarmPlanifier.checkAndPlanifyNextAlarm(currentAlarm,this);
 		
 		
 		/* we dont disable alarm anymore (never -> everyday)
@@ -293,7 +301,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		case R.drawable.ic_item_snooze:
 			_alarmEvent = TrackingEventAction.SNOOZE;
 			sender.sendUserEvent(TrackingEventCategory.ALARM, _alarmEvent,"",  currentVideo.getVideoid());
-			AlarmPlanifier.planifyNextAlarm(this,5*60);
+			AlarmPlanifier.planifyNextAlarm(this,currentAlarm,5*60);
 			Toast.makeText(this,getResources().getString(R.string.snoozeinfivemin) , Toast.LENGTH_LONG).show();
 			finish();
 			break;

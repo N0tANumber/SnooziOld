@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.wake.wank.UI.WakeupActivity;
+import com.wake.wank.models.MyAlarm;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
@@ -21,10 +22,12 @@ public class WakeupLaunchService extends WakefulIntentService {
 	@Override
 	protected void doWakefulWork(Intent intent) {
 		isrunning = true;
-		SnooziUtility.trace(this,TRACETYPE.DEBUG,"WakeupLaunchService.doWakefulWork");
+		int alarmid = intent.getIntExtra("alarmid", 0);
+		SnooziUtility.trace(this,TRACETYPE.DEBUG,"WakeupLaunchService.doWakefulWork alarmid + " + alarmid);
 		
 		Intent launchintent = new Intent(this, WakeupActivity.class);
 		launchintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		launchintent.putExtra("alarmid", alarmid);
 		startActivity(launchintent);
 		
 		

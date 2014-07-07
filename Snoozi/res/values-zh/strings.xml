@@ -61,5 +61,10 @@
     <string name="sendbtn">Send with Love</string>
     <string name="finalthanks">您所提供的所有信息将会帮助我们做的更好!</string>
     <string name="sendthanks">谢谢您的建议</string>
-  
+  <string name="setAlarm">Set the alarm</string>
+<string name="record">Record Video</string>
+<string name="startrecord">Start Recording</string>
+  <string name="stoprecord">Stop Recording</string>
+  <string name="pleaseRate">Rate this video to improve our Video Quality :</string>
+  <string name="addAlarm">add Alarm</string>
 </resources>

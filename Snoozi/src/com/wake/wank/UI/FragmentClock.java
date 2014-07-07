@@ -64,6 +64,35 @@ public class FragmentClock extends Fragment {
 		mAdapter = new MyAlarmAdapter(this.getActivity(), alarmList);
 		listView.setAdapter(mAdapter);
 		
+		SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                        listView,
+                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
+                            @Override
+                            public boolean canDismiss(int position) {
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                	
+                                	MyAlarm alrm = mAdapter.getItem(position);
+                                	if(alrm != null)
+                                	{
+                                		alrm.delete();
+                                		mAdapter.remove(alrm);
+                                	}
+                                    
+                                }
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
+        listView.setOnTouchListener(touchListener);
+        // Setting this scroll listener is required to ensure that during ListView scrolling,
+        // we don't look for swipes.
+        listView.setOnScrollListener(touchListener.makeScrollListener());
+        
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			  @Override
 			  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -79,6 +108,7 @@ public class FragmentClock extends Fragment {
 			  }
 			});
 		
+
 		addButton = (Button) rootView.findViewById(R.id.addButton);
 		addButton.setOnTouchListener(new OnTouchListener() {
 			
@@ -163,7 +193,7 @@ public class FragmentClock extends Fragment {
 		MyAlarm alrm = null;
 		// recuperation depuis la base de données des alarmes configurée
 		alarmList.clear();
-		alarmList.addAll(MyAlarm.getFromSQL(rootView.getContext()));
+		alarmList.addAll(MyAlarm.getListFromSQL());
 		
 		if(alarmList.isEmpty())
 		{
@@ -205,7 +235,7 @@ public class FragmentClock extends Fragment {
 			editor.remove("volume");
 			editor.commit();
 			if(alrm.getVolume() != -1)
-				alrm.save(rootView.getContext()); // alarm was activatged, so we save it
+				alrm.save(); // alarm was activatged, so we save it
 			alarmList.add(alrm);
 		}
 
@@ -242,8 +272,8 @@ public class FragmentClock extends Fragment {
 			
 			MyAlarm currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
 
-			currentAlarm.save(rootView.getContext());
-			currentAlarm.checkAndPlanify(getActivity(),rootView.getContext());
+			currentAlarm.save();
+			currentAlarm.checkAndPlanify(getActivity());
 			
 			//if(position == -1)
 			//	alarmList.add(currentAlarm);

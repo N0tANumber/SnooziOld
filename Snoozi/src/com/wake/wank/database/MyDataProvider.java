@@ -156,7 +156,7 @@ public class MyDataProvider extends ContentProvider {
 				// SELECT ONE ALARM
 				builder.setTables(SnooziContract.alarms.TABLE);
 				builder.appendWhere(SnooziContract.alarms.Columns._ID + " = " + uri.getLastPathSegment());
-				
+				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
 			}

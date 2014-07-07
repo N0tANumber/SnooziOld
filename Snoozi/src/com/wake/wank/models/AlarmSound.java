@@ -30,6 +30,7 @@ public class AlarmSound
 	
 	private int m_currentVolume;
 	private AudioManager m_audioManager;
+	private Uri m_uri;
 	
 	private final static int INT_VOLUME_MAX = 100;
 	private final static int INT_VOLUME_MIN = 0;
@@ -61,9 +62,9 @@ public class AlarmSound
 	public void load(Uri uri, boolean looping)
 	{
 		release();
+		m_uri = uri;
 		
-		
-		m_mediaPlayer = MediaPlayer.create(m_context, uri);
+		m_mediaPlayer = MediaPlayer.create(m_context, m_uri);
 		m_mediaPlayer.setLooping(looping);
 		SnooziUtility.trace(m_context, TRACETYPE.INFO, "ALARM LOADED : " + uri.toString());
 		m_currentVolume = 0;
@@ -99,10 +100,14 @@ public class AlarmSound
 			final Timer timer = new Timer(true);
 			TimerTask timerTask = new TimerTask() 
 			{
+				
 				@Override
 				public void run() 
 				{
 					try {
+						if(m_mediaPlayer == null)
+							load(m_uri,true);
+						
 						if(m_mediaPlayer.isPlaying())
 						{
 							updateVolume(finalvolumeStep);

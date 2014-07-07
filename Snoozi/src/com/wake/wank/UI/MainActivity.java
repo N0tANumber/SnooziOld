@@ -11,9 +11,9 @@ import java.util.TimerTask;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
-
 import com.wake.wank.*;
 import com.wake.wank.database.SnooziContract;
+import com.wake.wank.models.MyAlarm;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility;
@@ -61,6 +61,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 		
+		MyAlarm.setContext(this.getApplicationContext());
 		
 		//TEST : Start up RegisterActivity right away
 		//Intent intent = new Intent(this, RegisterActivity.class);

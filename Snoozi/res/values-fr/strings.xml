@@ -65,5 +65,6 @@
 <string name="startrecord">Start Recording</string>
   <string name="stoprecord">Stop Recording</string>
   <string name="pleaseRate">Notez cette vidéo pour améliorer la qualité des prochaines :</string>
-
+  <string name="addAlarm">nouvelle alarme</string>
+  
 </resources>

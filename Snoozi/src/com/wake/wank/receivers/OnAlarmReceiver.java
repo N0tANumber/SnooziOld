@@ -1,6 +1,7 @@
 package com.wake.wank.receivers;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
+import com.wake.wank.UI.WakeupActivity;
 import com.wake.wank.services.WakeupLaunchService;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
@@ -13,8 +14,15 @@ public class OnAlarmReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		SnooziUtility.trace(context,TRACETYPE.DEBUG,"OnAlarmReceiver.onReceive");
-		WakefulIntentService.sendWakefulWork(context, WakeupLaunchService.class);
+		
+		int alarmid = intent.getIntExtra("alarmid", 0);
+		SnooziUtility.trace(context,TRACETYPE.DEBUG,"OnAlarmReceiver.onReceive alarmid = " + alarmid);
+		
+		Intent launchintent = new Intent(context, WakeupLaunchService.class);
+		launchintent.putExtra("alarmid", alarmid);
+		WakefulIntentService.sendWakefulWork(context, launchintent);
+		
+		//WakefulIntentService.sendWakefulWork(context, WakeupLaunchService.class);
 	}
 
 }
