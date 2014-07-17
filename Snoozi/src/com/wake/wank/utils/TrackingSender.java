@@ -1,23 +1,37 @@
 package com.wake.wank.utils;
 
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.snoozi.trackingeventendpoint.Trackingeventendpoint;
+import com.snoozi.trackingeventendpoint.model.TrackingEvent;
 import com.wake.wank.MyApplication;
 import com.wake.wank.MyApplication.TrackerName;
 import com.wake.wank.database.SnooziContract;
+import com.wake.wank.models.CloudEndpointUtils;
 import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.app.Application;
+import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.RemoteException;
 
 
 /**
@@ -133,11 +147,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 				//Log.i("CONTENTRESOLVER",theResult.toString());
 				
 				//On demande une synchro avec le server
-				Bundle settingsBundle = new Bundle();
-		        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-		        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-		        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
-			
+				SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.TRACKING_SEND);
 	        }
 			
 		} catch (Exception e) {
@@ -168,6 +178,118 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 		}
 		*/
 		return (long) 0;
+	}
+	
+	
+	
+	
+	
+	//##### SERVER SIDE SYNC
+	
+
+	/**
+	 * Send all pending trackingEvent to the server
+	 * @param provider
+	 * @throws Exception 
+	 */
+	public static boolean sendTrackingEvent() throws Exception {
+		Cursor cursor = null;
+		
+		boolean success = false;
+		try {
+			
+			//We check all tracking event in Contentproviders
+			ContentResolver provider = MyApplication.getAppContext().getContentResolver();
+			cursor = provider.query(SnooziContract.trackingevents.CONTENT_URI, SnooziContract.trackingevents.PROJECTION_ALL, null, null,  null);
+			if (cursor.moveToFirst()) 
+			{
+				SnooziUtility.trace(TRACETYPE.INFO,"Sending "+cursor.getCount()+" TrackingEvent to server...");
+				// We got some tracking to send
+				//Preparing the endpoint for sending all tracking event
+				Trackingeventendpoint.Builder endpointBuilder = new Trackingeventendpoint.Builder(
+						AndroidHttp.newCompatibleTransport(),
+						new JacksonFactory(),
+						new HttpRequestInitializer() {
+							public void initialize(HttpRequest httpRequest) { }
+						});
+
+				//Building a tracking end for all message
+				Trackingeventendpoint endpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
+				String userId = SnooziUtility.getAccountNames();
+				String versionName;
+				/*
+				try {
+					RemoveErrorLoggerEvent removeresult = endpoint.removeErrorLoggerEvent();
+					removeresult.execute();
+					SnooziUtility.trace(getContext(), TRACETYPE.INFO,"deletion" + removeresult.toString());
+				} catch (Exception e) {
+					SnooziUtility.trace(getContext(), TRACETYPE.ERROR, e.toString());
+				}*/
+
+				try {
+					
+					versionName = MyApplication.getAppContext().getPackageManager().getPackageInfo(MyApplication.getAppContext().getPackageName(), 0).versionName;
+				} catch (NameNotFoundException e) {
+					SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter NameNotFoundException :  " +  e.toString());
+					versionName = "—";
+				}
+				do {
+					// getting the data from the cursor
+					int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns._ID));
+					long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTAMP));
+					String timestring = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTRING));
+					String description = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.DESCRIPTION));
+					String type = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TYPE));
+					long videoid = cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.VIDEOID));
+
+					if(description.length() > 500)
+						description = description.substring(0, 500);
+					//Building the trackingEvent
+					TrackingEvent trackingEvent = new TrackingEvent();
+					trackingEvent.setUserid(userId)
+						.setAndroidVersion(android.os.Build.VERSION.SDK_INT)
+						.setDeviceInformation(android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " " + android.os.Build.VERSION.RELEASE)
+						.setDescription(description)
+						.setType(type)
+						.setTimestamp(timestamp)
+						.setTimeString(timestring)
+						.setVideoid(videoid)
+						.setApkVersion(versionName);
+					TrackingEvent answerEvent;
+					if(SnooziUtility.DEV_MODE)
+					{
+						SnooziUtility.trace(TRACETYPE.INFO, "## DEV MODE DUMMY## Tracking "+type+" synchronisation complete, id : " + id);
+						answerEvent = new TrackingEvent();
+					}else
+					{
+						//Sending the tracking Event
+						answerEvent = endpoint.insertTrackingEvent(trackingEvent).execute();
+						SnooziUtility.trace(TRACETYPE.INFO, "Tracking "+type+" synchronisation complete, id : " + id);
+					}
+					if(answerEvent != null)
+					{
+
+						// Deleting the Tracking event
+						provider.delete(SnooziContract.trackingevents.CONTENT_URI, 
+								SnooziContract.trackingevents.Columns._ID + " = ? ", 
+								new String[]{String.valueOf(id)});
+					}
+				} while (cursor.moveToNext());
+				
+			}
+			success = true;
+
+		} catch (IOException e) {
+			//ne pas mettre TYPE"ERROR car sinon il va spammer le server de log error
+			throw e;
+		} catch (Exception e) {
+			throw e;
+		}finally{
+			if(cursor != null)
+				cursor.close();
+		}
+
+		return success;
 	}
 	
 }

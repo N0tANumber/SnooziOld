@@ -13,7 +13,7 @@ import com.wake.wank.utils.TrackingSender;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;

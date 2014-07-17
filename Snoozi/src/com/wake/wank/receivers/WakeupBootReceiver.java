@@ -12,7 +12,6 @@ import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 /**
  * Class for re-planing alarm if device is rebooted

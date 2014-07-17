@@ -103,18 +103,18 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 
 	/**
 	 * Launch all pending/error download
-	 * @param context
 	 */
 	@SuppressLint("NewApi")
-	public static void launchingPendingDownload(Context context)
+	public static void launchingPendingDownload()
 	{
 		Cursor cursor = null;
-		ContentResolver provider = context.getContentResolver();
-		DownloadManager dm = (DownloadManager)  context.getSystemService(Context.DOWNLOAD_SERVICE);
 
 
 		try 
 		{
+			Context context = MyApplication.getAppContext();
+			ContentResolver provider = context.getContentResolver();
+			DownloadManager dm = (DownloadManager)  context.getSystemService(Context.DOWNLOAD_SERVICE);
 			cursor = provider.query(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.PROJECTION_ALL, SnooziContract.videos.Columns.FILESTATUS + " LIKE ?", new String[]{"PENDING"},  null);
 			if (cursor.moveToFirst()) 
 			{
@@ -154,17 +154,17 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 							values.put(SnooziContract.videos.Columns.DOWNLOADID, filedownloadid );
 							SnooziUtility.trace(TRACETYPE.DEBUG,"  Downloading Video " + id + " from " + url + " to " + localUrl);
 						}catch (Exception e) {
-							SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload Error Video download :  " +  e.toString());
+							SnooziUtility.trace(TRACETYPE.ERROR,"VideoDownloadReceiver.launchingPendingDownload Error Video download :  " +  e.toString());
 							values.put(SnooziContract.videos.Columns.FILESTATUS,"ERROR" );
 						}
 						//And update the line
 						int updatecount = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, id), values,null,null);
 						if(updatecount == 0)
-							SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload Problem in updating FileStatus");
+							SnooziUtility.trace(TRACETYPE.ERROR,"VideoDownloadReceiver.launchingPendingDownload Problem in updating FileStatus");
 						
 
 					}catch (Exception e) {
-						SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload cursor ERROR :  " +  e.toString());
+						SnooziUtility.trace(TRACETYPE.ERROR,"VideoDownloadReceiver.launchingPendingDownload cursor ERROR :  " +  e.toString());
 					}
 
 				} while (cursor.moveToNext());
@@ -172,7 +172,7 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 
 
 		}catch (Exception e) {
-			SnooziUtility.trace(TRACETYPE.ERROR,"launchingPendingDownload ERROR :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR,"VideoDownloadReceiver.launchingPendingDownload ERROR :  " +  e.toString());
 		}finally{
 			if(cursor != null)
 				cursor.close();

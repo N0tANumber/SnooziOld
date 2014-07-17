@@ -14,14 +14,10 @@ import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.graphics.Rect;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
-import android.media.MediaRecorder.OnInfoListener;
-import android.media.MediaScannerConnection;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;

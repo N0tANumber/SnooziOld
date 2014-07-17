@@ -5,19 +5,16 @@ import java.io.IOException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.gcm.GCMBaseIntentService;
 import com.google.android.gcm.GCMRegistrar;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import android.accounts.Account;
-
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.json.jackson.JacksonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.snoozi.deviceinfoendpoint.model.DeviceInfo;
 import com.wake.wank.UI.RegisterActivity;
@@ -127,14 +124,10 @@ public class GCMIntentService extends GCMBaseIntentService {
       {
     	  Bundle extras = intent.getExtras();
           String message = extras.getString("message");
-          if (message.equals(SnooziUtility.SYNC_ACTION.NEW_VIDEO_AVAILABLE))
+          if (message.equals("VIDEO_RETRIEVE"))
           {
-        	 Bundle settingsBundle = new Bundle();
-        	settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
- 	        //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
- 	        settingsBundle.putString("action", message);
-  	        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
-
+        	  SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.VIDEO_RETRIEVE);
+        	
           }
       }
       
@@ -186,20 +179,15 @@ public class GCMIntentService extends GCMBaseIntentService {
             deviceInfo
                 .setDeviceRegistrationID(registration)
                 .setTimestamp(System.currentTimeMillis())
-                .setUserid(SnooziUtility.getAccountNames(context))
+                .setUserid(SnooziUtility.getAccountNames())
                 .setDeviceInformation(android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL + " " + android.os.Build.VERSION.RELEASE)).execute();
       }
       
       SnooziUtility.trace(TRACETYPE.DEBUG, "GCM registered  with id :  " +  registration);
      
     //Saving registration State
-	    Bundle settingsBundle = new Bundle();
-  		settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-       //settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-       settingsBundle.putString("action", SnooziUtility.SYNC_ACTION.GCM_REGISTERED);
-        ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
-
-        
+    SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.GCM_REGISTERED);
+	  
 	   
     } catch (IOException e) {
     	String msg = "Exception received when attempting to register with server at "

@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#641213"
-    android:orientation="vertical" >
-    <fragment android:name="com.wake.wank.UI.FragmentClock"
-              android:id="@+id/clock_fragment"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent" />
-    </RelativeLayout>
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     />

@@ -1,10 +1,13 @@
 package com.wake.wank.database;
 
 
+import com.wake.wank.MyApplication;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,9 +24,11 @@ public class MyDataProvider extends ContentProvider {
      * Defines a handle to the database helper object. The MainDatabaseHelper class is defined
      * in a following snippet.
      */
-    private MainDatabaseHelper m_OpenHelper;
+	private MainDatabaseHelper m_OpenHelper;
     private SQLiteDatabase db;
 
+    private static ContentProviderClient provider = null;
+    
 	/**
 	 * Constant to match URI with the pattern
 	 * @see http://developer.android.com/reference/android/content/UriMatcher.html
@@ -62,8 +67,6 @@ public class MyDataProvider extends ContentProvider {
 	}
 	
 	
-	
-
 	
 	
 	
@@ -415,7 +418,7 @@ public class MyDataProvider extends ContentProvider {
 		    "(" +                           // The columns in the table
 		     SnooziContract.trackingevents.Columns._ID + "  INTEGER PRIMARY KEY, " +
 		     SnooziContract.trackingevents.Columns.TYPE + " TEXT, " +
-		     SnooziContract.trackingevents.Columns.TIMESTAMP + " LONG, " +
+		     SnooziContract.trackingevents.Columns.TIMESTAMP + " LONG default 0, " +
 		     SnooziContract.trackingevents.Columns.TIMESTRING + " TEXT, " +
 		     SnooziContract.trackingevents.Columns.VIDEOID + " LONG default 0, " +
 		     SnooziContract.trackingevents.Columns.DESCRIPTION + " TEXT )";
@@ -425,7 +428,7 @@ public class MyDataProvider extends ContentProvider {
 		    "(" +                           // The columns in the table
 		     SnooziContract.videos.Columns._ID + "  INTEGER PRIMARY KEY, " +
 		     SnooziContract.videos.Columns.URL + " TEXT, " +
-		     SnooziContract.videos.Columns.VIDEOID + " LONG, " +
+		     SnooziContract.videos.Columns.VIDEOID + " LONG default 0, " +
 		     SnooziContract.videos.Columns.LOCALURL + " TEXT, " +
 		     SnooziContract.videos.Columns.DESCRIPTION + " TEXT, " +
 		     SnooziContract.videos.Columns.LIKE + " INTEGER default 0, " +
@@ -435,16 +438,16 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.videos.Columns.STATUS + " TEXT, " +
 		     SnooziContract.videos.Columns.FILESTATUS + " TEXT, " +
 		     SnooziContract.videos.Columns.LEVEL + " INTEGER default 0, " +
-		     SnooziContract.videos.Columns.TIMESTAMP + " LONG, " +
+		     SnooziContract.videos.Columns.TIMESTAMP + " LONG default 0, " +
 		     SnooziContract.videos.Columns.DOWNLOADID + " LONG default 0, " +
-		     SnooziContract.videos.Columns.USERID + " LONG )";
+		     SnooziContract.videos.Columns.USERID + " LONG default 0 )";
 		
 		private static final String SQL_CREATE_ALARM = "CREATE TABLE IF NOT EXISTS " +
         		SnooziContract.alarms.TABLE +  // Table's name
 		    "(" +                           // The columns in the table
 		     SnooziContract.alarms.Columns._ID + "  INTEGER PRIMARY KEY, " +
 		     SnooziContract.alarms.Columns.ACTIVATE + " INTEGER default 0, " +
-		     SnooziContract.alarms.Columns.ALARMID + " LONG, " +
+		     SnooziContract.alarms.Columns.ALARMID + " LONG default 0, " +
 		     SnooziContract.alarms.Columns.HOUR + " INTEGER default 7, " +
 		     SnooziContract.alarms.Columns.MINUTE + " INTEGER default 30, " +
 		     SnooziContract.alarms.Columns.DAYSTRING + " TEXT, " +
@@ -457,7 +460,7 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.alarms.Columns.SUNDAY + " INTEGER default 0, " +
 		     SnooziContract.alarms.Columns.VIBRATE + " INTEGER default 0, " +
 		     SnooziContract.alarms.Columns.VOLUME + " INTEGER default 0, " +
-		     SnooziContract.alarms.Columns.VIDEOID + " LONG )";
+		     SnooziContract.alarms.Columns.VIDEOID + " LONG default 0 )";
 		
 		
 		private static final String SQL_CREATE_USER = "CREATE TABLE IF NOT EXISTS " +
@@ -467,11 +470,11 @@ public class MyDataProvider extends ContentProvider {
 				SnooziContract.users.Columns.PSEUDO + " TEXT, " +
 				SnooziContract.users.Columns.CITY + " TEXT, " +
 				SnooziContract.users.Columns.COUNTRY + " TEXT, " +
-				SnooziContract.users.Columns.WAKEUPCOUNT + " INTEGER default 0, " +
 				SnooziContract.users.Columns.VIDEOCOUNT + " INTEGER default 0, " +
 				SnooziContract.users.Columns.VIEWCOUNT + " INTEGER default 0, " +
 				SnooziContract.users.Columns.LIKECOUNT + " INTEGER default 0, " +
-				SnooziContract.users.Columns.USERID + " LONG )";
+				SnooziContract.users.Columns.USERID + " LONG default 0, " +
+				SnooziContract.users.Columns.SIGNUPSTAMP + " LONG default 0 )";
 		
 		
 	    

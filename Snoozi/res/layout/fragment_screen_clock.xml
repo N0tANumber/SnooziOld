@@ -2,26 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+   android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:gravity="center"
+    android:background="#641213"
+    android:id="@+id/layoutclock"
     android:orientation="vertical" >
 
     <AnalogClock
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
     </AnalogClock>
     
      <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="45dp"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/addButton"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
             android:text="@string/addAlarm"
             android:textAllCaps="true" />
@@ -29,7 +31,7 @@
     </LinearLayout>
     
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.1"
         android:orientation="horizontal"
@@ -40,8 +42,8 @@
 
         <ListView
             android:id="@+id/listviewalarm"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:divider="#fff"
             android:dividerHeight="1dp"
            

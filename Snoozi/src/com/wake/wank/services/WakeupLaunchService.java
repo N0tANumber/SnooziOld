@@ -5,7 +5,6 @@ import android.content.Intent;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.wake.wank.UI.WakeupActivity;
-import com.wake.wank.models.MyAlarm;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 

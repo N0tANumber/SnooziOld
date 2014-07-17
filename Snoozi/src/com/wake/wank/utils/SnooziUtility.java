@@ -4,12 +4,9 @@ package com.wake.wank.utils;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.util.Log;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.wake.wank.MyApplication;
 import com.wake.wank.models.MyVideo;
@@ -26,13 +23,17 @@ public class SnooziUtility {
 	private static MyVideo m_video = null;
 	
 	
-	public class SYNC_ACTION{
-		public static final String NEW_VIDEO_AVAILABLE = "NEW_VIDEO_AVAILABLE";
-		public static final String GCM_REGISTERED = "GCM_REGISTERED";
-		public static final String SEND_RATING = "SEND_RATING";
-		public static final String SEND_DATA = "SEND_DATA";
-		public static final String UPDATE_ALARM = "UPDATE_ALARM";
-		public static final String SEND_MYPROFIL = "SEND_MYPROFIL";
+	public static enum SYNC_ACTION{
+		GCM_REGISTERED ,
+		TRACKING_SEND,
+		ALARM_UPDATE,
+		ALARM_DELETE,
+		USER_UPDATE,
+		USER_VIEW,
+		USER_WAKEUP,
+		VIDEO_RETRIEVE,
+		VIDEO_RATING,
+		VIDEO_CLEANUP
 		}
 	
 	public static enum TRACETYPE{
@@ -69,7 +70,7 @@ public class SnooziUtility {
 			if(!DEV_MODE) {
 				if (MyApplication.getAppContext() != null) {
 					// Logging to the server
-					//TrackingSender sender = new TrackingSender(context, );
+					//TrackingSender sender = new TrackingSender(MyApplication.);
 					//sender.sendUserEvent(TrackingEventType.ERROR_LOGGER,stackinfo );
 				}
 			}
@@ -82,19 +83,26 @@ public class SnooziUtility {
 	
 	/**
 	 * Return the user account email
-	 * @param context
 	 * @return email like foo@gmail.com
 	 */
-	public static String getAccountNames(Context context) {
+	public static String getAccountNames() {
 		if(m_username == "")
 		{
-			AccountManager mAccountManager = AccountManager.get(context);
-		    Account[] accounts = mAccountManager.getAccountsByType(
-		    		GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-		    String[] names = new String[accounts.length];
-		    for (int i = 0; i < names.length; i++) {
-		        names[i] = accounts[i].name;
-		    }
+			String[] names = new String[0];
+			try {
+				
+			
+				AccountManager mAccountManager = AccountManager.get(MyApplication.getAppContext());
+			    Account[] accounts = mAccountManager.getAccountsByType(
+			    		GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
+			    names = new String[accounts.length];
+			    for (int i = 0; i < names.length; i++) {
+			        names[i] = accounts[i].name;
+			    }
+			} catch (Exception e) {
+				SnooziUtility.trace(TRACETYPE.ERROR,"SnooziUtility.getAccountNames Exception " + e.toString());
+				
+			}
 		    if(names.length > 0)
 		    	m_username = names[0];
 		    else 
@@ -109,7 +117,7 @@ public class SnooziUtility {
 		
 		if(m_video == null)
 		{
-			m_video = MyVideo.getNextUnViewedVideo(context);
+			m_video = MyVideo.getNextUnViewedVideo();
 			
 			//SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 			//m_video = settings.getInt("videoNumber", 1);

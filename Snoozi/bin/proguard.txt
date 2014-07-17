@@ -1,3 +1,9 @@
+# view res/layout/activity_home.xml #generated:2
+-keep class android.support.v4.view.ViewPager { <init>(...); }
+
+# view res/layout/com_facebook_usersettingsfragment.xml #generated:48
+-keep class com.facebook.widget.LoginButton { <init>(...); }
+
 # view res/layout/activity_wakescreen.xml #generated:8
 -keep class com.fima.glowpadview.GlowPadView { <init>(...); }
 
@@ -13,8 +19,8 @@
 # view AndroidManifest.xml #generated:59
 -keep class com.wake.wank.UI.AlarmSettingActivity { <init>(...); }
 
-# view res/layout/activity_home.xml #generated:8
--keep class com.wake.wank.UI.FragmentClock { <init>(...); }
+# view res/layout/activity_video.xml #generated:8
+-keep class com.wake.wank.UI.FragmentVideo { <init>(...); }
 
 # view AndroidManifest.xml #generated:65
 -keep class com.wake.wank.UI.HomeActivity { <init>(...); }

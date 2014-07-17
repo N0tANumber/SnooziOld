@@ -90,7 +90,8 @@ public class AlarmSettingActivity extends Activity {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitlebar);
 
 		Intent data = getIntent();
-		currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
+		Bundle alarmBundleled =  data.getBundleExtra("alarm");
+		currentAlarm = new MyAlarm(alarmBundleled);
 		
 
 
@@ -307,7 +308,7 @@ public class AlarmSettingActivity extends Activity {
 				// TODO Auto-generated method stub
 				SavePref();
 				Intent returnIntent = new Intent();
-				returnIntent.putExtra("alarm",currentAlarm);
+				returnIntent.putExtra("alarm",currentAlarm.toBundle());
 				setResult(RESULT_OK, returnIntent);
 				finish();
 			}

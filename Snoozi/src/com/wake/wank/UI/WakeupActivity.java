@@ -9,6 +9,7 @@ import com.wake.wank.models.AlarmPlanifier;
 import com.wake.wank.models.AlarmSound;
 import com.wake.wank.models.MyAlarm;
 import com.wake.wank.models.MyVideo;
+import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.services.WakeupLaunchService;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.TrackingEventAction;
@@ -135,12 +136,13 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onResumeAlarm");
-		startRingingAlarm();
-		
 		try {
 			
-			com.facebook.AppEventsLogger.activateApp(this, "250270258502553");
+			SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onResumeAlarm");
+			startRingingAlarm();
+			
+			if(!SnooziUtility.DEV_MODE)
+				com.facebook.AppEventsLogger.activateApp(this, "250270258502553");
 		} catch (Exception e) {
 			SnooziUtility.trace(TRACETYPE.ERROR, "Facebook registration error : " + e.toString());
 			
@@ -259,7 +261,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		if(mMediaPlayer == null)
 		{
 			//Play sound
-			mMediaPlayer = new AlarmSound(this);
+			mMediaPlayer = new AlarmSound(this,currentAlarm);
 			try {
 				mMediaPlayer.load(SnooziUtility.getVideoUri(this), true);
 				
@@ -278,6 +280,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			long[] pattern = {0, 1000, 200};
 			_vibrator.vibrate(pattern, 0);
 		}
+		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.startRingingAlarm");
+		
 	}
 
 	private void stopRingingAlarm(){
@@ -289,6 +293,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			_vibrator.cancel();
 			
 		}
+		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.stopRingingAlarm");
+		
 	}
 
 	
@@ -307,13 +313,22 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 
 		case R.drawable.ic_item_wakeup:
 			_alarmEvent = TrackingEventAction.WAKEUP;
-			sender.sendUserEvent(TrackingEventCategory.ALARM,_alarmEvent,"",  currentVideo.getVideoid());
 			stopRingingAlarm();
 			mMediaPlayer.stop();
 			mMediaPlayer.release();
 			mMediaPlayer = null;
 			_vibrator = null;
+			
+			sender.sendUserEvent(TrackingEventCategory.ALARM,_alarmEvent,"",  currentVideo.getVideoid());
+			
+			//We ask for new video to the server
+			SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.VIDEO_RETRIEVE);
+			//We tell the server that the user wokeUp
+			SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.USER_WAKEUP);
+
+			
 			Intent intent = new Intent(this, VideoActivity.class);
+			intent.putExtra("video", currentVideo.toBundle());
 			startActivityForResult(intent, 1);
 			
 			

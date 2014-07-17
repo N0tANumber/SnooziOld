@@ -13,7 +13,6 @@ import com.google.analytics.tracking.android.EasyTracker;
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.wake.wank.*;
 import com.wake.wank.database.SnooziContract;
-import com.wake.wank.models.MyAlarm;
 import com.wake.wank.models.MyUser;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
@@ -24,6 +23,7 @@ import com.wake.wank.utils.TrackingSender;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -93,33 +93,45 @@ public class MainActivity extends Activity {
 					createDummyVideo();
 					
 					//During that time We ask for next video to be downloaded
-					Bundle settingsBundle = new Bundle();
-					settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-					//settingsBundle.putBoolean( ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-					settingsBundle.putString("action", "NEW_VIDEO_AVAILABLE");
-					ContentResolver.requestSync(SyncAdapter.GetSyncAccount(), SnooziContract.AUTHORITY, settingsBundle);
+					SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.VIDEO_RETRIEVE);
 				}
 				else
 					sender.sendUserEvent(TrackingEventCategory.APP,TrackingEventAction.LAUNCH);
 
+				
+				
 				//User Profil information
-				int userid = settings.getInt("userid", 0);
-				if(userid == 0)
+				int userid = settings.getInt("localuid", 0);
+				MyUser me = null;
+				if(userid != 0)
+					 me = MyUser.getFromSQL(userid);
+				if(me == null)
 				{
 					// We need to save userinfo and get the userid from the server
-					userid = createMyInfo();
-					//editor.putInt("userid", userid);
+					me = new MyUser();
+					me.setPseudo("Wankster");
+					me.save();
+					userid = me.getId();
+					editor.putInt("localuid", userid);
+				}
+				
+				// If we still don't have my serverside userId, i ask for a sync with the server
+				if(MyUser.getMyUserId() == 0l)
+					SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.USER_UPDATE,me); 
 					
-				}      
 				
 				editor.commit();
 				
 				//We copy the local BDD / Only on DEV MODE
 				if(SnooziUtility.DEV_MODE)
+				{
 					exportLocalDatabase();
+				}
+				
+				//We call a cleanup for old Video
+				SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.VIDEO_CLEANUP); 
 				
 				launchHomeActivity();
-				//launchSettingActivity();
 			}
 		};
 
@@ -192,7 +204,7 @@ public class MainActivity extends Activity {
 		videoObj.setVideoid(6421335542595584l); // video id on the Cloud Storage for tracking like/view and others...
 		videoObj.setDescription("Still Dreaming?");
 		videoObj.setTimestamp(1401291149156l);
-		videoObj.save(this);
+		videoObj.save();
 		videoObj.setId(0);
 
 		//SECOND VIDEO : Party at my house last night!
@@ -203,7 +215,7 @@ public class MainActivity extends Activity {
 		videoObj.setVideoid(6750768661004288l); // video id on the Cloud Storage for tracking like/view and others...
 		videoObj.setDescription("Party at my house last night!");
 		videoObj.setTimestamp(1401291282525l);
-		videoObj.save(this);
+		videoObj.save();
 		videoObj.setId(0);
 
 		//THIRD VIDEO : Elephant piano
@@ -217,15 +229,6 @@ public class MainActivity extends Activity {
 */
 	}
 	
-	private int createMyInfo() {
-		MyUser me = new MyUser();
-		me.setPseudo("WankUser");
-		me.saveAndSync();
-		
-		//TODO : get country and city in an async task
-		
-		return me.getId();
-	}
 
 	
 	/**
@@ -241,7 +244,7 @@ public class MainActivity extends Activity {
 				InputStream in = new FileInputStream(file);
 		        OutputStream out = null;
 		        
-		        File outFile = new File("/mnt/sdcard/Android/backupWank.db");
+		        File outFile = new File(Environment.getExternalStorageDirectory().getPath() + "/backupWank.db");
 				out = new FileOutputStream(outFile);
 		       
 		        byte[] buffer = new byte[1024];
@@ -257,10 +260,28 @@ public class MainActivity extends Activity {
 		        
 		        out = null;
 		        
-				SnooziUtility.trace(TRACETYPE.DEBUG, "Database exported : " + outFile.getAbsolutePath());
+		        // We do the same for userpref
+		         in = new FileInputStream("/data/data/com.wake.wank/shared_prefs/com.wake.wank.xml");
+		         out = null;
+		        
+		        outFile = new File(Environment.getExternalStorageDirectory().getPath() + "/com.wake.wank.sharedPref.xml");
+				out = new FileOutputStream(outFile);
+		       
+		        buffer = new byte[1024];
+		        while((read = in.read(buffer)) != -1){
+		          out.write(buffer, 0, read);
+		        }
+		        in.close();
+		        in = null;
+		        out.flush();
+		        out.close();
+		    	
+		    	
+		        
+				SnooziUtility.trace(TRACETYPE.INFO, "Database exported : " + outFile.getAbsolutePath());
 			} catch (Exception e) {
 				// TODO: handle exception
-				SnooziUtility.trace(TRACETYPE.DEBUG, "Database export error : "+ e.toString());
+				SnooziUtility.trace(TRACETYPE.ERROR, "Database export error : "+ e.toString());
 			}
 		
 	}

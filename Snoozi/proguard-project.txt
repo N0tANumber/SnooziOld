@@ -19,6 +19,7 @@
 #   public *;
 #}
 
+
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
@@ -38,3 +39,19 @@
 
 -keep class com.facebook.** { *; }
 -keepattributes Signature
+
+
+
+    
+    
+    
+-keep class javax.jdo.** { *; }
+-dontwarn javax.jdo.*
+
+-keep class javax.jdo.spi.** { *; }
+-dontwarn javax.jdo.spi.*
+
+-keep class javax.jdo.annotations.** { *; }
+-dontwarn javax.jdo.annotations.*
+
+

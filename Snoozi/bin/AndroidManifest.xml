@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wake.wank"
-    android:versionCode="8"
-    android:versionName="sexy.ape">
+    android:versionCode="10"
+    android:versionName="sexy.owl">
 
     <uses-sdk
         android:minSdkVersion="11"
@@ -64,8 +64,8 @@
         
         <activity
             android:name="com.wake.wank.UI.HomeActivity"
-             android:theme="@style/TitleBarTheme"
-           android:screenOrientation="portrait" >
+          android:icon="@drawable/titlebarpx"
+          android:screenOrientation="portrait" >
         </activity>
         
         <activity

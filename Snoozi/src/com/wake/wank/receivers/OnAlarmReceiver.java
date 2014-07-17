@@ -2,7 +2,6 @@ package com.wake.wank.receivers;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.wake.wank.MyApplication;
-import com.wake.wank.UI.WakeupActivity;
 import com.wake.wank.services.WakeupLaunchService;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;

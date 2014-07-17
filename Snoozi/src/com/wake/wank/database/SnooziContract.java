@@ -15,6 +15,9 @@ import android.provider.BaseColumns;
 public class SnooziContract {
 	
 	private SnooziContract(){}
+	
+	
+
 
 	/**
 	 * The authority of the provider. "com.wake.wankprovider"
@@ -71,6 +74,7 @@ public class SnooziContract {
 		public static final String TABLE = "video";
 		
 		public static final String[] PROJECTION_ID = {Columns._ID};
+		public static final String[] PROJECTION_URL = {Columns._ID,Columns.LOCALURL};
 		public static final String[] PROJECTION_ALL = {Columns._ID,
 								Columns.URL,
 								Columns.VIDEOID,
@@ -186,11 +190,11 @@ public class SnooziContract {
 								Columns.PSEUDO,
 								Columns.CITY,
 								Columns.COUNTRY,
-								Columns.WAKEUPCOUNT,
 								Columns.VIDEOCOUNT,
 								Columns.VIEWCOUNT,
 								Columns.LIKECOUNT,
-								Columns.USERID
+								Columns.USERID,
+								Columns.SIGNUPSTAMP
 								};
 		
 		public static final String SORT_ORDER_DEFAULT = Columns._ID + " ASC";
@@ -201,11 +205,11 @@ public class SnooziContract {
 			public static final String PSEUDO = "pseudo";
 			public static final String CITY = "city";
 			public static final String COUNTRY = "country";
-			public static final String WAKEUPCOUNT = "wakeupcount";
 			public static final String VIDEOCOUNT = "videocount";
 			public static final String VIEWCOUNT = "viewcount";
 			public static final String LIKECOUNT = "likecount";
 			public static final String USERID = "userid";
+			public static final String SIGNUPSTAMP = "signupstamp";
 			
 		}
 		

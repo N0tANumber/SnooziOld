@@ -2,7 +2,6 @@ package com.wake.wank.models;
 
 import java.util.Calendar;
 
-import com.wake.wank.R;
 import com.wake.wank.receivers.OnAlarmReceiver;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;

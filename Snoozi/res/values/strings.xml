@@ -52,9 +52,9 @@
         <item> Sun.</item>
     </string-array>
     <string-array name="hometabs">
-        <item> Alarm</item>
-        <item> Happening</item>
-        <item> My Gallery</item>
+        <item>Alarm</item>
+        <item>History</item>
+        <item>My Gallery</item>
     </string-array>
    
     <string name="volume">Alarm Volume</string>
@@ -71,5 +71,6 @@
   <string name="stoprecord">Stop Recording</string>
   <string name="pleaseRate">Rate this video to improve our Video Quality :</string>
   <string name="addAlarm">add Alarm</string>
+  <string name="maxalarmcount">You cannot have more than 3 alarm. Delete one by swiping it to the left. </string>
     
 </resources>

@@ -6,11 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
+
+
+
+
 //import com.google.android.gms.ads.AdRequest;
 //import com.google.android.gms.ads.AdView;
 //import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.wake.wank.R;
 import com.wake.wank.models.MyAlarm;
+import com.wake.wank.models.MyAlarmAdapter;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
@@ -25,31 +31,62 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 
-public class FragmentClock extends Fragment {
+public class FragmentClock extends Fragment  implements OnTouchListener{
 
 
 	private static final int REQUEST_SETTING = 1;
-	
+
 	private ViewGroup rootView;
 
 	private List<MyAlarm> alarmList ;
 	//private CheckBox chkactivate;
 	//private TextView txtday;
-	//private TextView txtTime;
-	private OnCheckedChangeListener activateListener = null;
+	//private TextView txtLike;
+	//private OnCheckedChangeListener activateListener = null;
 
 	private MyAlarmAdapter mAdapter;
 	private ListView listView;
 
 	private Button addButton;
 
-	
+	private Boolean isSettingLaunched = false;
+
+
+	/**
+	 * The argument key for the page number this fragment represents.
+	 */
+	//	public static final String ARG_PAGE = "page";
+
+	/**
+	 * The fragment's page number, which is set to the argument value for {@link #ARG_PAGE}.
+	 */
+	//	private int mPageNumber;
+
+	/**
+	 * Factory method for this fragment class. Constructs a new fragment for the given page number.
+	 */
+	/*	public static FragmentClock create(int pageNumber) {
+		FragmentClock fragment = new FragmentClock();
+		Bundle args = new Bundle();
+		args.putInt(ARG_PAGE, pageNumber);
+		fragment.setArguments(args);
+		return fragment;
+	}
+
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mPageNumber = getArguments().getInt(ARG_PAGE);
+	}*/
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,69 +96,99 @@ public class FragmentClock extends Fragment {
 		rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_screen_clock, container, false);
 
+		LinearLayout layout = (LinearLayout)rootView.findViewById(R.id.layoutclock);// get your root  layout
+		layout.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				ViewParent parent = v.getParent(); 
+				// or get a reference to the ViewPager and cast it to ViewParent
+
+				parent.requestDisallowInterceptTouchEvent(true);
+
+				SnooziUtility.trace(TRACETYPE.INFO, "touch event root  " );
+				return false;
+			}
+		});
+
 		listView = (ListView) rootView.findViewById(R.id.listviewalarm);
 		alarmList = new ArrayList<MyAlarm>();
 		mAdapter = new MyAlarmAdapter(this.getActivity(), alarmList);
 		listView.setAdapter(mAdapter);
-		
-		SwipeDismissListViewTouchListener touchListener =
-                new SwipeDismissListViewTouchListener(
-                        listView,
-                        new SwipeDismissListViewTouchListener.DismissCallbacks() {
-                            @Override
-                            public boolean canDismiss(int position) {
-                                return true;
-                            }
 
-                            @Override
-                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-                                for (int position : reverseSortedPositions) {
-                                	
-                                	MyAlarm alrm = mAdapter.getItem(position);
-                                	if(alrm != null)
-                                	{
-                                		alrm.delete();
-                                		mAdapter.remove(alrm);
-                                	}
-                                    
-                                }
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
-        listView.setOnTouchListener(touchListener);
-        // Setting this scroll listener is required to ensure that during ListView scrolling,
-        // we don't look for swipes.
-        listView.setOnScrollListener(touchListener.makeScrollListener());
-        
+
+
+		SwipeDismissListViewTouchListener touchListener =
+				new SwipeDismissListViewTouchListener(
+						listView,
+						new SwipeDismissListViewTouchListener.DismissCallbacks() {
+							@Override
+							public boolean canDismiss(int position) {
+								return true;
+							}
+
+							@Override
+							public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+								for (int position : reverseSortedPositions) {
+
+									MyAlarm alrm = mAdapter.getItem(position);
+									if(alrm != null)
+									{
+										alrm.delete();
+										mAdapter.remove(alrm);
+									}
+
+								}
+								mAdapter.notifyDataSetChanged();
+							}
+						});
+		listView.setOnTouchListener(touchListener);
+		// Setting this scroll listener is required to ensure that during ListView scrolling,
+		// we don't look for swipes.
+		listView.setOnScrollListener(touchListener.makeScrollListener());
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
-			  @Override
-			  public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				  // We must launch the setup
-					  try {
-						  launchSettingActivity(alarmList.get(position));
-						
-					} catch (Exception e) {
-						// nothing at that position, need to refresh the list
-						mAdapter.notifyDataSetChanged();
-					}
-			    
-			  }
-			});
-		
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// We must launch the setup
+				try {
+					launchSettingActivity(alarmList.get(position));
+
+				} catch (Exception e) {
+					// nothing at that position, need to refresh the list
+					mAdapter.notifyDataSetChanged();
+				}
+
+			}
+		});
+
 
 		addButton = (Button) rootView.findViewById(R.id.addButton);
 		addButton.setOnTouchListener(new OnTouchListener() {
-			
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
-				MyAlarm newalrm = new MyAlarm();
-				launchSettingActivity(newalrm);
+				if(!isSettingLaunched)
+				{
+					isSettingLaunched = true;
+
+
+					if(listView.getCount() >= 3)
+					{
+						String maxAlarmCount = getResources().getString(R.string.maxalarmcount);
+						Toast.makeText(rootView.getContext(),maxAlarmCount , Toast.LENGTH_LONG).show();
+
+					}else
+					{
+						MyAlarm newalrm = new MyAlarm();
+						launchSettingActivity(newalrm);
+					}
+				}
 				return false;
 			}
 		});
-		
-/*
+
+		/*
 		LinearLayout setAlarmBtn = (LinearLayout) rootView.findViewById(R.id.BtnSetAlarm);
 		setAlarmBtn.setOnTouchListener(new OnTouchListener() {
 
@@ -136,11 +203,11 @@ public class FragmentClock extends Fragment {
 				return false;
 			}
 		});
-		*/
-		
+		 */
+
 
 		// Build button list
-		//txtTime = (TextView)rootView.findViewById(R.id.TxtTime);
+		//txtLike = (TextView)rootView.findViewById(R.id.TxtTime);
 		//txtday = (TextView)rootView.findViewById(R.id.Txtdays);
 		//chkactivate = (CheckBox) rootView.findViewById(R.id.checkBoxActiv);
 
@@ -183,6 +250,13 @@ public class FragmentClock extends Fragment {
 		return rootView;
 	}
 
+	/**
+	 * Returns the page number represented by this fragment object.
+	 */
+	/*	public int getPageNumber() {
+		return mPageNumber;
+	}*/
+
 
 
 	@Override
@@ -193,8 +267,14 @@ public class FragmentClock extends Fragment {
 		MyAlarm alrm = null;
 		// recuperation depuis la base de données des alarmes configurée
 		alarmList.clear();
-		alarmList.addAll(MyAlarm.getListFromSQL());
 		
+		//filestatus = SUCCESSFUL
+		//		myviewcount > 0
+				
+		//		order by timestamp DESC
+				
+		alarmList.addAll(MyAlarm.getListFromSQL());
+		isSettingLaunched = false;
 		if(alarmList.isEmpty())
 		{
 
@@ -235,14 +315,14 @@ public class FragmentClock extends Fragment {
 			editor.remove("volume");
 			editor.commit();
 			if(alrm.getVolume() != -1)
-				alrm.save(); // alarm was activatged, so we save it
+				alrm.saveAndSync(); // alarm was activatged, so we save it
 			alarmList.add(alrm);
 		}
 
 
 		mAdapter.notifyDataSetChanged();
-		
-		//txtTime.setText(currentAlarm.toTime());
+
+		//txtLike.setText(currentAlarm.toTime());
 		//txtday.setText(currentAlarm.getDayString());
 		//chkactivate.setChecked(currentAlarm.getActivate());
 
@@ -254,7 +334,7 @@ public class FragmentClock extends Fragment {
 	private void launchSettingActivity(MyAlarm alrm)
 	{
 		Intent intent = new Intent(this.getActivity(), AlarmSettingActivity.class);
-		intent.putExtra("alarm", alrm);
+		intent.putExtra("alarm", alrm.toBundle());
 		startActivityForResult(intent, REQUEST_SETTING);
 
 	}
@@ -263,42 +343,50 @@ public class FragmentClock extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
+		isSettingLaunched = false;
 		if(requestCode == REQUEST_SETTING)
 		{
-		if (resultCode == Activity.RESULT_OK) 
-		{
+			if (resultCode == Activity.RESULT_OK) 
+			{
 
-			SnooziUtility.trace(TRACETYPE.INFO, ".....onAlarmSettingResult RESULT OK");
-			
-			MyAlarm currentAlarm = (MyAlarm) data.getParcelableExtra("alarm");
+				SnooziUtility.trace(TRACETYPE.INFO, ".....onAlarmSettingResult RESULT OK");
+				Bundle alarmBundleled =  data.getBundleExtra("alarm");
+				MyAlarm currentAlarm = new MyAlarm(alarmBundleled);
 
-			currentAlarm.save();
-			currentAlarm.checkAndPlanify(getActivity());
-			
-			//if(position == -1)
-			//	alarmList.add(currentAlarm);
-			//else
-			//	alarmList.set(position, currentAlarm);
-			
-			//mAdapter.notifyDataSetChanged();
-			
-			//Boolean activ = currentAlarm.getActivate();
+				currentAlarm.saveAndSync();
+				currentAlarm.checkAndPlanify(getActivity());
 
-			//txtTime.setText(currentAlarm.toTime());
-			//txtday.setText(currentAlarm.getDayString());
+				//if(position == -1)
+				//	alarmList.add(currentAlarm);
+				//else
+				//	alarmList.set(position, currentAlarm);
 
-			//if(activ == chkactivate.isChecked())
-			//	SetAlarm(activ);
-			//else
-			//	chkactivate.setChecked(activ);
-		}
+				//mAdapter.notifyDataSetChanged();
+
+				//Boolean activ = currentAlarm.getActivate();
+
+				//txtLike.setText(currentAlarm.toTime());
+				//txtday.setText(currentAlarm.getDayString());
+
+				//if(activ == chkactivate.isChecked())
+				//	SetAlarm(activ);
+				//else
+				//	chkactivate.setChecked(activ);
+			}
 		}
 
 	}
 
 
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-/*
+
+
+	/*
 	private void SetAlarm(Boolean isActivated)
 	{
 
@@ -359,7 +447,7 @@ public class FragmentClock extends Fragment {
 			AlarmPlanifier.CancelAlarm(getActivity());
 		}
 	}
-*/
+	 */
 
 
 }

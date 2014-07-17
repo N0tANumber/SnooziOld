@@ -51,7 +51,11 @@
         <item> Dim.</item>
     </string-array>
    
-
+    <string-array name="hometabs">
+        <item>Alarme</item>
+        <item>Historique</item>
+        <item>Ma Gallerie</item>
+    </string-array>
     <string name="volume">Volume de l\'alarme</string>
     <string name="title_activity_survey">SurveyActivity</string>
     <string name="thankyou">"Félicitations! Vous avez réussi à regarder toutes les vidéos! Merci de votre soutien! "</string>
@@ -66,5 +70,6 @@
   <string name="stoprecord">Stop Recording</string>
   <string name="pleaseRate">Notez cette vidéo pour améliorer la qualité des prochaines :</string>
   <string name="addAlarm">nouvelle alarme</string>
+  <string name="maxalarmcount">Vous ne pouvez avoir plus de 3 alarmes. Pour en supprimer une, glissez la vers la gauche </string>
   
 </resources>
