@@ -204,7 +204,7 @@ public class MainActivity extends Activity {
 		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
 		videoObj.setLocalurl(path);
 		videoObj.setUrl("Chicks.mp4");
-		videoObj.setVideoid(6421335542595584l); // video id on the Cloud Storage for tracking like/view and others...
+		//videoObj.setVideoid(6421335542595584l); // video id on the Cloud Storage for tracking like/view and others...
 		videoObj.setDescription("Still Dreaming?");
 		videoObj.setTimestamp(1401291149156l);
 		videoObj.save();
@@ -215,7 +215,7 @@ public class MainActivity extends Activity {
 		path =  "android.resource://" + context.getPackageName() + "/" + context.getResources().getIdentifier("video" + videoNumber, "raw", context.getPackageName());
 		videoObj.setLocalurl(path);
 		videoObj.setUrl("GirlsGoneWild.m4v");
-		videoObj.setVideoid(6750768661004288l); // video id on the Cloud Storage for tracking like/view and others...
+		//videoObj.setVideoid(6750768661004288l); // video id on the Cloud Storage for tracking like/view and others...
 		videoObj.setDescription("Party at my house last night!");
 		videoObj.setTimestamp(1401291282525l);
 		videoObj.save();

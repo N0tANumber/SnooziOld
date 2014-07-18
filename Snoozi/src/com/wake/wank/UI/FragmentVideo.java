@@ -214,7 +214,7 @@ public class FragmentVideo extends Fragment {
 			{
 				Uri theUri = Uri.parse(currentVideo.getLocalurl());
 				File file = new File(theUri.getPath());
-				if(file.exists())
+				if(file.exists() || currentVideo.getFilestatus().equals("DUMMY"))
 					mVideoView.setVideoURI(theUri);
 				else
 				{

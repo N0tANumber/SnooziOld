@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -74,7 +75,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		TrackingSender sender = new TrackingSender(getApplication());
 		sender.sendUserEvent(TrackingEventCategory.ALARM,TrackingEventAction.LAUNCH,"",currentVideo.getVideoid());
 		
-		SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+		//SharedPreferences settings = getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 		
 		AlarmPlanifier.checkAndPlanifyNextAlarm(currentAlarm,this);
 		
@@ -101,7 +102,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		// Start without a delay
 		// Vibrate for 100 milliseconds
 		// Sleep for 1000 milliseconds
-		boolean isVibrate = settings.getBoolean("vibrate", false);
+		boolean isVibrate = currentAlarm.getVibrate();
 		if(isVibrate)
 			_vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 		 
@@ -258,12 +259,12 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	
 	private void startRingingAlarm()
 	{
-		if(mMediaPlayer == null)
+		if(mMediaPlayer == null && currentVideo != null)
 		{
 			//Play sound
 			mMediaPlayer = new AlarmSound(this,currentAlarm);
 			try {
-				mMediaPlayer.load(SnooziUtility.getVideoUri(this), true);
+				mMediaPlayer.load(Uri.parse(currentVideo.getLocalurl()), true);
 				
 			} catch (Exception e) {
 				//TODO : Error while loading video, playing fallback sound

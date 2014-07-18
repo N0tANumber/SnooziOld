@@ -404,8 +404,12 @@ public class MyVideo  implements Bundleable {
 	 * @throws IOException
 	 */
 	private  void endPointRateVideo(Videoendpoint videoEndpoint) throws IOException {
-		videoEndpoint.rateVideo(getVideoid(),getAddedLike(),getAddedViewcount() ).execute();
-		SnooziUtility.trace(TRACETYPE.INFO,"OK Video rating sended to server : " + toString() + " with addedViewcount " + getAddedViewcount() + " with addedLike " + getAddedLike());
+		if(getVideoid() > 0)
+		{
+			
+			videoEndpoint.rateVideo(getVideoid(),getAddedLike(),getAddedViewcount() ).execute();
+			SnooziUtility.trace(TRACETYPE.INFO,"OK Video rating sended to server : " + toString() + " with addedViewcount " + getAddedViewcount() + " with addedLike " + getAddedLike());
+		}
 	}
 
 
