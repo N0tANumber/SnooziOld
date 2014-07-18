@@ -122,14 +122,17 @@ public class MainActivity extends Activity {
 				
 				editor.commit();
 				
+				//We call a cleanup for old Video
+				MyVideo.cleanupOldVideo();
+				
+				
+				
 				//We copy the local BDD / Only on DEV MODE
 				if(SnooziUtility.DEV_MODE)
 				{
 					exportLocalDatabase();
 				}
 				
-				//We call a cleanup for old Video
-				SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.VIDEO_CLEANUP); 
 				
 				launchHomeActivity();
 			}

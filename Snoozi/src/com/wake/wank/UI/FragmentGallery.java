@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.wake.wank.R;
+import com.wake.wank.database.SnooziContract;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.MyVideoAdapter;
+import com.wake.wank.utils.SnooziUtility;
+import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.content.Context;
 import android.content.Intent;
@@ -33,8 +36,7 @@ public class FragmentGallery extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-
+		
 		rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_screen_gallery, container, false);
 
@@ -74,20 +76,17 @@ public class FragmentGallery extends Fragment {
 
 	@Override
 	public void onStart() {
-		// TODO Auto-generated method stub
 		super.onStart();
+		SnooziUtility.trace(TRACETYPE.INFO, "FragmentGallery.onStart");
 		//chkactivate.setOnCheckedChangeListener(null);    
-		MyVideo video= null;
+		//MyVideo video= null;
 		// recuperation depuis la base de données des alarmes configurée
-		videoList.clear();
-		videoList.addAll(MyVideo.getListFromSQL());
-
+		
 
 		//List<MyAlarm> alrmList = MyAlarm.getListFromSQL(SnooziContract.alarms.Columns.ACTIVATE + " = ?", new String[]{"1"});
 
 
-		refreshGalleryList();
-
+		
 		//txtLike.setText(currentAlarm.toTime());
 		//txtday.setText(currentAlarm.getDayString());
 		//chkactivate.setChecked(currentAlarm.getActivate());
@@ -98,10 +97,33 @@ public class FragmentGallery extends Fragment {
 
 
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		SnooziUtility.trace(TRACETYPE.INFO, "FragmentGallery.onResume");
+		refreshGalleryList();
+
+	}
+
+
+
 	/**
 	 * 
 	 */
 	public void refreshGalleryList() {
+		if(videoList != null)
+		{
+			SnooziUtility.trace(TRACETYPE.INFO, "FragmentGallery.refreshGalleryList");
+			
+			videoList.clear();
+			String whereClause = SnooziContract.videos.Columns.MYVIEWCOUNT + " > 0 AND " + SnooziContract.videos.Columns.FILESTATUS + " LIKE ?";
+			String[] whereValue = new String[]{"SUCCESSFUL"};
+			
+			videoList.addAll(MyVideo.getListFromSQL(whereClause,whereValue));
+
+		}
 		if(mAdapter != null)
 			mAdapter.notifyDataSetChanged();
 	}

@@ -83,6 +83,10 @@ public class HomeActivity extends FragmentActivity {
 				// corresponding tab.
 				if(position < getActionBar().getTabCount())
 					getActionBar().setSelectedNavigationItem(position);
+				
+				if(position == GALLERY_POSITION)
+					mGalleryView.refreshGalleryList();
+
 			}
 
 			@Override
@@ -136,7 +140,7 @@ public class HomeActivity extends FragmentActivity {
 			@Override
 			public void onTabReselected(Tab tab, FragmentTransaction ft) {
 				// TODO Auto-generated method stub
-
+				
 			}
 
 			@Override

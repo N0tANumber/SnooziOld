@@ -28,7 +28,7 @@ import android.view.Window;
 public class VideoActivity extends FragmentActivity {
 
 
-	
+
 	private FragmentVideo videofragment;
 	private MyVideo currentVideo;
 
@@ -39,17 +39,17 @@ public class VideoActivity extends FragmentActivity {
 		setContentView(R.layout.activity_video);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.customtitlebar);
 
-		
-		
+
+
 		Intent data = getIntent();
 		Bundle videoBundleled =  data.getBundleExtra("video");
 		currentVideo = new MyVideo(videoBundleled);
-		
+
 		videofragment = (FragmentVideo) getSupportFragmentManager().findFragmentById(R.id.fragmentVideo);
 		videofragment.openVideo(currentVideo);
 	}
-	
-	
+
+
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
@@ -62,24 +62,28 @@ public class VideoActivity extends FragmentActivity {
 			// TODO: handle exception
 		}
 	}
-	
-	
+
+
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		
-		
+
+
 		videofragment.closeVideo();
-try{
+		try{
 			//prepare next video
 			SnooziUtility.unsetVideo( );
 			currentVideo = null;
 
+			//We call a cleanup for old Video
+			MyVideo.cleanupOldVideo(); 
+
+
 			if(!SnooziUtility.DEV_MODE)
 				EasyTracker.getInstance().activityStop(this);
 
-			
+
 			Intent returnIntent = new Intent();
 			setResult(Activity.RESULT_OK, returnIntent);  
 
@@ -92,5 +96,5 @@ try{
 		finish();
 	}
 
-	
+
 }

@@ -1,12 +1,12 @@
 
     <ScrollView
         android:id="@+id/scrollView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-     >
+    android:background="#641213" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,8 +48,7 @@
                     android:gravity="left"
                     android:text="@string/app_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#ffffff"
-                    android:visibility="gone" />
+                    android:textColor="#ffffff" />
 
                 <RadioGroup
                     android:id="@+id/radioGroup1"

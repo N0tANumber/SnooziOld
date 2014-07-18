@@ -577,7 +577,7 @@ public class MyVideo  implements Bundleable {
 	 * Remove old video from disk and database
 	 * @return
 	 */
-	private static boolean cleanupOldVideo() {
+	public static boolean cleanupOldVideo() {
 		Cursor cursor = null;
 		int maxKeptVideo = 4;
 		boolean success = false;
@@ -585,7 +585,7 @@ public class MyVideo  implements Bundleable {
 		int cleanedCount = 0;
 		int counter = 0;
 		
-		android.os.Debug.waitForDebugger();
+		//android.os.Debug.waitForDebugger();
 		
 		try {
 			//We check all tracking event in Contentproviders
@@ -594,7 +594,6 @@ public class MyVideo  implements Bundleable {
 
 			if (cursor.moveToFirst()) 
 			{
-				int total = cursor.getCount();
 				if(cursor.getCount() > maxKeptVideo)
 				{
 					do {
@@ -607,9 +606,12 @@ public class MyVideo  implements Bundleable {
 						int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
 						String localurl = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LOCALURL));
 
-						File file = new File(localurl);
-						//TODO : must check the return value
-						file.delete(); 
+						Uri uri = Uri.parse(localurl);
+						File file = new File( uri.getPath());
+						Boolean isdeleted = false;
+						if( file.exists() )
+							isdeleted = file.delete();
+						
 						if(counter > 10)
 						{
 							cleanedCount++;
@@ -617,7 +619,7 @@ public class MyVideo  implements Bundleable {
 							// Deleting the old Video 
 							provider.delete(SnooziContract.videos.CONTENT_URI, SnooziContract.trackingevents.Columns._ID + " = ? ", new String[]{String.valueOf(id)});
 							SnooziUtility.trace(TRACETYPE.INFO, "cleanupOldVideo - Permanently Deleted video :  " +  id);
-						}else
+						}else if(isdeleted)
 						{
 							// We only place the video filestatus as "DELETED"
 							ContentValues values = new ContentValues();

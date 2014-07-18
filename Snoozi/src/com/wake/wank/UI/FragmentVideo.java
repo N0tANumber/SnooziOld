@@ -2,6 +2,8 @@ package com.wake.wank.UI;
 
 
 
+import java.io.File;
+
 import com.wake.wank.R;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
@@ -24,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -54,6 +57,11 @@ public class FragmentVideo extends Fragment {
 	private boolean _isActivityPaused = false;
 	private TextView mVideoTitle;
 	private ViewGroup rootView;
+	private TextView mTxtinfo;
+	private RadioButton radioLike;
+	private RadioButton radioDislike;
+	private OnCheckedChangeListener likedislikeCheckedChange;
+	private RadioGroup radioGroup;
 
 
 
@@ -61,8 +69,7 @@ public class FragmentVideo extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-
+		
 		rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_screen_video, container, false);
 
@@ -71,7 +78,11 @@ public class FragmentVideo extends Fragment {
 		mVideoView = (VideoView)rootView.findViewById(R.id.myvideoView);
 		mVideoTitle = (TextView) rootView.findViewById(R.id.txtinfo);
 		mProgressBar = (ProgressBar)rootView.findViewById(R.id.Progressbar);
-		RadioGroup radioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup1);        
+		mTxtinfo = (TextView) rootView.findViewById(R.id.txtinfo);
+		radioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup1);        
+		radioLike = (RadioButton) rootView.findViewById(R.id.radioLike);
+		radioDislike = (RadioButton) rootView.findViewById(R.id.radioDislike);
+		
 
 
 
@@ -117,10 +128,9 @@ public class FragmentVideo extends Fragment {
 					startPlaying();
 
 				} catch (Exception e) {
-					// TODO: handle exception
 					SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.prepareVideo Error : "+ e.toString());
-
-					getActivity().finish();
+					stopPlaying();
+					
 				}
 			}
 		});
@@ -152,7 +162,7 @@ public class FragmentVideo extends Fragment {
 
 
 		// Like / Dislike
-		radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() 
+		likedislikeCheckedChange = new OnCheckedChangeListener() 
 		{
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				// checkedId is the RadioButton selected
@@ -174,7 +184,9 @@ public class FragmentVideo extends Fragment {
 				}
 
 			}
-		});
+		};
+		
+		radioGroup.setOnCheckedChangeListener(likedislikeCheckedChange);
 		if(currentVideo != null)
 			openVideo(currentVideo);
 
@@ -188,11 +200,11 @@ public class FragmentVideo extends Fragment {
 	 * @param currentVideo 
 	 * 
 	 */
-	public void openVideo(MyVideo video) {
+	public Boolean openVideo(MyVideo video) {
 		if(video == null)
 		{
 			SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.openVideo :  video is NULL");
-			return; // no video
+			return false; // no video
 		}
 
 
@@ -200,18 +212,31 @@ public class FragmentVideo extends Fragment {
 			setCurrentVideo(video);
 			if(mVideoView != null)
 			{
-				mVideoView.setVideoURI(Uri.parse(currentVideo.getLocalurl()));
-				//refreshInfo();
+				Uri theUri = Uri.parse(currentVideo.getLocalurl());
+				File file = new File(theUri.getPath());
+				if(file.exists())
+					mVideoView.setVideoURI(theUri);
+				else
+				{
+					mVideoView.setVideoURI(null);
+					return false;
+				}
+				refreshInfo();
 			}
 
 		} catch (Exception e) {
 			SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.openVideo Error : "+ e.toString());
+			stopPlaying();
+			
+			return false;
 
 		}
+		return true;
 
 	}
 
 	public void closeVideo() {
+		SnooziUtility.trace(TRACETYPE.INFO, "FragmentVideo.closeVideo begin");
 		if(currentVideo == null)
 		{
 			SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.closeVideo :  video is NULL");
@@ -253,10 +278,12 @@ public class FragmentVideo extends Fragment {
 			if(currentVideo.getMylike() != 0)
 				likesender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.RATING, currentVideo.getMylike() +"", currentVideo.getVideoid());
 
-			stopPlaying();
-
+			
 		} catch (Exception e) {
 			SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.closeVideo Error : "+ e.toString());
+
+		}finally{
+			stopPlaying();
 
 		}
 	}
@@ -279,15 +306,26 @@ public class FragmentVideo extends Fragment {
 		info = (currentVideo.getViewcount() + currentVideo.getMyviewcount()) + " wakeup - ";
 		info += (currentVideo.getLike() + currentVideo.getMylike()) + " like(s)";
 
-		TextView txtinfo = (TextView) rootView.findViewById(R.id.txtinfo);
-		txtinfo.setText(info);
+		mTxtinfo.setText(info);
+		
+		radioGroup.setOnCheckedChangeListener(null);
+		if(currentVideo.getMylike() > 0)
+			radioLike.setChecked(true);
+		else if(currentVideo.getMylike() > 0)
+			radioDislike.setChecked(true);
+		else
+		{
+			radioLike.setChecked(false);
+			radioDislike.setChecked(false);
+		}
+		radioGroup.setOnCheckedChangeListener(likedislikeCheckedChange);
+		
 	}
 
 
 
 	@Override
 	public void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
 		_isActivityPaused =true;
 
@@ -296,7 +334,6 @@ public class FragmentVideo extends Fragment {
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		_isActivityPaused = false;
 	}
@@ -309,11 +346,12 @@ public class FragmentVideo extends Fragment {
 
 	@Override
 	public void onStop() {
-		// TODO Auto-generated method stub
 		super.onStop();
 		SnooziUtility.trace(TRACETYPE.INFO, "FragmentVideo.onStop : ");
 
-		stopPlaying();
+		closeVideo();
+		
+		
 		
 	}
 
@@ -358,10 +396,10 @@ public class FragmentVideo extends Fragment {
 			do {
 				if(!_isActivityPaused)
 				{
-					current  = mVideoView.getCurrentPosition();
+					try {
+						current  = mVideoView.getCurrentPosition();
 					//System.out.println("duration - " + duration + " current- "
 					//        + current);
-					try {
 						if(duration > 0)
 						{
 							int currentPrecent = (int) (current * 100 / duration);
@@ -375,6 +413,7 @@ public class FragmentVideo extends Fragment {
 						Thread.sleep(200);
 
 					} catch (Exception e) {
+						
 					}
 				}
 			} while (mVideoPlayback != VIDEO_STATE.STOPPED);
