@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+                 >
+
+    <ImageView
+        android:id="@+id/thumbView"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/blank"
+        android:src="@drawable/snoozi_wakeup" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:contentDescription="@string/blank"
+        android:scaleType="fitXY"
+        android:src="@drawable/thumb_overlay" />
+
+		                   <ImageView
+		                       android:id="@+id/imageView2"
+		                       android:layout_width="wrap_content"
+		                       android:layout_height="wrap_content"
+		                       android:layout_alignParentBottom="true"
+		                       android:layout_toLeftOf="@+id/txtViewCount"
+		                       android:contentDescription="@string/blank"
+		                       android:paddingBottom="10dp"
+		                       android:paddingRight="3dp"
+		                       android:src="@drawable/ic_wakeup" />
+		                  
+		                  <TextView
+		                      android:id="@+id/txtLikeCount"
+		                      android:layout_width="wrap_content"
+		                      android:layout_height="wrap_content"
+		                      android:layout_alignParentBottom="true"
+		                      android:layout_alignParentRight="true"
+		                      android:focusable="false"
+		                      android:focusableInTouchMode="false"
+		                      android:paddingBottom="10dp"
+		                      android:paddingRight="15dp"
+		                      android:text="@string/blank"
+		                      android:textAppearance="?android:attr/textAppearanceSmall"
+		                      android:textColor="#ffffff" />
+		                 
+		                  <ImageView
+		                      android:id="@+id/imageView3"
+		                      android:layout_width="wrap_content"
+		                      android:layout_height="wrap_content"
+		                      android:layout_alignParentBottom="true"
+		                      android:layout_toLeftOf="@+id/txtLikeCount"
+		                      android:contentDescription="@string/blank"
+		                      android:paddingBottom="10dp"
+		                      android:paddingRight="3dp"
+		                       android:src="@drawable/ic_like" />
+
+		                  <TextView
+		                      android:id="@+id/txtViewCount"
+		                      android:layout_width="wrap_content"
+		                      android:layout_height="wrap_content"
+		                      android:layout_alignParentBottom="true"
+		                      android:layout_toLeftOf="@+id/imageView3"
+		                      android:focusable="false"
+		                      android:focusableInTouchMode="false"
+		                      android:paddingBottom="10dp"
+		                      android:paddingRight="20dp"
+		                      android:text="@string/blank"
+		                      android:textAppearance="?android:attr/textAppearanceSmall"
+		                      android:textColor="#ffffff" />
+
+</RelativeLayout>
+        
