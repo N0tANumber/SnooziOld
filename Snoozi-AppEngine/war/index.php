@@ -192,6 +192,8 @@
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
+			<form id="subscribe-for" class="subscribe-form " action="newsletter.php" method="post">
+				
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 		        <h4 class="modal-title" id="myModalLabel">Subscribe</h4>
@@ -201,7 +203,7 @@
 		        <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">@</div>
-				      <input class="form-control" type="email" placeholder="Enter email">
+				      <input class="form-control" name="email" type="email" placeholder="Enter email">
 				    </div>
 				  </div>
 		      </div>
@@ -209,13 +211,17 @@
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		        <button type="button" class="btn btn-primary btn-color">Subscribe</button>
 		      </div>
-		    </div>
+		    
+			</form>
+			
+			</div>
 		  </div>
 		</div>
 		<!-- Modal-Register -->
 		<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
+				<form action="http://snoozi.us8.list-manage1.com/subscribe/post?u=3337b6881ccecdef9f8348cfc&amp;id=c96b2bc083" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 		        <h4 class="modal-title" id="myModalLabel">Register</h4>
@@ -225,14 +231,22 @@
 		        <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">@</div>
-				      <input class="form-control" type="email" placeholder="Enter email">
-				    </div>
+				      <input class="form-control" type="email" placeholder="Enter email" name="EMAIL" id="mce-EMAIL">
+					 </div>
+					<div id="mce-responses" class="clear">
+						<div class="response" id="mce-error-response" style="display:none"></div>
+						<div class="response" id="mce-success-response" style="display:none"></div>
+					</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+				    <div style="position: absolute; left: -5000px;"><input type="text" name="b_3337b6881ccecdef9f8348cfc_e1aa0aaf59" tabindex="-1" value=""></div>
 				  </div>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary btn-color">Register</button>
+		        <button type="submit" class="btn btn-primary btn-color" name="subscribe">Register</button>
 		      </div>
+			  
+			  
+		  		</form>
 		    </div>
 		  </div>
 		</div>
