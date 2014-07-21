@@ -21,5 +21,3 @@
 # Needed by google-play-services when linking against an older platform version
 
 -dontwarn com.google.android.gms.**
-
-

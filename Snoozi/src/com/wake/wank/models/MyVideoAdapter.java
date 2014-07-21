@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,7 +91,8 @@ public class MyVideoAdapter extends ArrayAdapter<MyVideo> {
 		Bitmap bMap = null;
 		//SnooziUtility.trace(TRACETYPE.INFO, "1 ");
 		try {
-			 bMap = ThumbnailUtils.createVideoThumbnail(alrm.getLocalurl(), MediaStore.Video.Thumbnails.MINI_KIND);
+			Uri uri = Uri.parse(alrm.getLocalurl());
+			 bMap = ThumbnailUtils.createVideoThumbnail(uri.getPath() , MediaStore.Video.Thumbnails.MINI_KIND);
 			if(bMap != null)
 				holder.preview = bMap;
 		} catch (Exception e) {

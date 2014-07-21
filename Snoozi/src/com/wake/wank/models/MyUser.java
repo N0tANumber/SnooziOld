@@ -355,9 +355,35 @@ public class MyUser implements Bundleable{
 	 * @throws IOException
 	 */
 	private void endPointUpdate(Userendpoint userEndpoint) throws IOException {
+		//android.os.Debug.waitForDebugger();
 		User usr = new User();
-		if(getUserid() != 0l)
-			usr.setId(getUserid());
+		Boolean isToSave = false;
+		String email = SnooziUtility.getAccountNames();
+		
+		//if Not yet registered
+		if(getUserid() == 0l){
+			isToSave = true;
+			//we must look if this user already  have an account
+			if(!(email.equals("") || email.equals("unknow")))
+			{
+				User oldusr = userEndpoint.getUserByEmail(email).execute();
+				if(oldusr != null)
+				{
+					// We already have this guy in our listing
+					setUserid(oldusr.getId());
+					setCity(oldusr.getCity());
+					setCountry(oldusr.getCountry());
+					setPseudo(oldusr.getPseudo());
+					setLikecount(oldusr.getLikecount());
+					setVideocount(oldusr.getVideocount());
+					setViewcount(oldusr.getViewcount());
+					setSignupstamp(oldusr.getSignupstamp());
+				}
+			}
+		}	
+		
+		usr.setId(getUserid());
+		
 		usr.setCity(getCity());
 		usr.setCountry(getCountry());
 		usr.setPseudo(getPseudo());
@@ -367,15 +393,17 @@ public class MyUser implements Bundleable{
 		usr.setEmail(SnooziUtility.getAccountNames());
 		if(getSignupstamp() != 0l)
 			usr.setSignupstamp(getSignupstamp());
+		
 		usr = userEndpoint.updateUser(usr).execute();
 
-		if(getUserid() == 0l)
+		
+		if(isToSave)
 		{
 			Long userid = usr.getId();
 			setUserid(userid); //We take the id from the server
 			setSignupstamp(usr.getSignupstamp());
 			MyUser.setMyUserId(userid);
-			SnooziUtility.trace(TRACETYPE.INFO,"new  Profil server id : " + userid);
+			SnooziUtility.trace(TRACETYPE.INFO,"new Profil server id : " + userid);
 
 			// We save it locally
 			save();  

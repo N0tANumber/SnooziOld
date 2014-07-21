@@ -155,6 +155,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
 			case TRACKING_SEND:
 				// we send all data to the server if any
+				TrackingSender.sendTrackingEvent();
+				/*
 				new Handler(Looper.getMainLooper()).post(new Runnable() {             
 				    @Override
 				    public void run() { 
@@ -165,7 +167,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 							e.printStackTrace();
 						}
 				    }
-				});
+				});*/
 				break;
 			case USER_UPDATE :
 			case USER_WAKEUP :
@@ -193,6 +195,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			}
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
+			android.os.Debug.waitForDebugger();
+			
 			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter IOException :  " +  e.toString());
 			syncResult.stats.numIoExceptions++;
 			
