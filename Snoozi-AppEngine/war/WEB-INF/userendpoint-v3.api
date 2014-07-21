@@ -133,7 +133,8 @@
         "type" : "object",
         "properties" : {
           "id" : {
-            "type" : "string"
+            "type" : "string",
+            "format" : "int64"
           },
           "pseudo" : {
             "type" : "string"

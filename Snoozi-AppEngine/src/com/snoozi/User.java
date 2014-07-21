@@ -11,7 +11,7 @@ public class User {
 
 	@PrimaryKey
 	@Persistent(valueStrategy=IdGeneratorStrategy.IDENTITY )
-	private String id;
+	private Long id;
 	
 	@Persistent
 	private String pseudo;
@@ -48,7 +48,7 @@ public class User {
 	}
 
 
-	public String getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -99,7 +99,7 @@ public class User {
 	}
 
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
