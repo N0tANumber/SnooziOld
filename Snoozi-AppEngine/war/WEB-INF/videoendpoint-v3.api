@@ -237,6 +237,9 @@
           "description" : {
             "type" : "string"
           },
+          "extlink" : {
+            "type" : "string"
+          },
           "viewcount" : {
             "type" : "integer"
           },

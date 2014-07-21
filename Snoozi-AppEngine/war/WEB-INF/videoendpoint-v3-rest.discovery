@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/aZaDIJoDMDMcWPA04BRwF6kG2A8\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/h4wx2wyE9uLH9OL08gCsJuT3-sc\"",
  "discoveryVersion": "v1",
  "id": "videoendpoint:v3",
  "name": "videoendpoint",
@@ -111,6 +111,9 @@
    "type": "object",
    "properties": {
     "description": {
+     "type": "string"
+    },
+    "extlink": {
      "type": "string"
     },
     "id": {

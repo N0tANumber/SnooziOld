@@ -24,6 +24,8 @@ public class Video {
 	@Persistent
 	private String description;
 	@Persistent
+	private String extlink;
+	@Persistent
 	private int viewcount;
 	@Persistent
 	private int like;
@@ -49,6 +51,7 @@ public class Video {
 		level = 0;
 		viewcount = 0;
 		description = "";
+		extlink = "";
 		url = "";
 		userid = 0l;
 		timestamp = System.currentTimeMillis();
@@ -80,6 +83,12 @@ public class Video {
 	public int getLevel() {
 		return level;
 	}
+	
+
+	public String getExtlink() {
+		return extlink;
+	}
+
 
 	public void setId(Long id) {
 		this.id = id;
@@ -129,5 +138,9 @@ public class Video {
 
 	public void setStatus(VIDEO_STATUS status) {
 		this.status = status;
+	}
+
+	public void setExtlink(String extlink) {
+		this.extlink = extlink;
 	}
 }
