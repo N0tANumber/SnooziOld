@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/awbD1iZUNrHrunqlqpC8aPqo6K4\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/dH5CDWItl-RJPrrD87TJSS8EGtk\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v3",
  "name": "userendpoint",
@@ -102,7 +102,8 @@
      "type": "string"
     },
     "id": {
-     "type": "string"
+     "type": "string",
+     "format": "int64"
     },
     "lastwakeup": {
      "type": "string",
@@ -114,6 +115,10 @@
     },
     "pseudo": {
      "type": "string"
+    },
+    "signupstamp": {
+     "type": "string",
+     "format": "int64"
     },
     "videocount": {
      "type": "integer",
@@ -131,6 +136,35 @@
   }
  },
  "methods": {
+  "addUserview": {
+   "id": "userendpoint.addUserview",
+   "path": "addUserview",
+   "httpMethod": "PUT",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "query"
+    },
+    "viewcount": {
+     "type": "integer",
+     "required": true,
+     "format": "int32",
+     "location": "query"
+    }
+   },
+   "parameterOrder": [
+    "id",
+    "viewcount"
+   ],
+   "response": {
+    "$ref": "User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
   "getUser": {
    "id": "userendpoint.getUser",
    "path": "user/{id}",
@@ -139,11 +173,33 @@
     "id": {
      "type": "string",
      "required": true,
+     "format": "int64",
      "location": "path"
     }
    },
    "parameterOrder": [
     "id"
+   ],
+   "response": {
+    "$ref": "User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getUserByEmail": {
+   "id": "userendpoint.getUserByEmail",
+   "path": "getUserByEmail",
+   "httpMethod": "GET",
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true,
+     "location": "query"
+    }
+   },
+   "parameterOrder": [
+    "email"
    ],
    "response": {
     "$ref": "User"
@@ -215,6 +271,28 @@
     "$ref": "User",
     "parameterName": "resource"
    },
+   "response": {
+    "$ref": "User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "wakeupUser": {
+   "id": "userendpoint.wakeupUser",
+   "path": "wakeupUser",
+   "httpMethod": "PUT",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "query"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
    "response": {
     "$ref": "User"
    },

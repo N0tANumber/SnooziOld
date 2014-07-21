@@ -1,7 +1,6 @@
 package com.snoozi;
 
 import com.snoozi.PMF;
-
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -77,7 +76,7 @@ public class UserEndpoint {
 	 * @return The entity with primary key id.
 	 */
 	@ApiMethod(name = "getUser")
-	public User getUser(@Named("id") String id) {
+	public User getUser(@Named("id") Long id) {
 		PersistenceManager mgr = getPersistenceManager();
 		User user = null;
 		try {
@@ -87,7 +86,41 @@ public class UserEndpoint {
 		}
 		return user;
 	}
+	
+	/**
+	 * This method gets the entity having the email. It uses HTTP GET method.
+	 *
+	 * @param email of the java bean.
+	 * @return The entity with email.
+	 */
+	@SuppressWarnings("unchecked")
+	@ApiMethod(name = "getUserByEmail", path="getUserByEmail",httpMethod="GET")
+	public User getUserByEmail(@Named("email") String email) {
+		PersistenceManager mgr = null;
+		List<User> execute = null;
+		User usr = null;
+		try {
+			mgr = getPersistenceManager();
+			Query query = mgr.newQuery(User.class);
+			query.setFilter("email == userEmail");
+			query.declareParameters("String userEmail");
+			query.setRange(0, 1);
+					
+			
+			execute = (List<User>) query.execute(email);
+			
+			// Tight loop for fetching all entities from datastore and accomodate
+			// for lazy fetch.
+			for (User obj : execute)
+				usr = obj;
+		} finally {
+			mgr.close();
+		}
 
+		return usr;
+	}
+
+	
 	/**
 	 * This inserts a new entity into App Engine datastore. If the entity already
 	 * exists in the datastore, an exception is thrown.
@@ -123,7 +156,7 @@ public class UserEndpoint {
 		PersistenceManager mgr = getPersistenceManager();
 		try {
 			if (!containsUser(user)) {
-				throw new EntityNotFoundException("Object does not exist");
+				return insertUser(user);
 			}
 			mgr.makePersistent(user);
 		} finally {
@@ -149,6 +182,51 @@ public class UserEndpoint {
 		}
 	}
 
+	
+	
+	
+	@ApiMethod(name = "addUserview", path="addUserview",httpMethod="PUT")
+	public User addUserview(@Named("id") Long id, @Named("viewcount") int viewcount) {
+		PersistenceManager mgr = getPersistenceManager();
+		User user = null;
+		try {
+			
+			user = mgr.getObjectById(User.class, id);
+			if(user != null)
+			{
+				if(viewcount != 0)
+					user.setViewcount(user.getViewcount() + viewcount);
+				
+				mgr.makePersistent(user);
+			}
+		} finally {
+			mgr.close();
+		}
+		return user;
+	}	
+	
+	
+	@ApiMethod(name = "wakeupUser", path="wakeupUser",httpMethod="PUT")
+	public User wakeupUser(@Named("id") Long id) {
+		PersistenceManager mgr = getPersistenceManager();
+		User user = null;
+		try {
+			
+			user = mgr.getObjectById(User.class, id);
+			if(user != null)
+			{
+				user.setWakeupcount(user.getWakeupcount() + 1);
+				
+				mgr.makePersistent(user);
+			}
+		} finally {
+			mgr.close();
+		}
+		return user;
+	}	
+	
+	
+	
 	private boolean containsUser(User user) {
 		if(user.getId() ==null)
 			return false;

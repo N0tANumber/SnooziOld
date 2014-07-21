@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/awbD1iZUNrHrunqlqpC8aPqo6K4\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/dH5CDWItl-RJPrrD87TJSS8EGtk\"",
  "discoveryVersion": "v1",
  "id": "userendpoint:v3",
  "name": "userendpoint",
@@ -100,7 +100,8 @@
      "type": "string"
     },
     "id": {
-     "type": "string"
+     "type": "string",
+     "format": "int64"
     },
     "lastwakeup": {
      "type": "string",
@@ -112,6 +113,10 @@
     },
     "pseudo": {
      "type": "string"
+    },
+    "signupstamp": {
+     "type": "string",
+     "format": "int64"
     },
     "videocount": {
      "type": "integer",
@@ -129,17 +134,62 @@
   }
  },
  "methods": {
+  "userendpoint.addUserview": {
+   "id": "userendpoint.addUserview",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    },
+    "viewcount": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
+    }
+   },
+   "parameterOrder": [
+    "id",
+    "viewcount"
+   ],
+   "returns": {
+    "$ref": "User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
   "userendpoint.getUser": {
    "id": "userendpoint.getUser",
    "allowGet": true,
    "parameters": {
     "id": {
      "type": "string",
-     "required": true
+     "required": true,
+     "format": "int64"
     }
    },
    "parameterOrder": [
     "id"
+   ],
+   "returns": {
+    "$ref": "User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "userendpoint.getUserByEmail": {
+   "id": "userendpoint.getUserByEmail",
+   "allowGet": true,
+   "parameters": {
+    "email": {
+     "type": "string",
+     "required": true
+    }
+   },
+   "parameterOrder": [
+    "email"
    ],
    "returns": {
     "$ref": "User"
@@ -208,6 +258,25 @@
    },
    "parameterOrder": [
     "resource"
+   ],
+   "returns": {
+    "$ref": "User"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "userendpoint.wakeupUser": {
+   "id": "userendpoint.wakeupUser",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64"
+    }
+   },
+   "parameterOrder": [
+    "id"
    ],
    "returns": {
     "$ref": "User"

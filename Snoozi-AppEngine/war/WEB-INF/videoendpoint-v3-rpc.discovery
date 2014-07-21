@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"p_qcyFV0KQVqSB1Aq3pqmPu-2MY/aZaDIJoDMDMcWPA04BRwF6kG2A8\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/aZaDIJoDMDMcWPA04BRwF6kG2A8\"",
  "discoveryVersion": "v1",
  "id": "videoendpoint:v3",
  "name": "videoendpoint",

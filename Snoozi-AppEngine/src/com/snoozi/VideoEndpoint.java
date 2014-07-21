@@ -127,7 +127,7 @@ public class VideoEndpoint {
 		PersistenceManager mgr = getPersistenceManager();
 		try {
 			if (!containsVideo(video)) {
-				throw new EntityNotFoundException("Object does not exist");
+				return insertVideo(video);
 			}
 			mgr.makePersistent(video);
 		} finally {

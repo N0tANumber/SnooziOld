@@ -32,6 +32,8 @@ public class User {
 	private int likecount; // number of time user has liked a video
 	@Persistent
 	private long lastwakeup; // last wokeup timestamp
+	@Persistent
+	private long signupstamp; //  signup timestamp
 
 
 	public User(){
@@ -44,6 +46,7 @@ public class User {
 		city = null;
 		country = null;
 		lastwakeup = 0l;
+		signupstamp = 0l;
 		
 	}
 
@@ -99,6 +102,11 @@ public class User {
 	}
 
 
+	public long getSignupstamp() {
+		return signupstamp;
+	}
+	
+	
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -143,6 +151,13 @@ public class User {
 
 	public void setLastwakeup(long lastwakeup) {
 		this.lastwakeup = lastwakeup;
+	}
+
+
+
+
+	public void setSignupstamp(long signupstamp) {
+		this.signupstamp = signupstamp;
 	}
 
 

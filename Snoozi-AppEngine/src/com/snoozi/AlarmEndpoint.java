@@ -123,7 +123,7 @@ public class AlarmEndpoint {
 		PersistenceManager mgr = getPersistenceManager();
 		try {
 			if (!containsAlarm(alarm)) {
-				throw new EntityNotFoundException("Object does not exist");
+				return insertAlarm(alarm);
 			}
 			mgr.makePersistent(alarm);
 		} finally {
