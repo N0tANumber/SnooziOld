@@ -54,7 +54,7 @@ public class MyVideoAdapter extends ArrayAdapter<MyVideo> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
-		MyVideo alrm = videolist.get(position);
+		MyVideo video = videolist.get(position);
 		
 		
 		
@@ -75,9 +75,7 @@ public class MyVideoAdapter extends ArrayAdapter<MyVideo> {
 
 			//viewHolder.mainLayout.setLayoutParams(new LinearLayout.LayoutParams(viewwidth,viewHolder.mainLayout.getHeight()));
 			rowView.setTag(viewHolder);
-			
-			
-					
+				
 		}
 
 		// fill data
@@ -86,12 +84,12 @@ public class MyVideoAdapter extends ArrayAdapter<MyVideo> {
 		if(this.touchlistener != null)
 			rowView.setOnTouchListener(this.touchlistener);
 
-		holder.txtLike.setText("" + alrm.getLike());
-		holder.txtView.setText("" + alrm.getViewcount());
+		holder.txtLike.setText("" + (video.getLike()));
+		holder.txtView.setText("" + video.getViewcount());
 		Bitmap bMap = null;
 		//SnooziUtility.trace(TRACETYPE.INFO, "1 ");
 		try {
-			Uri uri = Uri.parse(alrm.getLocalurl());
+			Uri uri = Uri.parse(video.getLocalurl());
 			 bMap = ThumbnailUtils.createVideoThumbnail(uri.getPath() , MediaStore.Video.Thumbnails.MINI_KIND);
 			if(bMap != null)
 				holder.preview = bMap;

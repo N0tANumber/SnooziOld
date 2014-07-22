@@ -80,6 +80,7 @@ public class SnooziContract {
 								Columns.VIDEOID,
 								Columns.LOCALURL,
 								Columns.DESCRIPTION,
+								Columns.EXTLINK,
 								Columns.LIKE,
 								Columns.MYLIKE,
 								Columns.VIEWCOUNT,
@@ -103,6 +104,7 @@ public class SnooziContract {
 			public static final String VIDEOID = "videoid";
 			public static final String LOCALURL = "localurl";
 			public static final String DESCRIPTION = "description";
+			public static final String EXTLINK = "extlink";
 			public static final String LIKE = "like";
 			public static final String MYLIKE = "mylike";
 			public static final String VIEWCOUNT = "viewcount";

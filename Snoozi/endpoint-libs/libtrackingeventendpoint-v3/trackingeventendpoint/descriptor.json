@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/trackingeventendpoint/v3/20140721160123/java/1.18.0-rc/snoozi.com-trackingeventendpoint-v3-20140721160123-java-1.18.0-rc-sources.jar", 
-      "path": "snoozi.com-trackingeventendpoint-v3-20140721160123-java-1.18.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/trackingeventendpoint/v3/20140721193757/java/1.18.0-rc/snoozi.com-trackingeventendpoint-v3-20140721193757-java-1.18.0-rc-sources.jar", 
+      "path": "snoozi.com-trackingeventendpoint-v3-20140721193757-java-1.18.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2014-07-21 16:01"
+      "timestamp": "2014-07-21 19:37"
     }, 
     {
-      "path": "snoozi.com-trackingeventendpoint-v3-20140721160123-java-1.18.0-rc.jar.properties", 
+      "path": "snoozi.com-trackingeventendpoint-v3-20140721193757-java-1.18.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -674,5 +674,5 @@
   "version": "v3", 
   "language_version": "1.18.0-rc", 
   "id": "trackingeventendpoint:v3", 
-  "revision": 20140721160123
+  "revision": 20140721193757
 }

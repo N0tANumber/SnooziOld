@@ -1,6 +1,9 @@
 package com.wake.wank.UI;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.google.analytics.tracking.android.EasyTracker;
 import com.wake.wank.R;
 import com.wake.wank.models.MyVideo;
@@ -83,21 +86,23 @@ public class HomeActivity extends FragmentActivity {
 				// corresponding tab.
 				if(position < getActionBar().getTabCount())
 					getActionBar().setSelectedNavigationItem(position);
-				
+
 				if(position == GALLERY_POSITION)
 					mGalleryView.refreshGalleryList();
-
 			}
 
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 				// TODO Auto-generated method stub
+				
 
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
 				// TODO Auto-generated method stub
+				try {
+					
 				if(state == ViewPager.SCROLL_STATE_IDLE)
 				{
 					if(mPager.getCurrentItem() < VIDEO_POSITION)
@@ -107,9 +112,13 @@ public class HomeActivity extends FragmentActivity {
 							mShowingDetail = false;
 							mPager.removeView(mVideoView.getView());
 							mPagerAdapter.notifyDataSetChanged();
-
+							mGalleryView.refreshGalleryList();
+							
 						}
 					}
+				}
+				} catch (Exception e) {
+					// TODO: handle exception
 				}
 
 			}
@@ -120,10 +129,10 @@ public class HomeActivity extends FragmentActivity {
 		final ActionBar actionBar = getActionBar();
 		// Specify that tabs should be displayed in the action bar.
 		//actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-		
+
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		
-		
+
+
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayUseLogoEnabled(false);
@@ -132,7 +141,7 @@ public class HomeActivity extends FragmentActivity {
 		//actionBar.setIcon(android.R.color.transparent);
 		//actionBar.setIcon(R.drawable.titlebarpx);
 		actionBar.setCustomView(R.layout.customtitlebar);
-		
+
 		actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.titlebarpx));
 		// Create a tab listener that is called when the user changes tabs.
 		ActionBar.TabListener tabListener = new ActionBar.TabListener() {
@@ -140,7 +149,7 @@ public class HomeActivity extends FragmentActivity {
 			@Override
 			public void onTabReselected(Tab tab, FragmentTransaction ft) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -186,14 +195,14 @@ public class HomeActivity extends FragmentActivity {
 
 	public void showVideoView(MyVideo myVideo)
 	{
-		
+
 		mShowingDetail = true;
 		mCurrentVideo = myVideo;
 		//mVideoView.openVideo(mCurrentVideo);
 		mPagerAdapter.notifyDataSetChanged();
 		mPager.setCurrentItem(VIDEO_POSITION);
-		
-		
+
+
 	}
 
 
@@ -204,9 +213,9 @@ public class HomeActivity extends FragmentActivity {
 	 * sequence.
 	 */
 	private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-		
+
 		public ScreenSlidePagerAdapter(FragmentManager fm) {
-			
+
 			super(fm);
 		}
 
@@ -220,7 +229,7 @@ public class HomeActivity extends FragmentActivity {
 
 				theResult = mAlarmView;
 				break;
-			/*case FEED_POSITION:
+				/*case FEED_POSITION:
 				if(mFeedView == null)
 					mFeedView = new FragmentFeed();
 				theResult = mFeedView;
@@ -228,7 +237,7 @@ public class HomeActivity extends FragmentActivity {
 			case GALLERY_POSITION:
 				if(mGalleryView == null)
 					mGalleryView = new FragmentGallery();
-				mGalleryView.refreshGalleryList();
+				//mGalleryView.refreshGalleryList();
 				theResult = mGalleryView;
 				break;
 			case VIDEO_POSITION:
@@ -239,8 +248,8 @@ public class HomeActivity extends FragmentActivity {
 				//Intent intent = new Intent(this.getActivity(), VideoActivity.class);
 				//intent.putExtra("video", myVideo.toBundle());
 				//startActivityForResult(intent, 1);
-				
-				
+
+
 				theResult = mVideoView;
 				break;
 

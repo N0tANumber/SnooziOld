@@ -6,20 +6,12 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#641213" >
+    android:background="#ffffff" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-                android:layout_margin="10dp"
             android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="@string/pleaseRate" />
 
                 <VideoView
                     android:id="@+id/myvideoView"
@@ -30,59 +22,95 @@
                 android:id="@+id/Progressbar"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="fill_parent"
+                android:progressDrawable="@drawable/redprogress"
                 android:layout_height="5dp" />
-            
-           
-           
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#231e2f" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="@string/blank" />
+
+						 <ImageView
+						     android:id="@+id/imageView2"
+						     android:layout_width="wrap_content"
+						     android:layout_height="wrap_content"
+						     android:layout_gravity="center_vertical"
+						     android:contentDescription="@string/blank"
+						     android:paddingRight="3dp"
+						     android:src="@drawable/ic_wakeup" />
+		                  
+		                  <TextView
+		                      android:id="@+id/txtViewCount"
+		                      android:layout_width="wrap_content"
+		                      android:layout_height="wrap_content"
+		                      android:layout_gravity="center_vertical"
+		                      android:focusable="false"
+		                      android:focusableInTouchMode="false"
+		                      android:paddingRight="15dp"
+		                      android:text="@string/blank"
+		                      android:textAppearance="?android:attr/textAppearanceSmall"
+		                      android:textColor="#ffffff" />
+		                 
+		                  <ImageView
+		                      android:id="@+id/imageView3"
+		                      android:layout_width="wrap_content"
+		                      android:layout_height="wrap_content"
+		                      android:layout_gravity="center_vertical"
+		                      android:contentDescription="@string/blank"
+		                      android:paddingRight="3dp"
+		                      android:src="@drawable/ic_like" />
+
+		                  <TextView
+		                      android:id="@+id/txtLikeCount"
+		                      android:layout_width="wrap_content"
+		                      android:layout_height="wrap_content"
+		                      android:layout_gravity="center_vertical"
+		                      android:focusable="false"
+		                      android:focusableInTouchMode="false"
+		                      android:paddingRight="20dp"
+		                      android:text="@string/blank"
+		                      android:textAppearance="?android:attr/textAppearanceSmall"
+		                      android:textColor="#ffffff" />
+		                  
+                <ImageView
+                    android:id="@+id/imgBtnLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/blank"
+                    android:src="@drawable/btnlike_0" />
+
+            </LinearLayout>
+
+            <View android:layout_width="fill_parent" android:layout_height="1dp"
+				 android:background="#634176" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:orientation="vertical" >
+
+               
 
                 <TextView
                     android:id="@+id/txtinfo"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dip"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="1"
                     android:gravity="left"
                     android:text="@string/app_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#ffffff" />
-
-                <RadioGroup
-                    android:id="@+id/radioGroup1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1.19"
-                    android:gravity="fill_horizontal"
-                    android:orientation="horizontal"
-                    android:paddingBottom="50dp" >
-
-                    <RadioButton
-                        android:id="@+id/radioDislike"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/dislike"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#fff"
-                        android:textStyle="bold" />
-
-                    <RadioButton
-                        android:id="@+id/radioLike"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|left"
-                        android:layout_marginLeft="40dp"
-                        android:layout_weight="1"
-                        android:text="@string/like"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="#fff"
-                        android:textStyle="bold" />
-                </RadioGroup>
+                    android:textColor="#000" />
 
             </LinearLayout>
 

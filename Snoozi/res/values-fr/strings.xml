@@ -68,7 +68,6 @@
 <string name="record">Record Video</string>
 <string name="startrecord">Start Recording</string>
   <string name="stoprecord">Stop Recording</string>
-  <string name="pleaseRate">Notez cette vidéo pour améliorer la qualité des prochaines :</string>
   <string name="addAlarm">nouvelle alarme</string>
   <string name="maxalarmcount">Vous ne pouvez avoir plus de 3 alarmes. Pour en supprimer une, glissez la vers la gauche </string>
   

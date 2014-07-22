@@ -411,7 +411,7 @@ public class MyDataProvider extends ContentProvider {
 
 		// A string that defines the SQL statement for creating a table
 		private static final String DBNAME = "WankDB.db";
-		private static final int DB_VERSION = 4;
+		private static final int DB_VERSION = 5;
 		 
 		private static final String SQL_CREATE_TRACKINGEVENT = "CREATE TABLE IF NOT EXISTS " +
         		SnooziContract.trackingevents.TABLE +  // Table's name
@@ -431,6 +431,7 @@ public class MyDataProvider extends ContentProvider {
 		     SnooziContract.videos.Columns.VIDEOID + " LONG default 0, " +
 		     SnooziContract.videos.Columns.LOCALURL + " TEXT, " +
 		     SnooziContract.videos.Columns.DESCRIPTION + " TEXT, " +
+		     SnooziContract.videos.Columns.EXTLINK + " TEXT, " +
 		     SnooziContract.videos.Columns.LIKE + " INTEGER default 0, " +
 		     SnooziContract.videos.Columns.MYLIKE + " INTEGER default 0, " +
 		     SnooziContract.videos.Columns.VIEWCOUNT + " INTEGER default 0, " +
@@ -530,13 +531,22 @@ public class MyDataProvider extends ContentProvider {
 	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 4");
 	            }
 	            
-	            /*
+	            
 	            if(oldVersion<5){
+	            	// Upgrade database structure from Version 4 to 5
+	            	String alterTable = "ALTER TABLE " + SnooziContract.videos.TABLE + 
+	            			" ADD "+ SnooziContract.videos.Columns.EXTLINK + " TEXT " ;
+	           		db.execSQL(alterTable);
+	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 5");
+	            }
+	            
+	            /*
+	            if(oldVersion<6){
 	            	// Upgrade database structure from Version 4 to 5
 	            	String alterTable = "ALTER ....";
 	            	
 	            	db.execSQL(alterTable);
-	            	SnooziUtility.trace(null, TRACETYPE.INFO,"Successfully upgraded to Version 4");
+	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 6");
 	            }*/
 
 	            // Only when this code is executed, the changes will be applied 

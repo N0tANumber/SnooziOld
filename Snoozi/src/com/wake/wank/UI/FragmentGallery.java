@@ -11,6 +11,7 @@ import com.wake.wank.models.MyVideoAdapter;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -106,6 +107,9 @@ public class FragmentGallery extends Fragment {
 		refreshGalleryList();
 
 	}
+
+
+
 
 
 

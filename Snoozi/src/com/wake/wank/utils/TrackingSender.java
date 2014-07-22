@@ -40,7 +40,7 @@ import android.os.RemoteException;
  * @author CtrlX
  *
  */
-public class TrackingSender extends AsyncTask<Context, Integer, Long> {
+public class TrackingSender {
 	
 	
 	private Application m_apps;
@@ -52,13 +52,11 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	private long m_timestamp;
 	private String m_timestring;
 	
-	private boolean isRunning;
 	
 	public TrackingSender(Application apps){
 		
 		this.m_apps = apps;
 		//this._userAccount = null;
-		isRunning = false;
 		
 	}
 	
@@ -84,38 +82,11 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 		this.m_timestring = currentLocalTime.toString();
 		this.m_videoid = videoid;
 		
-		if(!isRunning)
-			this.execute(m_apps.getApplicationContext());
-	}
-	
-	/**
-	 * Send a Event made by the current User
-	 * @param theType
-	 * 			SET_ALARM,UNSET_ALARM, SNOOZE, VIEW_VIDEO, LIKE_VIDEO, DISLIKE_VIDEO
-	 * @param theDescription
-	 * 			description of the event
-	 */
-	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType, String theDescription){
-		sendUserEvent( theCat, theType, theDescription,0l);
-	}
-	
-	
-	
-	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType){
-		sendUserEvent(theCat, theType, "");
-	}
-	
-	
-	
-	
-	protected Long doInBackground(Context... contexts) 
-	{
 		try 
 		{
 			
 			// Get tracker.
-			isRunning = true;
-	        Tracker t = ((MyApplication)this.m_apps).getTracker(
+			Tracker t = ((MyApplication)this.m_apps).getTracker(
 	            TrackerName.APP_TRACKER);
 	        int theValue = 0;
 	        if(this.m_action.equals(TrackingEventAction.SET.toString()))
@@ -151,42 +122,36 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	        }
 			
 		} catch (Exception e) {
-			SnooziUtility.trace(TRACETYPE.ERROR,"CONTENTRESOLVER Error " + e.toString());
+			SnooziUtility.trace(TRACETYPE.DEBUG,"TrackingSender.sendUserEvent Error " + e.toString());
 			
 		}finally{
-			isRunning = false;
 		}
 		
-		/*
 		
-		
-		Trackingeventendpoint.Builder endpointBuilder = new Trackingeventendpoint.Builder(
-				AndroidHttp.newCompatibleTransport(),
-				new JacksonFactory(),
-				new HttpRequestInitializer() {
-					public void initialize(HttpRequest httpRequest) { }
-				});
-		Trackingeventendpoint endpoint = CloudEndpointUtils.updateBuilder(
-				endpointBuilder).build();
-		try {
-			
-			// TODO : Ne pas envoyer l'event tout de suite, mais le sauvegarder et le faire dans un background service qui check si on a internet
-			TrackingEvent result = endpoint.insertTrackingEvent(this._trackingEvent).execute();
-			this._trackingEvent = result;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		*/
-		return (long) 0;
 	}
 	
+	/**
+	 * Send a Event made by the current User
+	 * @param theType
+	 * 			SET_ALARM,UNSET_ALARM, SNOOZE, VIEW_VIDEO, LIKE_VIDEO, DISLIKE_VIDEO
+	 * @param theDescription
+	 * 			description of the event
+	 */
+	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType, String theDescription){
+		sendUserEvent( theCat, theType, theDescription,0l);
+	}
+	
+	
+	
+	public void sendUserEvent(TrackingEventCategory theCat,TrackingEventAction theType){
+		sendUserEvent(theCat, theType, "");
+	}
 	
 	
 	
 	
 	//##### SERVER SIDE SYNC
 	
-
 	/**
 	 * Send all pending trackingEvent to the server
 	 * @param provider
@@ -194,6 +159,7 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 	 */
 	public static boolean sendTrackingEvent() throws Exception {
 		Cursor cursor = null;
+		android.os.Debug.waitForDebugger();
 		
 		boolean success = false;
 		try {
@@ -280,7 +246,6 @@ public class TrackingSender extends AsyncTask<Context, Integer, Long> {
 			success = true;
 
 		} catch (IOException e) {
-			//ne pas mettre TYPE"ERROR car sinon il va spammer le server de log error
 			throw e;
 		} catch (Exception e) {
 			throw e;

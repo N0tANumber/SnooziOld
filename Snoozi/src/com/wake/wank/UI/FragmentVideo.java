@@ -5,6 +5,7 @@ package com.wake.wank.UI;
 import java.io.File;
 
 import com.wake.wank.R;
+import com.wake.wank.models.MyAlarm;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility;
@@ -19,16 +20,22 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnTouchListener;
+import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 
@@ -57,11 +64,9 @@ public class FragmentVideo extends Fragment {
 	private boolean _isActivityPaused = false;
 	private TextView mVideoTitle;
 	private ViewGroup rootView;
-	private TextView mTxtinfo;
-	private RadioButton radioLike;
-	private RadioButton radioDislike;
-	private OnCheckedChangeListener likedislikeCheckedChange;
-	private RadioGroup radioGroup;
+	private TextView mTxtwakeup;
+	private TextView mTxtlike;
+	private ImageView mBtnLike;
 
 
 
@@ -69,7 +74,7 @@ public class FragmentVideo extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		
+
 		rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_screen_video, container, false);
 
@@ -77,13 +82,16 @@ public class FragmentVideo extends Fragment {
 
 		mVideoView = (VideoView)rootView.findViewById(R.id.myvideoView);
 		mVideoTitle = (TextView) rootView.findViewById(R.id.txtinfo);
-		mProgressBar = (ProgressBar)rootView.findViewById(R.id.Progressbar);
-		mTxtinfo = (TextView) rootView.findViewById(R.id.txtinfo);
-		radioGroup = (RadioGroup) rootView.findViewById(R.id.radioGroup1);        
-		radioLike = (RadioButton) rootView.findViewById(R.id.radioLike);
-		radioDislike = (RadioButton) rootView.findViewById(R.id.radioDislike);
-		
+		mVideoTitle.setClickable(true);
+		mVideoTitle.setMovementMethod(LinkMovementMethod.getInstance());
 
+		mProgressBar = (ProgressBar)rootView.findViewById(R.id.Progressbar);
+		mTxtwakeup = (TextView) rootView.findViewById(R.id.txtViewCount);
+		mTxtlike = (TextView) rootView.findViewById(R.id.txtLikeCount);
+		mBtnLike = (ImageView) rootView.findViewById(R.id.imgBtnLike);
+
+
+		
 
 
 
@@ -112,7 +120,7 @@ public class FragmentVideo extends Fragment {
 
 		mProgressBar.setProgress(0);
 		mProgressBar.setMax(100);
-		
+
 		DisplayMetrics displaymetrics = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 		int height = displaymetrics.heightPixels;
@@ -130,14 +138,15 @@ public class FragmentVideo extends Fragment {
 				} catch (Exception e) {
 					SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.prepareVideo Error : "+ e.toString());
 					stopPlaying();
-					
+
 				}
 			}
 		});
 		mVideoView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent ev) {
-				if(ev.getAction() == MotionEvent.ACTION_DOWN){
+				if(ev.getAction() == MotionEvent.ACTION_UP){
+					SnooziUtility.trace(TRACETYPE.INFO, "ACTION UP ");
 					if(mVideoView.isPlaying())
 					{
 						mVideoView.pause();
@@ -146,50 +155,44 @@ public class FragmentVideo extends Fragment {
 						mVideoView.start();
 					}
 					return true;		
-				} else {
+				} else if(ev.getAction() == MotionEvent.ACTION_DOWN)
+				{
+					SnooziUtility.trace(TRACETYPE.INFO, "ACTION DOWN ");
+
+					return true;
+				}else
 					return false;
-				}
 			}
 		});
 		mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 			public void onCompletion(MediaPlayer mp) {
-				_videoViewCount++;
-				mp.start();
+				try {
+					_videoViewCount++;
+					mp.start();
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
 			}
 		});
 
+		
 
+		mBtnLike.setOnTouchListener(new OnTouchListener() {
 
-
-		// Like / Dislike
-		likedislikeCheckedChange = new OnCheckedChangeListener() 
-		{
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				// checkedId is the RadioButton selected
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
 				if(currentVideo != null)
 				{
-
-					switch (checkedId) {
-					case R.id.radioLike:
-						currentVideo.addLike(1);
-						break;
-					case R.id.radioDislike:
-						currentVideo.addLike(-1);
-						break;
-
-					default:
-						break;
-					}
+					currentVideo.addLike(1);
 					refreshInfo();
+					
 				}
-
+				return false;
 			}
-		};
-		
-		radioGroup.setOnCheckedChangeListener(likedislikeCheckedChange);
-		if(currentVideo != null)
-			openVideo(currentVideo);
+		});
 
+		
+		
 		return rootView;
 
 	}
@@ -227,13 +230,27 @@ public class FragmentVideo extends Fragment {
 		} catch (Exception e) {
 			SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.openVideo Error : "+ e.toString());
 			stopPlaying();
-			
+
 			return false;
 
 		}
 		return true;
 
 	}
+	
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		
+		_videoViewCount = 0;
+		if(currentVideo != null)
+			openVideo(currentVideo);
+
+	}
+
+
 
 	public void closeVideo() {
 		SnooziUtility.trace(TRACETYPE.INFO, "FragmentVideo.closeVideo begin");
@@ -278,7 +295,7 @@ public class FragmentVideo extends Fragment {
 			if(currentVideo.getMylike() != 0)
 				likesender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.RATING, currentVideo.getMylike() +"", currentVideo.getVideoid());
 
-			
+
 		} catch (Exception e) {
 			SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.closeVideo Error : "+ e.toString());
 
@@ -298,36 +315,53 @@ public class FragmentVideo extends Fragment {
 	 */
 	public void refreshInfo() {
 
+		if(currentVideo == null)
+			return;
 		
-		mVideoTitle.setText(currentVideo.getDescription());
+		mVideoTitle.setText(Html.fromHtml(currentVideo.getDescription()));
+		//mVideoTitle.setText(currentVideo.getDescription());
 
 
-		String info = "";
-		info = (currentVideo.getViewcount() + currentVideo.getMyviewcount()) + " wakeup - ";
-		info += (currentVideo.getLike() + currentVideo.getMylike()) + " like(s)";
+		//String info = "";
+		//info = (currentVideo.getViewcount() + currentVideo.getMyviewcount()) + " wakeup - ";
+		//info += (currentVideo.getLike() + currentVideo.getMylike()) + " like(s)";
+		int myLike = currentVideo.getMylike();
 
-		mTxtinfo.setText(info);
-		
-		radioGroup.setOnCheckedChangeListener(null);
-		if(currentVideo.getMylike() > 0)
-			radioLike.setChecked(true);
-		else if(currentVideo.getMylike() > 0)
-			radioDislike.setChecked(true);
-		else
-		{
-			radioLike.setChecked(false);
-			radioDislike.setChecked(false);
-		}
-		radioGroup.setOnCheckedChangeListener(likedislikeCheckedChange);
-		
+		mTxtwakeup.setText("" + currentVideo.getViewcount());
+		mTxtlike.setText("" + (currentVideo.getLike()));
+
+		switch (myLike) {
+		case 1:
+			mBtnLike.setImageResource(R.drawable.btnlike_1);
+
+			break;
+		case 2:
+			mBtnLike.setImageResource(R.drawable.btnlike_2);
+			break;
+		case 3:
+			mBtnLike.setImageResource(R.drawable.btnlike_3);
+			break;
+
+		default:
+			mBtnLike.setImageResource(R.drawable.btnlike_0);
+			break;
 	}
+		
 
+
+	
+
+	}
+	
+	
 
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		_isActivityPaused =true;
+		if(currentVideo !=null)
+			currentVideo.save();
 
 	}
 
@@ -350,9 +384,9 @@ public class FragmentVideo extends Fragment {
 		SnooziUtility.trace(TRACETYPE.INFO, "FragmentVideo.onStop : ");
 
 		closeVideo();
-		
-		
-		
+
+
+
 	}
 
 
@@ -398,8 +432,8 @@ public class FragmentVideo extends Fragment {
 				{
 					try {
 						current  = mVideoView.getCurrentPosition();
-					//System.out.println("duration - " + duration + " current- "
-					//        + current);
+						//System.out.println("duration - " + duration + " current- "
+						//        + current);
 						if(duration > 0)
 						{
 							int currentPrecent = (int) (current * 100 / duration);
@@ -413,7 +447,7 @@ public class FragmentVideo extends Fragment {
 						Thread.sleep(200);
 
 					} catch (Exception e) {
-						
+
 					}
 				}
 			} while (mVideoPlayback != VIDEO_STATE.STOPPED);

@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/videoendpoint/v3/20140721160041/java/1.18.0-rc/snoozi.com-videoendpoint-v3-20140721160041-java-1.18.0-rc-sources.jar", 
-      "path": "snoozi.com-videoendpoint-v3-20140721160041-java-1.18.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/videoendpoint/v3/20140721193712/java/1.18.0-rc/snoozi.com-videoendpoint-v3-20140721193712-java-1.18.0-rc-sources.jar", 
+      "path": "snoozi.com-videoendpoint-v3-20140721193712-java-1.18.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2014-07-21 16:00"
+      "timestamp": "2014-07-21 19:37"
     }, 
     {
-      "path": "snoozi.com-videoendpoint-v3-20140721160041-java-1.18.0-rc.jar.properties", 
+      "path": "snoozi.com-videoendpoint-v3-20140721193712-java-1.18.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -674,5 +674,5 @@
   "version": "v3", 
   "language_version": "1.18.0-rc", 
   "id": "videoendpoint:v3", 
-  "revision": 20140721160041
+  "revision": 20140721193712
 }

@@ -49,6 +49,12 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
+		
+		// STILL A BUG WITH THE FIRST ALARM
+		// On the Rise Kyosera, the first alarm you set vibrate 1s, then the activity is killed
+		// if you set a second alarm, it's ok
+		// need to investigate
+		
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		
@@ -105,14 +111,19 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		boolean isVibrate = currentAlarm.getVibrate();
 		if(isVibrate)
 			_vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
-		 
-		mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
-		mGlowPadView.setOnTriggerListener(this);
-		
-		// uncomment this to make sure the glowpad doesn't vibrate on touch
-		// mGlowPadView.setVibrateEnabled(false);
-		// uncomment this to hide targets
-		mGlowPadView.setShowTargetsOnIdle(true);
+		 try {
+			
+			 mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
+			 mGlowPadView.setOnTriggerListener(this);
+			 
+			 // uncomment this to make sure the glowpad doesn't vibrate on touch
+			 // mGlowPadView.setVibrateEnabled(false);
+			 // uncomment this to hide targets
+			 mGlowPadView.setShowTargetsOnIdle(true);
+		} catch (Exception e) {
+			SnooziUtility.trace(TRACETYPE.ERROR, "WakeupActivity.onCreate : " + e.toString());
+			
+		}
 		//_launchtime = System.currentTimeMillis();
 	}
 	
@@ -122,7 +133,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onStartAlarm");
+		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onStart");
 		
 		try {
 			if(!SnooziUtility.DEV_MODE)
@@ -139,7 +150,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		super.onResume();
 		try {
 			
-			SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onResumeAlarm");
+			SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onResume");
 			startRingingAlarm();
 			
 			if(!SnooziUtility.DEV_MODE)
@@ -156,7 +167,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onPauseAlarm");
+		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onPause");
 		stopRingingAlarm();
 		/*
 		long currenttime = System.currentTimeMillis();
@@ -183,7 +194,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
     public void onConfigurationChanged(Configuration newConfig) 
     {
         super.onConfigurationChanged(newConfig);
-        SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onConfigurationChanged");
+        SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onConfigurationChanged");
 		
 		
     }
@@ -199,7 +210,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onStop");
+		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onStop");
 		try {
 			if(!SnooziUtility.DEV_MODE)
 				EasyTracker.getInstance().activityStop(this);
@@ -211,7 +222,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	@Override
 	public void onGrabbed(View v, int handle) {
 		// TODO Auto-generated method stub
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onGrabbed");
+		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onGrabbed");
 		
 	}
 
@@ -230,7 +241,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		
 		if(isFinishing())
 		{
-			SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onDestroy with Finishing");
+			SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onDestroy with Finishing");
 			stopRingingAlarm();
 			if(mMediaPlayer != null)
 			{
@@ -244,7 +255,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			
 			if (_alarmEvent == TrackingEventAction.KILLED) 
 			{
-				SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity Alarm Killed");
+				SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity Alarm Killed");
 				//Reporting alarm killed
 				TrackingSender sender = new TrackingSender(getApplication());
 				sender.sendUserEvent(TrackingEventCategory.ALARM, _alarmEvent,"",currentVideo.getVideoid());
@@ -252,7 +263,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			}
 			WakeupLaunchService.isrunning = false;
 		}else
-			SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onDestroy");
+			SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onDestroy");
 	}
 	
 	
@@ -268,7 +279,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 				
 			} catch (Exception e) {
 				//TODO : Error while loading video, playing fallback sound
-				SnooziUtility.trace(TRACETYPE.ERROR, "AlarmReceiverActivity.startRingingAlarm Exception :  " +  e.toString());
+				SnooziUtility.trace(TRACETYPE.ERROR, "WakeupActivity.startRingingAlarm Exception :  " +  e.toString());
 			}
 			
 		}
@@ -281,7 +292,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			long[] pattern = {0, 1000, 200};
 			_vibrator.vibrate(pattern, 0);
 		}
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.startRingingAlarm");
+		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.startRingingAlarm");
 		
 	}
 
@@ -294,7 +305,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 			_vibrator.cancel();
 			
 		}
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.stopRingingAlarm");
+		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.stopRingingAlarm");
 		
 	}
 
@@ -344,7 +355,7 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		SnooziUtility.trace(TRACETYPE.INFO, "AlarmReceiverActivity.onActivityResult");
+		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onActivityResult");
 		if (resultCode == RESULT_OK) 
 		{
 			SnooziUtility.trace(TRACETYPE.INFO, ".....onActivityResult RESULT OK");

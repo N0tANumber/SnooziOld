@@ -39,6 +39,7 @@ public class MyVideo  implements Bundleable {
 	private Long videoid;
 	private String localurl;
 	private String description;
+	private String extlink;
 	private int like;
 	private int mylike;
 	private int viewcount;
@@ -64,6 +65,7 @@ public class MyVideo  implements Bundleable {
 		b.putString("_url",url);
 		b.putString("_localurl",localurl);
 		b.putString("_description",description);
+		b.putString("_extlink",extlink);
 		b.putInt("_like",like);
 		b.putInt("_mylike",mylike);
 		b.putInt("_viewcount",viewcount);
@@ -91,6 +93,7 @@ public class MyVideo  implements Bundleable {
 		setUrl(b.getString("_url"));
 		setLocalurl(b.getString("_localurl"));
 		setDescription(b.getString("_description"));
+		setExtlink(b.getString("_extlink"));
 		setLike(b.getInt("_like"));
 		setMylike(b.getInt("_mylike"));
 		setViewcount(b.getInt("_viewcount"));
@@ -117,6 +120,7 @@ public class MyVideo  implements Bundleable {
 	public MyVideo()
 	{
 		setDescription("");
+		setExtlink("");
 		setVideoid(-1l);
 		setUrl("");
 		setLocalurl("");
@@ -147,6 +151,7 @@ public class MyVideo  implements Bundleable {
 			this.setVideoid(cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.VIDEOID)));
 			this.setLocalurl(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LOCALURL)));
 			this.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.DESCRIPTION)));
+			this.setExtlink(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.EXTLINK)));
 			this.setLike(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LIKE)));
 			this.setMylike(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.MYLIKE)));
 			this.setViewcount(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.VIEWCOUNT)));
@@ -176,10 +181,16 @@ public class MyVideo  implements Bundleable {
 
 	public void addLike(int i) 
 	{
+		
 		//We remove the previous like value to know what to add
-		this.setAddedLike( i - this.getMylike());
-
-		this.setMylike(i);
+		int myfinallike = (this.getMylike() + i) % 4;
+		
+		int difference = myfinallike - this.getMylike();
+		this.setLike(getLike() + difference);
+		this.setAddedLike( difference);
+		
+		this.setMylike(myfinallike);
+		
 
 	}
 
@@ -194,6 +205,7 @@ public class MyVideo  implements Bundleable {
 		if(this.getId() == 0 || hasChanged)
 		{
 
+			//on met a jour les likes
 			try {
 
 				//SAVE THE VIDEO IN THE LOCAL DATABASE
@@ -208,6 +220,7 @@ public class MyVideo  implements Bundleable {
 				{
 					//INSERTING
 					values.put(SnooziContract.videos.Columns.DESCRIPTION,getDescription() );
+					values.put(SnooziContract.videos.Columns.EXTLINK,getExtlink() );
 					values.put(SnooziContract.videos.Columns.STATUS,getStatus() );
 					values.put(SnooziContract.videos.Columns.LEVEL,getLevel() );
 					values.put(SnooziContract.videos.Columns.VIDEOID,getVideoid() );
@@ -227,6 +240,7 @@ public class MyVideo  implements Bundleable {
 					result = provider.update(ContentUris.withAppendedId(SnooziContract.videos.CONTENT_URI, getId()), values,null,null);
 				}
 
+				
 				setHasChanged(false);
 
 				SnooziUtility.trace(TRACETYPE.INFO,"Saved Video " + getId() + " " + getUrl() + " with myviewcount " + getMyviewcount());
@@ -408,6 +422,8 @@ public class MyVideo  implements Bundleable {
 		{
 			
 			videoEndpoint.rateVideo(getVideoid(),getAddedLike(),getAddedViewcount() ).execute();
+			setAddedLike(0);
+			setAddedViewcount(0);
 			SnooziUtility.trace(TRACETYPE.INFO,"OK Video rating sended to server : " + toString() + " with addedViewcount " + getAddedViewcount() + " with addedLike " + getAddedLike());
 		}
 	}
@@ -503,6 +519,7 @@ public class MyVideo  implements Bundleable {
 							//Preparing video data to insert or update ( both case)
 							ContentValues values = new ContentValues();
 							values.put(SnooziContract.videos.Columns.DESCRIPTION,video.getDescription() );
+							values.put(SnooziContract.videos.Columns.EXTLINK,video.getExtlink() );
 							values.put(SnooziContract.videos.Columns.LIKE,video.getLike() );
 							values.put(SnooziContract.videos.Columns.VIEWCOUNT,video.getViewcount() );
 							values.put(SnooziContract.videos.Columns.STATUS,video.getStatus() );
@@ -746,6 +763,11 @@ public class MyVideo  implements Bundleable {
 		return addedViewcount;
 
 	}
+	
+	public String getExtlink() {
+		return extlink;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 		setHasChanged(true);
@@ -830,6 +852,13 @@ public class MyVideo  implements Bundleable {
 
 	public void setAddedViewcount(int addedViewcount) {
 		this.addedViewcount = addedViewcount;
+		setHasChanged(true);
+	}
+
+	
+
+	public void setExtlink(String extlink) {
+		this.extlink = extlink;
 		setHasChanged(true);
 	}
 

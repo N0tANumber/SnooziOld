@@ -13,7 +13,7 @@
         android:src="@drawable/snoozi_wakeup" />
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/imgBtnLike"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:contentDescription="@string/blank"
