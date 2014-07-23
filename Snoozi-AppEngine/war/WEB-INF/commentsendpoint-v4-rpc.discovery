@@ -1,6 +1,6 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/JTFB5MkwhsZP42rd93zr8QdzHYU\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/HGp6VU_TZ7aNaJeeJqIG7x0_N8E\"",
  "discoveryVersion": "v1",
  "id": "commentsendpoint:v4",
  "name": "commentsendpoint",
@@ -159,6 +159,25 @@
   },
   "commentsendpoint.listComments": {
    "id": "commentsendpoint.listComments",
+   "allowGet": true,
+   "parameters": {
+    "cursor": {
+     "type": "string"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_Comments"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "commentsendpoint.listRecentComments": {
+   "id": "commentsendpoint.listRecentComments",
    "allowGet": true,
    "parameters": {
     "cursor": {

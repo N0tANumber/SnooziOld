@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/JTFB5MkwhsZP42rd93zr8QdzHYU\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/HGp6VU_TZ7aNaJeeJqIG7x0_N8E\"",
  "discoveryVersion": "v1",
  "id": "commentsendpoint:v4",
  "name": "commentsendpoint",
@@ -162,6 +162,28 @@
   "listComments": {
    "id": "commentsendpoint.listComments",
    "path": "comments",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursor": {
+     "type": "string",
+     "location": "query"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "CollectionResponse_Comments"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "listRecentComments": {
+   "id": "commentsendpoint.listRecentComments",
+   "path": "listRecentComments",
    "httpMethod": "GET",
    "parameters": {
     "cursor": {
