@@ -87,6 +87,61 @@ public class CommentsEndpoint {
 		return comments;
 	}
 
+	
+	/**
+	 * Get all recent video posted
+	 * @param cursorString  point to start	
+	 * @param limit record count
+	 * @param status status of type VIDEO_STATUS (OK, REPORT,DELETE...)
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "unused" })
+	@ApiMethod(name = "listRecentComments", path="listRecentComments")
+	public CollectionResponse<Comments> listRecentComments(
+			@Nullable @Named("cursor") String cursorString,
+			@Nullable @Named("limit") Integer limit) {
+
+		PersistenceManager mgr = null;
+		Cursor cursor = null;
+		List<Comments> execute = null;
+
+		try {
+			mgr = getPersistenceManager();
+			Query query = mgr.newQuery(Comments.class);
+			
+			
+			query.setOrdering("timestamp desc");
+			if (cursorString != null && cursorString != "") {
+				cursor = Cursor.fromWebSafeString(cursorString);
+				HashMap<String, Object> extensionMap = new HashMap<String, Object>();
+				extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+				query.setExtensions(extensionMap);
+			}
+
+			if (limit != null) {
+				query.setRange(0, limit);
+			}
+			
+
+			execute = (List<Comments>) query.execute();
+			cursor = JDOCursorHelper.getCursor(execute);
+			if (cursor != null)
+				cursorString = cursor.toWebSafeString();
+
+			// Tight loop for fetching all entities from datastore and accomodate
+			// for lazy fetch.
+			for (Comments obj : execute)
+				;
+		} finally {
+			mgr.close();
+		}
+
+		return CollectionResponse.<Comments> builder().setItems(execute)
+				.setNextPageToken(cursorString).build();
+	}
+	
+	
+	
 	/**
 	 * This inserts a new entity into App Engine datastore. If the entity already
 	 * exists in the datastore, an exception is thrown.
