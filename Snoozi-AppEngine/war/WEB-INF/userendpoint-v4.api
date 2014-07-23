@@ -1,0 +1,302 @@
+{
+  "extends" : "thirdParty.api",
+  "abstract" : false,
+  "root" : "https://evident-quasar-565.appspot.com/_ah/api",
+  "name" : "userendpoint",
+  "version" : "v4",
+  "defaultVersion" : false,
+  "adapter" : {
+    "bns" : "https://evident-quasar-565.appspot.com/_ah/spi",
+    "deadline" : 65.0,
+    "type" : "lily"
+  },
+  "auth" : {
+    "allowCookieAuth" : false
+  },
+  "frontendLimits" : {
+    "unregisteredUserQps" : -1,
+    "unregisteredQps" : -1,
+    "unregisteredDaily" : -1,
+    "rules" : [ ]
+  },
+  "cacheControl" : {
+    "type" : "no-cache",
+    "maxAge" : 0
+  },
+  "ownerDomain" : "snoozi.com",
+  "ownerName" : "snoozi.com",
+  "methods" : {
+    "userendpoint.updateUser" : {
+      "path" : "user",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.updateUser",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.addUserview" : {
+      "path" : "addUserview",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.addUserview",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          },
+          "viewcount" : {
+            "type" : "int32",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.removeUser" : {
+      "path" : "user/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.removeUser",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "userendpoint.listUser" : {
+      "path" : "user",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.listUser",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.getUserByEmail" : {
+      "path" : "getUserByEmail",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.getUserByEmail",
+      "request" : {
+        "parameters" : {
+          "email" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.insertUser" : {
+      "path" : "user",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.insertUser",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.getUser" : {
+      "path" : "user/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.getUser",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "userendpoint.wakeupUser" : {
+      "path" : "wakeupUser",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserEndpoint.wakeupUser",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    }
+  },
+  "descriptor" : {
+    "schemas" : {
+      "User" : {
+        "id" : "User",
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "pseudo" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          },
+          "country" : {
+            "type" : "string"
+          },
+          "wakeupcount" : {
+            "type" : "integer"
+          },
+          "videocount" : {
+            "type" : "integer"
+          },
+          "viewcount" : {
+            "type" : "integer"
+          },
+          "likecount" : {
+            "type" : "integer"
+          },
+          "lastwakeup" : {
+            "type" : "string",
+            "format" : "int64"
+          },
+          "signupstamp" : {
+            "type" : "string",
+            "format" : "int64"
+          }
+        }
+      },
+      "CollectionResponse_User" : {
+        "id" : "CollectionResponse_User",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "User"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "methods" : {
+      "com.snoozi.UserEndpoint.updateUser" : {
+        "request" : {
+          "$ref" : "User"
+        },
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.snoozi.UserEndpoint.addUserview" : {
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.snoozi.UserEndpoint.removeUser" : {
+      },
+      "com.snoozi.UserEndpoint.listUser" : {
+        "response" : {
+          "$ref" : "CollectionResponse_User"
+        }
+      },
+      "com.snoozi.UserEndpoint.getUserByEmail" : {
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.snoozi.UserEndpoint.insertUser" : {
+        "request" : {
+          "$ref" : "User"
+        },
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.snoozi.UserEndpoint.getUser" : {
+        "response" : {
+          "$ref" : "User"
+        }
+      },
+      "com.snoozi.UserEndpoint.wakeupUser" : {
+        "response" : {
+          "$ref" : "User"
+        }
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "extends" : "thirdParty.api",
   "abstract" : false,
   "root" : "https://evident-quasar-565.appspot.com/_ah/api",
-  "name" : "commentsendpoint",
+  "name" : "deviceinfoendpoint",
   "version" : "v4",
   "defaultVersion" : false,
   "adapter" : {
@@ -26,14 +26,51 @@
   "ownerDomain" : "snoozi.com",
   "ownerName" : "snoozi.com",
   "methods" : {
-    "commentsendpoint.listComments" : {
-      "path" : "comments",
+    "deviceinfoendpoint.updateDeviceInfo" : {
+      "path" : "deviceinfo",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.DeviceInfoEndpoint.updateDeviceInfo",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "deviceinfoendpoint.removeDeviceInfo" : {
+      "path" : "deviceinfo/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.DeviceInfoEndpoint.removeDeviceInfo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "string",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "deviceinfoendpoint.listDeviceInfo" : {
+      "path" : "deviceinfo",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.listComments",
+      "rosyMethod" : "com.snoozi.DeviceInfoEndpoint.listDeviceInfo",
       "request" : {
         "parameters" : {
           "cursor" : {
@@ -51,18 +88,18 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "commentsendpoint.getComments" : {
-      "path" : "comments/{id}",
+    "deviceinfoendpoint.getDeviceInfo" : {
+      "path" : "deviceinfo/{id}",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.getComments",
+      "rosyMethod" : "com.snoozi.DeviceInfoEndpoint.getDeviceInfo",
       "request" : {
         "parameters" : {
           "id" : {
-            "type" : "int64",
+            "type" : "string",
             "required" : true
           }
         },
@@ -72,51 +109,14 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "commentsendpoint.removeComments" : {
-      "path" : "comments/{id}",
-      "httpMethod" : "DELETE",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.removeComments",
-      "request" : {
-        "parameters" : {
-          "id" : {
-            "type" : "int64",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "empty"
-      }
-    },
-    "commentsendpoint.insertComments" : {
-      "path" : "comments",
+    "deviceinfoendpoint.insertDeviceInfo" : {
+      "path" : "deviceinfo",
       "httpMethod" : "POST",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.insertComments",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "commentsendpoint.updateComments" : {
-      "path" : "comments",
-      "httpMethod" : "PUT",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.updateComments",
+      "rosyMethod" : "com.snoozi.DeviceInfoEndpoint.insertDeviceInfo",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
         "bodyName" : "resource"
@@ -128,80 +128,68 @@
   },
   "descriptor" : {
     "schemas" : {
-      "CollectionResponse_Comments" : {
-        "id" : "CollectionResponse_Comments",
+      "DeviceInfo" : {
+        "id" : "DeviceInfo",
         "type" : "object",
         "properties" : {
-          "items" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "Comments"
-            }
-          },
-          "nextPageToken" : {
-            "type" : "string"
-          }
-        }
-      },
-      "Comments" : {
-        "id" : "Comments",
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "description" : {
+          "deviceRegistrationID" : {
             "type" : "string"
           },
-          "like" : {
-            "type" : "integer"
+          "deviceInformation" : {
+            "type" : "string"
           },
           "userid" : {
-            "type" : "string",
-            "format" : "int64"
-          },
-          "userpseudo" : {
             "type" : "string"
-          },
-          "videoid" : {
-            "type" : "string",
-            "format" : "int64"
           },
           "timestamp" : {
             "type" : "string",
             "format" : "int64"
           }
         }
+      },
+      "CollectionResponse_DeviceInfo" : {
+        "id" : "CollectionResponse_DeviceInfo",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "DeviceInfo"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
+          }
+        }
       }
     },
     "methods" : {
-      "com.snoozi.CommentsEndpoint.listComments" : {
-        "response" : {
-          "$ref" : "CollectionResponse_Comments"
-        }
-      },
-      "com.snoozi.CommentsEndpoint.getComments" : {
-        "response" : {
-          "$ref" : "Comments"
-        }
-      },
-      "com.snoozi.CommentsEndpoint.removeComments" : {
-      },
-      "com.snoozi.CommentsEndpoint.insertComments" : {
+      "com.snoozi.DeviceInfoEndpoint.updateDeviceInfo" : {
         "request" : {
-          "$ref" : "Comments"
+          "$ref" : "DeviceInfo"
         },
         "response" : {
-          "$ref" : "Comments"
+          "$ref" : "DeviceInfo"
         }
       },
-      "com.snoozi.CommentsEndpoint.updateComments" : {
+      "com.snoozi.DeviceInfoEndpoint.removeDeviceInfo" : {
+      },
+      "com.snoozi.DeviceInfoEndpoint.listDeviceInfo" : {
+        "response" : {
+          "$ref" : "CollectionResponse_DeviceInfo"
+        }
+      },
+      "com.snoozi.DeviceInfoEndpoint.getDeviceInfo" : {
+        "response" : {
+          "$ref" : "DeviceInfo"
+        }
+      },
+      "com.snoozi.DeviceInfoEndpoint.insertDeviceInfo" : {
         "request" : {
-          "$ref" : "Comments"
+          "$ref" : "DeviceInfo"
         },
         "response" : {
-          "$ref" : "Comments"
+          "$ref" : "DeviceInfo"
         }
       }
     }

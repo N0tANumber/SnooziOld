@@ -1,0 +1,264 @@
+{
+ "kind": "discovery#restDescription",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/9nIJFicsfo_ppH5Rhj1VmkIOZdQ\"",
+ "discoveryVersion": "v1",
+ "id": "alarmendpoint:v4",
+ "name": "alarmendpoint",
+ "version": "v4",
+ "description": "This is an API",
+ "ownerDomain": "snoozi.com",
+ "ownerName": "snoozi.com",
+ "icons": {
+  "x16": "http://www.google.com/images/icons/product/search-16.gif",
+  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+ },
+ "protocol": "rest",
+ "baseUrl": "https://evident-quasar-565.appspot.com/_ah/api/alarmendpoint/v4/",
+ "basePath": "/_ah/api/alarmendpoint/v4/",
+ "rootUrl": "https://evident-quasar-565.appspot.com/_ah/api/",
+ "servicePath": "alarmendpoint/v4/",
+ "batchPath": "batch",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "ALARM_STATUS": {
+   "id": "ALARM_STATUS",
+   "type": "string",
+   "enum": [
+    "ASSIGNED_FRIEND",
+    "ASSIGNED_RANDOM",
+    "UNASSIGNED"
+   ],
+   "enumDescriptions": [
+    "",
+    "",
+    ""
+   ]
+  },
+  "Alarm": {
+   "id": "Alarm",
+   "type": "object",
+   "properties": {
+    "activate": {
+     "type": "boolean"
+    },
+    "daystring": {
+     "type": "string"
+    },
+    "friday": {
+     "type": "boolean"
+    },
+    "hour": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "minute": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "monday": {
+     "type": "boolean"
+    },
+    "saturday": {
+     "type": "boolean"
+    },
+    "status": {
+     "$ref": "ALARM_STATUS"
+    },
+    "sunday": {
+     "type": "boolean"
+    },
+    "thursday": {
+     "type": "boolean"
+    },
+    "tuesday": {
+     "type": "boolean"
+    },
+    "userid": {
+     "type": "string",
+     "format": "int64"
+    },
+    "vibrate": {
+     "type": "boolean"
+    },
+    "videoid": {
+     "type": "string",
+     "format": "int64"
+    },
+    "volume": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "wednesday": {
+     "type": "boolean"
+    }
+   }
+  },
+  "CollectionResponse_Alarm": {
+   "id": "CollectionResponse_Alarm",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Alarm"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "methods": {
+  "getAlarm": {
+   "id": "alarmendpoint.getAlarm",
+   "path": "alarm/{id}",
+   "httpMethod": "GET",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "response": {
+    "$ref": "Alarm"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "insertAlarm": {
+   "id": "alarmendpoint.insertAlarm",
+   "path": "alarm",
+   "httpMethod": "POST",
+   "request": {
+    "$ref": "Alarm",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "Alarm"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "listAlarm": {
+   "id": "alarmendpoint.listAlarm",
+   "path": "alarm",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursor": {
+     "type": "string",
+     "location": "query"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "CollectionResponse_Alarm"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "removeAlarm": {
+   "id": "alarmendpoint.removeAlarm",
+   "path": "alarm/{id}",
+   "httpMethod": "DELETE",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "updateAlarm": {
+   "id": "alarmendpoint.updateAlarm",
+   "path": "alarm",
+   "httpMethod": "PUT",
+   "request": {
+    "$ref": "Alarm",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "Alarm"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}

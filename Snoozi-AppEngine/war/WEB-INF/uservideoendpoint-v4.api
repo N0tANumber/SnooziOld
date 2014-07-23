@@ -2,7 +2,7 @@
   "extends" : "thirdParty.api",
   "abstract" : false,
   "root" : "https://evident-quasar-565.appspot.com/_ah/api",
-  "name" : "commentsendpoint",
+  "name" : "uservideoendpoint",
   "version" : "v4",
   "defaultVersion" : false,
   "adapter" : {
@@ -26,14 +26,30 @@
   "ownerDomain" : "snoozi.com",
   "ownerName" : "snoozi.com",
   "methods" : {
-    "commentsendpoint.listComments" : {
-      "path" : "comments",
+    "uservideoendpoint.insertUserVideo" : {
+      "path" : "uservideo",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.insertUserVideo",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "uservideoendpoint.listUserVideo" : {
+      "path" : "uservideo",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.listComments",
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.listUserVideo",
       "request" : {
         "parameters" : {
           "cursor" : {
@@ -51,75 +67,59 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "commentsendpoint.getComments" : {
-      "path" : "comments/{id}",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.getComments",
-      "request" : {
-        "parameters" : {
-          "id" : {
-            "type" : "int64",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "commentsendpoint.removeComments" : {
-      "path" : "comments/{id}",
-      "httpMethod" : "DELETE",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.removeComments",
-      "request" : {
-        "parameters" : {
-          "id" : {
-            "type" : "int64",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "empty"
-      }
-    },
-    "commentsendpoint.insertComments" : {
-      "path" : "comments",
-      "httpMethod" : "POST",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.insertComments",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "commentsendpoint.updateComments" : {
-      "path" : "comments",
+    "uservideoendpoint.updateUserVideo" : {
+      "path" : "uservideo",
       "httpMethod" : "PUT",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.updateComments",
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.updateUserVideo",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
         "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "uservideoendpoint.removeUserVideo" : {
+      "path" : "uservideo/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.removeUserVideo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "uservideoendpoint.getUserVideo" : {
+      "path" : "uservideo/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.getUserVideo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
       },
       "response" : {
         "body" : "autoTemplate(backendResponse)"
@@ -128,80 +128,76 @@
   },
   "descriptor" : {
     "schemas" : {
-      "CollectionResponse_Comments" : {
-        "id" : "CollectionResponse_Comments",
-        "type" : "object",
-        "properties" : {
-          "items" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "Comments"
-            }
-          },
-          "nextPageToken" : {
-            "type" : "string"
-          }
-        }
-      },
-      "Comments" : {
-        "id" : "Comments",
+      "UserVideo" : {
+        "id" : "UserVideo",
         "type" : "object",
         "properties" : {
           "id" : {
             "type" : "string",
             "format" : "int64"
           },
-          "description" : {
-            "type" : "string"
-          },
-          "like" : {
-            "type" : "integer"
+          "isFavorite" : {
+            "type" : "boolean"
           },
           "userid" : {
             "type" : "string",
             "format" : "int64"
           },
-          "userpseudo" : {
-            "type" : "string"
-          },
           "videoid" : {
             "type" : "string",
             "format" : "int64"
           },
-          "timestamp" : {
-            "type" : "string",
-            "format" : "int64"
+          "viewcount" : {
+            "type" : "integer"
+          },
+          "likecount" : {
+            "type" : "integer"
+          }
+        }
+      },
+      "CollectionResponse_UserVideo" : {
+        "id" : "CollectionResponse_UserVideo",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "UserVideo"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
           }
         }
       }
     },
     "methods" : {
-      "com.snoozi.CommentsEndpoint.listComments" : {
-        "response" : {
-          "$ref" : "CollectionResponse_Comments"
-        }
-      },
-      "com.snoozi.CommentsEndpoint.getComments" : {
-        "response" : {
-          "$ref" : "Comments"
-        }
-      },
-      "com.snoozi.CommentsEndpoint.removeComments" : {
-      },
-      "com.snoozi.CommentsEndpoint.insertComments" : {
+      "com.snoozi.UserVideoEndpoint.insertUserVideo" : {
         "request" : {
-          "$ref" : "Comments"
+          "$ref" : "UserVideo"
         },
         "response" : {
-          "$ref" : "Comments"
+          "$ref" : "UserVideo"
         }
       },
-      "com.snoozi.CommentsEndpoint.updateComments" : {
+      "com.snoozi.UserVideoEndpoint.listUserVideo" : {
+        "response" : {
+          "$ref" : "CollectionResponse_UserVideo"
+        }
+      },
+      "com.snoozi.UserVideoEndpoint.updateUserVideo" : {
         "request" : {
-          "$ref" : "Comments"
+          "$ref" : "UserVideo"
         },
         "response" : {
-          "$ref" : "Comments"
+          "$ref" : "UserVideo"
+        }
+      },
+      "com.snoozi.UserVideoEndpoint.removeUserVideo" : {
+      },
+      "com.snoozi.UserVideoEndpoint.getUserVideo" : {
+        "response" : {
+          "$ref" : "UserVideo"
         }
       }
     }

@@ -1,0 +1,219 @@
+{
+ "kind": "discovery#restDescription",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/JTFB5MkwhsZP42rd93zr8QdzHYU\"",
+ "discoveryVersion": "v1",
+ "id": "commentsendpoint:v4",
+ "name": "commentsendpoint",
+ "version": "v4",
+ "description": "This is an API",
+ "ownerDomain": "snoozi.com",
+ "ownerName": "snoozi.com",
+ "icons": {
+  "x16": "http://www.google.com/images/icons/product/search-16.gif",
+  "x32": "http://www.google.com/images/icons/product/search-32.gif"
+ },
+ "protocol": "rest",
+ "baseUrl": "https://evident-quasar-565.appspot.com/_ah/api/commentsendpoint/v4/",
+ "basePath": "/_ah/api/commentsendpoint/v4/",
+ "rootUrl": "https://evident-quasar-565.appspot.com/_ah/api/",
+ "servicePath": "commentsendpoint/v4/",
+ "batchPath": "batch",
+ "parameters": {
+  "alt": {
+   "type": "string",
+   "description": "Data format for the response.",
+   "default": "json",
+   "enum": [
+    "json"
+   ],
+   "enumDescriptions": [
+    "Responses with Content-Type of application/json"
+   ],
+   "location": "query"
+  },
+  "fields": {
+   "type": "string",
+   "description": "Selector specifying which fields to include in a partial response.",
+   "location": "query"
+  },
+  "key": {
+   "type": "string",
+   "description": "API key. Your API key identifies your project and provides you with API access, quota, and reports. Required unless you provide an OAuth 2.0 token.",
+   "location": "query"
+  },
+  "oauth_token": {
+   "type": "string",
+   "description": "OAuth 2.0 token for the current user.",
+   "location": "query"
+  },
+  "prettyPrint": {
+   "type": "boolean",
+   "description": "Returns response with indentations and line breaks.",
+   "default": "true",
+   "location": "query"
+  },
+  "quotaUser": {
+   "type": "string",
+   "description": "Available to use for quota purposes for server-side applications. Can be any arbitrary string assigned to a user, but should not exceed 40 characters. Overrides userIp if both are provided.",
+   "location": "query"
+  },
+  "userIp": {
+   "type": "string",
+   "description": "IP address of the site where the request originates. Use this if you want to enforce per-user limits.",
+   "location": "query"
+  }
+ },
+ "auth": {
+  "oauth2": {
+   "scopes": {
+    "https://www.googleapis.com/auth/userinfo.email": {
+     "description": "View your email address"
+    }
+   }
+  }
+ },
+ "schemas": {
+  "CollectionResponse_Comments": {
+   "id": "CollectionResponse_Comments",
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "$ref": "Comments"
+     }
+    },
+    "nextPageToken": {
+     "type": "string"
+    }
+   }
+  },
+  "Comments": {
+   "id": "Comments",
+   "type": "object",
+   "properties": {
+    "description": {
+     "type": "string"
+    },
+    "id": {
+     "type": "string",
+     "format": "int64"
+    },
+    "like": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "timestamp": {
+     "type": "string",
+     "format": "int64"
+    },
+    "userid": {
+     "type": "string",
+     "format": "int64"
+    },
+    "userpseudo": {
+     "type": "string"
+    },
+    "videoid": {
+     "type": "string",
+     "format": "int64"
+    }
+   }
+  }
+ },
+ "methods": {
+  "getComments": {
+   "id": "commentsendpoint.getComments",
+   "path": "comments/{id}",
+   "httpMethod": "GET",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "response": {
+    "$ref": "Comments"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "insertComments": {
+   "id": "commentsendpoint.insertComments",
+   "path": "comments",
+   "httpMethod": "POST",
+   "request": {
+    "$ref": "Comments",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "Comments"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "listComments": {
+   "id": "commentsendpoint.listComments",
+   "path": "comments",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursor": {
+     "type": "string",
+     "location": "query"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "CollectionResponse_Comments"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "removeComments": {
+   "id": "commentsendpoint.removeComments",
+   "path": "comments/{id}",
+   "httpMethod": "DELETE",
+   "parameters": {
+    "id": {
+     "type": "string",
+     "required": true,
+     "format": "int64",
+     "location": "path"
+    }
+   },
+   "parameterOrder": [
+    "id"
+   ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "updateComments": {
+   "id": "commentsendpoint.updateComments",
+   "path": "comments",
+   "httpMethod": "PUT",
+   "request": {
+    "$ref": "Comments",
+    "parameterName": "resource"
+   },
+   "response": {
+    "$ref": "Comments"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  }
+ }
+}
