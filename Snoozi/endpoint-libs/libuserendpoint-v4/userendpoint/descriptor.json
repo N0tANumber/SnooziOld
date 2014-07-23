@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/userendpoint/v4/20140723131205/java/1.18.0-rc/snoozi.com-userendpoint-v4-20140723131205-java-1.18.0-rc-sources.jar", 
-      "path": "snoozi.com-userendpoint-v4-20140723131205-java-1.18.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/userendpoint/v4/20140723184700/java/1.18.0-rc/snoozi.com-userendpoint-v4-20140723184700-java-1.18.0-rc-sources.jar", 
+      "path": "snoozi.com-userendpoint-v4-20140723184700-java-1.18.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2014-07-23 13:12"
+      "timestamp": "2014-07-23 18:47"
     }, 
     {
-      "path": "snoozi.com-userendpoint-v4-20140723131205-java-1.18.0-rc.jar.properties", 
+      "path": "snoozi.com-userendpoint-v4-20140723184700-java-1.18.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -674,5 +674,5 @@
   "version": "v4", 
   "language_version": "1.18.0-rc", 
   "id": "userendpoint:v4", 
-  "revision": 20140723131205
+  "revision": 20140723184700
 }

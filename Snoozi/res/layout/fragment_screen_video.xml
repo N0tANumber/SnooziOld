@@ -1,13 +1,61 @@
-
-    <ScrollView
-        android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#ffffff" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff" >
 
+       <LinearLayout
+        android:id="@+id/layoutcomments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="#fff" >
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/txtbackground"
+            android:hint="@string/leavecomment"
+            android:inputType="textMultiLine"
+            android:paddingLeft="5dp"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:textColor="#000" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btnbackground"
+            android:text="@string/send"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse" />
+
+    </LinearLayout>
+<View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignTop="@id/layoutcomments"
+        android:background="#634176" />
+ 
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layoutcomments" >
+        
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,7 +137,7 @@
 
             </LinearLayout>
 
-            <View android:layout_width="fill_parent" android:layout_height="1dp"
+            <View android:layout_width="match_parent" android:layout_height="1dp"
 				 android:background="#634176" />
 
             <LinearLayout
@@ -116,3 +164,7 @@
 
         </LinearLayout>
     </ScrollView>
+
+    
+</RelativeLayout>
+    

@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/commentsendpoint/v4/20140723131136/java/1.18.0-rc/snoozi.com-commentsendpoint-v4-20140723131136-java-1.18.0-rc-sources.jar", 
-      "path": "snoozi.com-commentsendpoint-v4-20140723131136-java-1.18.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/commentsendpoint/v4/20140723184631/java/1.18.0-rc/snoozi.com-commentsendpoint-v4-20140723184631-java-1.18.0-rc-sources.jar", 
+      "path": "snoozi.com-commentsendpoint-v4-20140723184631-java-1.18.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2014-07-23 13:11"
+      "timestamp": "2014-07-23 18:46"
     }, 
     {
-      "path": "snoozi.com-commentsendpoint-v4-20140723131136-java-1.18.0-rc.jar.properties", 
+      "path": "snoozi.com-commentsendpoint-v4-20140723184631-java-1.18.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -674,5 +674,5 @@
   "version": "v4", 
   "language_version": "1.18.0-rc", 
   "id": "commentsendpoint:v4", 
-  "revision": 20140723131136
+  "revision": 20140723184631
 }

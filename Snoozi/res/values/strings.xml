@@ -71,5 +71,7 @@
   <string name="stoprecord">Stop Recording</string>
   <string name="addAlarm">add Alarm</string>
   <string name="maxalarmcount">You cannot have more than 3 alarm. Delete one by swiping it to the left. </string>
+  <string name="send">Send</string>
+  <string name="leavecomment">leave a comment...</string>
     
 </resources>

@@ -5,7 +5,6 @@ package com.wake.wank.UI;
 import java.io.File;
 
 import com.wake.wank.R;
-import com.wake.wank.models.MyAlarm;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility;
@@ -28,16 +27,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
-import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 
 public class FragmentVideo extends Fragment {
 

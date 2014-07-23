@@ -14,7 +14,7 @@ import com.wake.wank.models.MyVideo;
 public class SnooziUtility {
 	public static final String PREFS_NAME = "com.wake.wank";
 	private static final String SNOOZI_TRACE = "Snoozi_TRACE";
-	public static final boolean DEV_MODE = false;
+	public static final boolean DEV_MODE = true;
 
 	 
 	
