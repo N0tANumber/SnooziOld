@@ -87,7 +87,7 @@ public class HomeActivity extends FragmentActivity {
 				if(position < getActionBar().getTabCount())
 					getActionBar().setSelectedNavigationItem(position);
 
-				if(position == GALLERY_POSITION)
+				if(position == GALLERY_POSITION && mGalleryView != null)
 					mGalleryView.refreshGalleryList();
 			}
 
@@ -111,8 +111,10 @@ public class HomeActivity extends FragmentActivity {
 						{
 							mShowingDetail = false;
 							mPager.removeView(mVideoView.getView());
-							mPagerAdapter.notifyDataSetChanged();
-							mGalleryView.refreshGalleryList();
+							if(mPagerAdapter != null)
+								mPagerAdapter.notifyDataSetChanged();
+							if(mGalleryView != null)
+								mGalleryView.refreshGalleryList();
 							
 						}
 					}

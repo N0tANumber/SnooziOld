@@ -104,7 +104,7 @@ public class FragmentGallery extends Fragment {
 		super.onResume();
 		
 		SnooziUtility.trace(TRACETYPE.INFO, "FragmentGallery.onResume");
-		refreshGalleryList();
+		//refreshGalleryList();
 
 	}
 

@@ -195,7 +195,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 			}
 		} catch (final IOException e) {
 			// TODO Auto-generated catch block
-			android.os.Debug.waitForDebugger();
+			//android.os.Debug.waitForDebugger();
 			
 			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter IOException :  " +  e.toString());
 			syncResult.stats.numIoExceptions++;

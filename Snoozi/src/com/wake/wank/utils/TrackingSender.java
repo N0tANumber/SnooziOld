@@ -94,14 +94,7 @@ public class TrackingSender {
         	else if(this.m_action.equals(TrackingEventAction.UNSET.toString()))
         		theValue = -1;
         	
-	        // Build and send an Event.
-	        t.send(new HitBuilders.EventBuilder()
-	            .setCategory(this.m_category)
-	            .setAction(this.m_action)
-	            .setLabel(this.m_description)
-	            .setValue(theValue)
-	            .build());
-	        
+	       
 	        
 	        if(this.m_category.equals(TrackingEventCategory.ALARM.toString()))
 	        {
@@ -120,7 +113,15 @@ public class TrackingSender {
 				//On demande une synchro avec le server
 				SyncAdapter.requestSync(SnooziUtility.SYNC_ACTION.TRACKING_SEND);
 	        }
-			
+	        
+	        // Build and send an Event.
+	        t.send(new HitBuilders.EventBuilder()
+	            .setCategory(this.m_category)
+	            .setAction(this.m_action)
+	            .setLabel(this.m_description)
+	            .setValue(theValue)
+	            .build());
+	        
 		} catch (Exception e) {
 			SnooziUtility.trace(TRACETYPE.DEBUG,"TrackingSender.sendUserEvent Error " + e.toString());
 			
@@ -159,7 +160,7 @@ public class TrackingSender {
 	 */
 	public static boolean sendTrackingEvent() throws Exception {
 		Cursor cursor = null;
-		android.os.Debug.waitForDebugger();
+		//android.os.Debug.waitForDebugger();
 		
 		boolean success = false;
 		try {
@@ -246,8 +247,10 @@ public class TrackingSender {
 			success = true;
 
 		} catch (IOException e) {
+			SnooziUtility.trace(TRACETYPE.ERROR, "sendTrackingEvent IoException " + e.toString());
 			throw e;
 		} catch (Exception e) {
+			SnooziUtility.trace(TRACETYPE.ERROR, "sendTrackingEvent Exception " + e.toString());
 			throw e;
 		}finally{
 			if(cursor != null)

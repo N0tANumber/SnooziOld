@@ -20,6 +20,9 @@ public class WakeupLaunchService extends WakefulIntentService {
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
+		//if(!isrunning)
+		//{
+			
 		isrunning = true;
 		int alarmid = intent.getIntExtra("alarmid", 0);
 		SnooziUtility.trace(TRACETYPE.DEBUG,"WakeupLaunchService.doWakefulWork alarmid + " + alarmid);
@@ -41,6 +44,7 @@ public class WakeupLaunchService extends WakefulIntentService {
 			}
 		} while (isrunning);
 		
+		//}
 	}
 
 }

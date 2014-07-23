@@ -91,7 +91,7 @@ public class FragmentVideo extends Fragment {
 		mBtnLike = (ImageView) rootView.findViewById(R.id.imgBtnLike);
 
 
-		
+
 
 
 
@@ -175,7 +175,7 @@ public class FragmentVideo extends Fragment {
 			}
 		});
 
-		
+
 
 		mBtnLike.setOnTouchListener(new OnTouchListener() {
 
@@ -185,14 +185,14 @@ public class FragmentVideo extends Fragment {
 				{
 					currentVideo.addLike(1);
 					refreshInfo();
-					
+
 				}
 				return false;
 			}
 		});
 
-		
-		
+
+
 		return rootView;
 
 	}
@@ -237,13 +237,13 @@ public class FragmentVideo extends Fragment {
 		return true;
 
 	}
-	
+
 
 	@Override
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		
+
 		_videoViewCount = 0;
 		if(currentVideo != null)
 			openVideo(currentVideo);
@@ -317,7 +317,7 @@ public class FragmentVideo extends Fragment {
 
 		if(currentVideo == null)
 			return;
-		
+
 		mVideoTitle.setText(Html.fromHtml(currentVideo.getDescription()));
 		//mVideoTitle.setText(currentVideo.getDescription());
 
@@ -345,15 +345,15 @@ public class FragmentVideo extends Fragment {
 		default:
 			mBtnLike.setImageResource(R.drawable.btnlike_0);
 			break;
+		}
+
+
+
+
+
 	}
-		
 
 
-	
-
-	}
-	
-	
 
 
 	@Override

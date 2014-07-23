@@ -92,7 +92,14 @@ public class MyVideoAdapter extends ArrayAdapter<MyVideo> {
 			Uri uri = Uri.parse(video.getLocalurl());
 			 bMap = ThumbnailUtils.createVideoThumbnail(uri.getPath() , MediaStore.Video.Thumbnails.MINI_KIND);
 			if(bMap != null)
+			{
+				if(holder.preview != null)
+				{
+					holder.imgThumb.setImageBitmap(null);
+					holder.preview.recycle();
+				}
 				holder.preview = bMap;
+			}
 		} catch (Exception e) {
 			bMap = null;
 		}

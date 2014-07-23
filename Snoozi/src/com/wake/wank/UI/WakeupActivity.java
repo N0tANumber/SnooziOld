@@ -260,8 +260,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 				TrackingSender sender = new TrackingSender(getApplication());
 				sender.sendUserEvent(TrackingEventCategory.ALARM, _alarmEvent,"",currentVideo.getVideoid());
 				
-			}
-			WakeupLaunchService.isrunning = false;
+			}else
+				WakeupLaunchService.isrunning = false;
 		}else
 			SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onDestroy");
 	}
