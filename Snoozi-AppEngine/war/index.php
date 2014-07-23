@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Snoozi - Thank God it's monday morning #TGIMM</title>
+		<title>Snoozi | Thank God it's monday morning #TGIMM</title>
 		<meta name="author" content="Snoozi">
 		<meta name="keywords" content="wakeup, android, morning, monday, alarm, clock, video, snoozi">
 		

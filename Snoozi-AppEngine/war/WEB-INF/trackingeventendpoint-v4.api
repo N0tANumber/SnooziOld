@@ -41,22 +41,6 @@
         "body" : "empty"
       }
     },
-    "trackingeventendpoint.insertTrackingEvent" : {
-      "path" : "trackingevent",
-      "httpMethod" : "POST",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.TrackingEventEndpoint.insertTrackingEvent",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "trackingeventendpoint.getTrackingEvent" : {
       "path" : "trackingevent/{id}",
       "httpMethod" : "GET",
@@ -78,6 +62,31 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "trackingeventendpoint.listTrackingEvent" : {
+      "path" : "trackingevent",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.TrackingEventEndpoint.listTrackingEvent",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "trackingeventendpoint.updateTrackingEvent" : {
       "path" : "trackingevent",
       "httpMethod" : "PUT",
@@ -86,6 +95,22 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.snoozi.TrackingEventEndpoint.updateTrackingEvent",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "trackingeventendpoint.insertTrackingEvent" : {
+      "path" : "trackingevent",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.TrackingEventEndpoint.insertTrackingEvent",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
         "bodyName" : "resource"
@@ -113,31 +138,6 @@
       },
       "response" : {
         "body" : "empty"
-      }
-    },
-    "trackingeventendpoint.listTrackingEvent" : {
-      "path" : "trackingevent",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.TrackingEventEndpoint.listTrackingEvent",
-      "request" : {
-        "parameters" : {
-          "cursor" : {
-            "type" : "string",
-            "required" : false
-          },
-          "limit" : {
-            "type" : "int32",
-            "required" : false
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
       }
     }
   },
@@ -204,17 +204,14 @@
     "methods" : {
       "com.snoozi.TrackingEventEndpoint.removeErrorLoggerEvent" : {
       },
-      "com.snoozi.TrackingEventEndpoint.insertTrackingEvent" : {
-        "request" : {
-          "$ref" : "TrackingEvent"
-        },
+      "com.snoozi.TrackingEventEndpoint.getTrackingEvent" : {
         "response" : {
           "$ref" : "TrackingEvent"
         }
       },
-      "com.snoozi.TrackingEventEndpoint.getTrackingEvent" : {
+      "com.snoozi.TrackingEventEndpoint.listTrackingEvent" : {
         "response" : {
-          "$ref" : "TrackingEvent"
+          "$ref" : "CollectionResponse_TrackingEvent"
         }
       },
       "com.snoozi.TrackingEventEndpoint.updateTrackingEvent" : {
@@ -225,12 +222,15 @@
           "$ref" : "TrackingEvent"
         }
       },
-      "com.snoozi.TrackingEventEndpoint.removeTrackingEvent" : {
-      },
-      "com.snoozi.TrackingEventEndpoint.listTrackingEvent" : {
+      "com.snoozi.TrackingEventEndpoint.insertTrackingEvent" : {
+        "request" : {
+          "$ref" : "TrackingEvent"
+        },
         "response" : {
-          "$ref" : "CollectionResponse_TrackingEvent"
+          "$ref" : "TrackingEvent"
         }
+      },
+      "com.snoozi.TrackingEventEndpoint.removeTrackingEvent" : {
       }
     }
   }
