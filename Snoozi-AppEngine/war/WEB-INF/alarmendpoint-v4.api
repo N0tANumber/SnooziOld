@@ -26,6 +26,22 @@
   "ownerDomain" : "snoozi.com",
   "ownerName" : "snoozi.com",
   "methods" : {
+    "alarmendpoint.insertAlarm" : {
+      "path" : "alarm",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.AlarmEndpoint.insertAlarm",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "alarmendpoint.getAlarm" : {
       "path" : "alarm/{id}",
       "httpMethod" : "GET",
@@ -72,38 +88,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "alarmendpoint.insertAlarm" : {
-      "path" : "alarm",
-      "httpMethod" : "POST",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.AlarmEndpoint.insertAlarm",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "alarmendpoint.updateAlarm" : {
-      "path" : "alarm",
-      "httpMethod" : "PUT",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.AlarmEndpoint.updateAlarm",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "alarmendpoint.removeAlarm" : {
       "path" : "alarm/{id}",
       "httpMethod" : "DELETE",
@@ -123,6 +107,22 @@
       },
       "response" : {
         "body" : "empty"
+      }
+    },
+    "alarmendpoint.updateAlarm" : {
+      "path" : "alarm",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.AlarmEndpoint.updateAlarm",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
       }
     }
   },
@@ -210,6 +210,14 @@
       }
     },
     "methods" : {
+      "com.snoozi.AlarmEndpoint.insertAlarm" : {
+        "request" : {
+          "$ref" : "Alarm"
+        },
+        "response" : {
+          "$ref" : "Alarm"
+        }
+      },
       "com.snoozi.AlarmEndpoint.getAlarm" : {
         "response" : {
           "$ref" : "Alarm"
@@ -220,13 +228,7 @@
           "$ref" : "CollectionResponse_Alarm"
         }
       },
-      "com.snoozi.AlarmEndpoint.insertAlarm" : {
-        "request" : {
-          "$ref" : "Alarm"
-        },
-        "response" : {
-          "$ref" : "Alarm"
-        }
+      "com.snoozi.AlarmEndpoint.removeAlarm" : {
       },
       "com.snoozi.AlarmEndpoint.updateAlarm" : {
         "request" : {
@@ -235,8 +237,6 @@
         "response" : {
           "$ref" : "Alarm"
         }
-      },
-      "com.snoozi.AlarmEndpoint.removeAlarm" : {
       }
     }
   }

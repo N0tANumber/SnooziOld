@@ -1,7 +1,6 @@
 package com.snoozi;
 
 import com.snoozi.PMF;
-
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
@@ -148,8 +147,12 @@ public class CommentsEndpoint {
 			mgr.close();
 		}
 	}
+	
+	
 
 	private boolean containsComments(Comments comments) {
+		if(comments.getId() ==null)
+			return false;
 		PersistenceManager mgr = getPersistenceManager();
 		boolean contains = true;
 		try {
