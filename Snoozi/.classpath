@@ -17,11 +17,13 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="lib" path="/Users/CtrlX/Documents/Developpement/sdk/extras/google/analytics_sdk_v2/libGoogleAnalyticsV2.jar"/>
 	<classpathentry kind="con" path="com.google.gdt.eclipse.managedapis.MANAGED_API_CONTAINER/storage-v1r3lv1.18.0-rc"/>
-	<classpathentry kind="src" path="endpoint-libs/libalarmendpoint-v3/alarmendpoint/alarmendpoint-v3-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libdeviceinfoendpoint-v3/deviceinfoendpoint/deviceinfoendpoint-v3-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v3/messageEndpoint/messageendpoint-v3-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libtrackingeventendpoint-v3/trackingeventendpoint/trackingeventendpoint-v3-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libuserendpoint-v3/userendpoint/userendpoint-v3-generated-source"/>
-	<classpathentry kind="src" path="endpoint-libs/libvideoendpoint-v3/videoendpoint/videoendpoint-v3-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libalarmendpoint-v4/alarmendpoint/alarmendpoint-v4-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libcommentsendpoint-v4/commentsendpoint/commentsendpoint-v4-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libdeviceinfoendpoint-v4/deviceinfoendpoint/deviceinfoendpoint-v4-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libmessageEndpoint-v4/messageEndpoint/messageendpoint-v4-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libtrackingeventendpoint-v4/trackingeventendpoint/trackingeventendpoint-v4-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libuserendpoint-v4/userendpoint/userendpoint-v4-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libuservideoendpoint-v4/uservideoendpoint/uservideoendpoint-v4-generated-source"/>
+	<classpathentry kind="src" path="endpoint-libs/libvideoendpoint-v4/videoendpoint/videoendpoint-v4-generated-source"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
