@@ -1,10 +1,10 @@
 {
  "kind": "discovery#rpcDescription",
- "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/dH5CDWItl-RJPrrD87TJSS8EGtk\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/K8N4CMtxChqra_UxyTWX2TyhUuA\"",
  "discoveryVersion": "v1",
- "id": "userendpoint:v3",
- "name": "userendpoint",
- "version": "v3",
+ "id": "videoendpoint:v4",
+ "name": "videoendpoint",
+ "version": "v4",
  "description": "This is an API",
  "ownerDomain": "snoozi.com",
  "ownerName": "snoozi.com",
@@ -71,14 +71,14 @@
   }
  },
  "schemas": {
-  "CollectionResponse_User": {
-   "id": "CollectionResponse_User",
+  "CollectionResponse_Video": {
+   "id": "CollectionResponse_Video",
    "type": "object",
    "properties": {
     "items": {
      "type": "array",
      "items": {
-      "$ref": "User"
+      "$ref": "Video"
      }
     },
     "nextPageToken": {
@@ -86,47 +86,61 @@
     }
    }
   },
-  "User": {
-   "id": "User",
+  "VIDEO_STATUS": {
+   "id": "VIDEO_STATUS",
+   "type": "string",
+   "enum": [
+    "DELETE",
+    "DUMMY",
+    "OK",
+    "PENDING",
+    "REPORT"
+   ],
+   "enumDescriptions": [
+    "",
+    "",
+    "",
+    "",
+    ""
+   ]
+  },
+  "Video": {
+   "id": "Video",
    "type": "object",
    "properties": {
-    "city": {
+    "description": {
      "type": "string"
     },
-    "country": {
-     "type": "string"
-    },
-    "email": {
+    "extlink": {
      "type": "string"
     },
     "id": {
      "type": "string",
      "format": "int64"
     },
-    "lastwakeup": {
-     "type": "string",
-     "format": "int64"
-    },
-    "likecount": {
+    "level": {
      "type": "integer",
      "format": "int32"
     },
-    "pseudo": {
+    "like": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "status": {
+     "$ref": "VIDEO_STATUS"
+    },
+    "timestamp": {
+     "type": "string",
+     "format": "int64"
+    },
+    "url": {
      "type": "string"
     },
-    "signupstamp": {
+    "userid": {
      "type": "string",
      "format": "int64"
     },
-    "videocount": {
-     "type": "integer",
-     "format": "int32"
-    },
     "viewcount": {
-     "type": "integer",
-     "format": "int32"
-    },
-    "wakeupcount": {
      "type": "integer",
      "format": "int32"
     }
@@ -134,33 +148,8 @@
   }
  },
  "methods": {
-  "userendpoint.addUserview": {
-   "id": "userendpoint.addUserview",
-   "parameters": {
-    "id": {
-     "type": "string",
-     "required": true,
-     "format": "int64"
-    },
-    "viewcount": {
-     "type": "integer",
-     "required": true,
-     "format": "int32"
-    }
-   },
-   "parameterOrder": [
-    "id",
-    "viewcount"
-   ],
-   "returns": {
-    "$ref": "User"
-   },
-   "scopes": [
-    "https://www.googleapis.com/auth/userinfo.email"
-   ]
-  },
-  "userendpoint.getUser": {
-   "id": "userendpoint.getUser",
+  "videoendpoint.getVideo": {
+   "id": "videoendpoint.getVideo",
    "allowGet": true,
    "parameters": {
     "id": {
@@ -173,50 +162,83 @@
     "id"
    ],
    "returns": {
-    "$ref": "User"
+    "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "userendpoint.getUserByEmail": {
-   "id": "userendpoint.getUserByEmail",
+  "videoendpoint.getVideosFromUser": {
+   "id": "videoendpoint.getVideosFromUser",
    "allowGet": true,
    "parameters": {
-    "email": {
+    "cursor": {
+     "type": "string"
+    },
+    "fromstamp": {
      "type": "string",
-     "required": true
+     "format": "int64"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "status": {
+     "type": "string"
+    },
+    "userid": {
+     "type": "string",
+     "format": "int64"
     }
    },
-   "parameterOrder": [
-    "email"
-   ],
    "returns": {
-    "$ref": "User"
+    "$ref": "CollectionResponse_Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "userendpoint.insertUser": {
-   "id": "userendpoint.insertUser",
+  "videoendpoint.insertVideo": {
+   "id": "videoendpoint.insertVideo",
    "parameters": {
     "resource": {
-     "$ref": "User"
+     "$ref": "Video"
     }
    },
    "parameterOrder": [
     "resource"
    ],
    "returns": {
-    "$ref": "User"
+    "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "userendpoint.listUser": {
-   "id": "userendpoint.listUser",
+  "videoendpoint.listRecentVideo": {
+   "id": "videoendpoint.listRecentVideo",
+   "allowGet": true,
+   "parameters": {
+    "cursor": {
+     "type": "string"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32"
+    },
+    "status": {
+     "type": "string"
+    }
+   },
+   "returns": {
+    "$ref": "CollectionResponse_Video"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "videoendpoint.listVideo": {
+   "id": "videoendpoint.listVideo",
    "allowGet": true,
    "parameters": {
     "cursor": {
@@ -228,46 +250,45 @@
     }
    },
    "returns": {
-    "$ref": "CollectionResponse_User"
+    "$ref": "CollectionResponse_Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "userendpoint.removeUser": {
-   "id": "userendpoint.removeUser",
+  "videoendpoint.rateVideo": {
+   "id": "videoendpoint.rateVideo",
    "parameters": {
     "id": {
      "type": "string",
-     "required": true
+     "required": true,
+     "format": "int64"
+    },
+    "likevalue": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
+    },
+    "viewcount": {
+     "type": "integer",
+     "required": true,
+     "format": "int32"
     }
    },
    "parameterOrder": [
-    "id"
-   ],
-   "scopes": [
-    "https://www.googleapis.com/auth/userinfo.email"
-   ]
-  },
-  "userendpoint.updateUser": {
-   "id": "userendpoint.updateUser",
-   "parameters": {
-    "resource": {
-     "$ref": "User"
-    }
-   },
-   "parameterOrder": [
-    "resource"
+    "id",
+    "likevalue",
+    "viewcount"
    ],
    "returns": {
-    "$ref": "User"
+    "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "userendpoint.wakeupUser": {
-   "id": "userendpoint.wakeupUser",
+  "videoendpoint.removeVideo": {
+   "id": "videoendpoint.removeVideo",
    "parameters": {
     "id": {
      "type": "string",
@@ -278,8 +299,22 @@
    "parameterOrder": [
     "id"
    ],
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "videoendpoint.updateVideo": {
+   "id": "videoendpoint.updateVideo",
+   "parameters": {
+    "resource": {
+     "$ref": "Video"
+    }
+   },
+   "parameterOrder": [
+    "resource"
+   ],
    "returns": {
-    "$ref": "User"
+    "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

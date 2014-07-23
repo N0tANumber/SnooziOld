@@ -1,10 +1,10 @@
 {
- "kind": "discovery#restDescription",
- "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/EnjlLoorm5cioHBU4497cysf8Ws\"",
+ "kind": "discovery#rpcDescription",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/1Hfcnv7svTthYzI57S2vL6UyTaM\"",
  "discoveryVersion": "v1",
- "id": "messageEndpoint:v3",
+ "id": "messageEndpoint:v4",
  "name": "messageEndpoint",
- "version": "v3",
+ "version": "v4",
  "description": "This is an API",
  "ownerDomain": "snoozi.com",
  "ownerName": "snoozi.com",
@@ -12,12 +12,10 @@
   "x16": "http://www.google.com/images/icons/product/search-16.gif",
   "x32": "http://www.google.com/images/icons/product/search-32.gif"
  },
- "protocol": "rest",
- "baseUrl": "https://evident-quasar-565.appspot.com/_ah/api/messageEndpoint/v3/",
- "basePath": "/_ah/api/messageEndpoint/v3/",
+ "protocol": "rpc",
  "rootUrl": "https://evident-quasar-565.appspot.com/_ah/api/",
- "servicePath": "messageEndpoint/v3/",
- "batchPath": "batch",
+ "rpcUrl": "https://evident-quasar-565.appspot.com/_ah/api/rpc",
+ "rpcPath": "/_ah/api/rpc",
  "parameters": {
   "alt": {
    "type": "string",
@@ -134,37 +132,31 @@
   }
  },
  "methods": {
-  "listMessages": {
+  "messageEndpoint.listMessages": {
    "id": "messageEndpoint.listMessages",
-   "path": "messagedata",
-   "httpMethod": "GET",
+   "allowGet": true,
    "parameters": {
     "cursor": {
-     "type": "string",
-     "location": "query"
+     "type": "string"
     },
     "limit": {
      "type": "integer",
-     "format": "int32",
-     "location": "query"
+     "format": "int32"
     }
    },
-   "response": {
+   "returns": {
     "$ref": "CollectionResponse_MessageData"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "sendMessage": {
+  "messageEndpoint.sendMessage": {
    "id": "messageEndpoint.sendMessage",
-   "path": "sendMessage/{message}",
-   "httpMethod": "POST",
    "parameters": {
     "message": {
      "type": "string",
-     "required": true,
-     "location": "path"
+     "required": true
     }
    },
    "parameterOrder": [

@@ -1,10 +1,10 @@
 {
- "kind": "discovery#rpcDescription",
- "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/h4wx2wyE9uLH9OL08gCsJuT3-sc\"",
+ "kind": "discovery#restDescription",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/K8N4CMtxChqra_UxyTWX2TyhUuA\"",
  "discoveryVersion": "v1",
- "id": "videoendpoint:v3",
+ "id": "videoendpoint:v4",
  "name": "videoendpoint",
- "version": "v3",
+ "version": "v4",
  "description": "This is an API",
  "ownerDomain": "snoozi.com",
  "ownerName": "snoozi.com",
@@ -12,10 +12,12 @@
   "x16": "http://www.google.com/images/icons/product/search-16.gif",
   "x32": "http://www.google.com/images/icons/product/search-32.gif"
  },
- "protocol": "rpc",
+ "protocol": "rest",
+ "baseUrl": "https://evident-quasar-565.appspot.com/_ah/api/videoendpoint/v4/",
+ "basePath": "/_ah/api/videoendpoint/v4/",
  "rootUrl": "https://evident-quasar-565.appspot.com/_ah/api/",
- "rpcUrl": "https://evident-quasar-565.appspot.com/_ah/api/rpc",
- "rpcPath": "/_ah/api/rpc",
+ "servicePath": "videoendpoint/v4/",
+ "batchPath": "batch",
  "parameters": {
   "alt": {
    "type": "string",
@@ -148,131 +150,149 @@
   }
  },
  "methods": {
-  "videoendpoint.getVideo": {
+  "getVideo": {
    "id": "videoendpoint.getVideo",
-   "allowGet": true,
+   "path": "video/{id}",
+   "httpMethod": "GET",
    "parameters": {
     "id": {
      "type": "string",
      "required": true,
-     "format": "int64"
+     "format": "int64",
+     "location": "path"
     }
    },
    "parameterOrder": [
     "id"
    ],
-   "returns": {
+   "response": {
     "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "videoendpoint.getVideosFromUser": {
+  "getVideosFromUser": {
    "id": "videoendpoint.getVideosFromUser",
-   "allowGet": true,
+   "path": "getVideosFromUser",
+   "httpMethod": "GET",
    "parameters": {
     "cursor": {
-     "type": "string"
+     "type": "string",
+     "location": "query"
     },
     "fromstamp": {
      "type": "string",
-     "format": "int64"
+     "format": "int64",
+     "location": "query"
     },
     "limit": {
      "type": "integer",
-     "format": "int32"
+     "format": "int32",
+     "location": "query"
     },
     "status": {
-     "type": "string"
+     "type": "string",
+     "location": "query"
     },
     "userid": {
      "type": "string",
-     "format": "int64"
+     "format": "int64",
+     "location": "query"
     }
    },
-   "returns": {
+   "response": {
     "$ref": "CollectionResponse_Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "videoendpoint.insertVideo": {
+  "insertVideo": {
    "id": "videoendpoint.insertVideo",
-   "parameters": {
-    "resource": {
-     "$ref": "Video"
-    }
+   "path": "video",
+   "httpMethod": "POST",
+   "request": {
+    "$ref": "Video",
+    "parameterName": "resource"
    },
-   "parameterOrder": [
-    "resource"
-   ],
-   "returns": {
+   "response": {
     "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "videoendpoint.listRecentVideo": {
+  "listRecentVideo": {
    "id": "videoendpoint.listRecentVideo",
-   "allowGet": true,
+   "path": "listRecentVideo",
+   "httpMethod": "GET",
    "parameters": {
     "cursor": {
-     "type": "string"
+     "type": "string",
+     "location": "query"
     },
     "limit": {
      "type": "integer",
-     "format": "int32"
+     "format": "int32",
+     "location": "query"
     },
     "status": {
-     "type": "string"
+     "type": "string",
+     "location": "query"
     }
    },
-   "returns": {
+   "response": {
     "$ref": "CollectionResponse_Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "videoendpoint.listVideo": {
+  "listVideo": {
    "id": "videoendpoint.listVideo",
-   "allowGet": true,
+   "path": "video",
+   "httpMethod": "GET",
    "parameters": {
     "cursor": {
-     "type": "string"
+     "type": "string",
+     "location": "query"
     },
     "limit": {
      "type": "integer",
-     "format": "int32"
+     "format": "int32",
+     "location": "query"
     }
    },
-   "returns": {
+   "response": {
     "$ref": "CollectionResponse_Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "videoendpoint.rateVideo": {
+  "rateVideo": {
    "id": "videoendpoint.rateVideo",
+   "path": "rateVideo",
+   "httpMethod": "PUT",
    "parameters": {
     "id": {
      "type": "string",
      "required": true,
-     "format": "int64"
+     "format": "int64",
+     "location": "query"
     },
     "likevalue": {
      "type": "integer",
      "required": true,
-     "format": "int32"
+     "format": "int32",
+     "location": "query"
     },
     "viewcount": {
      "type": "integer",
      "required": true,
-     "format": "int32"
+     "format": "int32",
+     "location": "query"
     }
    },
    "parameterOrder": [
@@ -280,20 +300,23 @@
     "likevalue",
     "viewcount"
    ],
-   "returns": {
+   "response": {
     "$ref": "Video"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "videoendpoint.removeVideo": {
+  "removeVideo": {
    "id": "videoendpoint.removeVideo",
+   "path": "video/{id}",
+   "httpMethod": "DELETE",
    "parameters": {
     "id": {
      "type": "string",
      "required": true,
-     "format": "int64"
+     "format": "int64",
+     "location": "path"
     }
    },
    "parameterOrder": [
@@ -303,17 +326,15 @@
     "https://www.googleapis.com/auth/userinfo.email"
    ]
   },
-  "videoendpoint.updateVideo": {
+  "updateVideo": {
    "id": "videoendpoint.updateVideo",
-   "parameters": {
-    "resource": {
-     "$ref": "Video"
-    }
+   "path": "video",
+   "httpMethod": "PUT",
+   "request": {
+    "$ref": "Video",
+    "parameterName": "resource"
    },
-   "parameterOrder": [
-    "resource"
-   ],
-   "returns": {
+   "response": {
     "$ref": "Video"
    },
    "scopes": [
