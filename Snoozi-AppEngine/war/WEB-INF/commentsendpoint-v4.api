@@ -26,47 +26,17 @@
   "ownerDomain" : "snoozi.com",
   "ownerName" : "snoozi.com",
   "methods" : {
-    "commentsendpoint.listComments" : {
+    "commentsendpoint.insertComments" : {
       "path" : "comments",
-      "httpMethod" : "GET",
+      "httpMethod" : "POST",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.listComments",
+      "rosyMethod" : "com.snoozi.CommentsEndpoint.insertComments",
       "request" : {
-        "parameters" : {
-          "cursor" : {
-            "type" : "string",
-            "required" : false
-          },
-          "limit" : {
-            "type" : "int32",
-            "required" : false
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "commentsendpoint.getComments" : {
-      "path" : "comments/{id}",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.getComments",
-      "request" : {
-        "parameters" : {
-          "id" : {
-            "type" : "int64",
-            "required" : true
-          }
-        },
-        "body" : "empty"
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
       },
       "response" : {
         "body" : "autoTemplate(backendResponse)"
@@ -93,22 +63,6 @@
         "body" : "empty"
       }
     },
-    "commentsendpoint.insertComments" : {
-      "path" : "comments",
-      "httpMethod" : "POST",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.insertComments",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "commentsendpoint.updateComments" : {
       "path" : "comments",
       "httpMethod" : "PUT",
@@ -124,25 +78,56 @@
       "response" : {
         "body" : "autoTemplate(backendResponse)"
       }
+    },
+    "commentsendpoint.getComments" : {
+      "path" : "comments/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.CommentsEndpoint.getComments",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "commentsendpoint.listComments" : {
+      "path" : "comments",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.CommentsEndpoint.listComments",
+      "request" : {
+        "parameters" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
     }
   },
   "descriptor" : {
     "schemas" : {
-      "CollectionResponse_Comments" : {
-        "id" : "CollectionResponse_Comments",
-        "type" : "object",
-        "properties" : {
-          "items" : {
-            "type" : "array",
-            "items" : {
-              "$ref" : "Comments"
-            }
-          },
-          "nextPageToken" : {
-            "type" : "string"
-          }
-        }
-      },
       "Comments" : {
         "id" : "Comments",
         "type" : "object",
@@ -173,21 +158,24 @@
             "format" : "int64"
           }
         }
+      },
+      "CollectionResponse_Comments" : {
+        "id" : "CollectionResponse_Comments",
+        "type" : "object",
+        "properties" : {
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "Comments"
+            }
+          },
+          "nextPageToken" : {
+            "type" : "string"
+          }
+        }
       }
     },
     "methods" : {
-      "com.snoozi.CommentsEndpoint.listComments" : {
-        "response" : {
-          "$ref" : "CollectionResponse_Comments"
-        }
-      },
-      "com.snoozi.CommentsEndpoint.getComments" : {
-        "response" : {
-          "$ref" : "Comments"
-        }
-      },
-      "com.snoozi.CommentsEndpoint.removeComments" : {
-      },
       "com.snoozi.CommentsEndpoint.insertComments" : {
         "request" : {
           "$ref" : "Comments"
@@ -196,12 +184,24 @@
           "$ref" : "Comments"
         }
       },
+      "com.snoozi.CommentsEndpoint.removeComments" : {
+      },
       "com.snoozi.CommentsEndpoint.updateComments" : {
         "request" : {
           "$ref" : "Comments"
         },
         "response" : {
           "$ref" : "Comments"
+        }
+      },
+      "com.snoozi.CommentsEndpoint.getComments" : {
+        "response" : {
+          "$ref" : "Comments"
+        }
+      },
+      "com.snoozi.CommentsEndpoint.listComments" : {
+        "response" : {
+          "$ref" : "CollectionResponse_Comments"
         }
       }
     }
