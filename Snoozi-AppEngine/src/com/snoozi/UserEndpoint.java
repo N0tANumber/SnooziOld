@@ -18,7 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-@Api(name = "userendpoint",version="v3", namespace = @ApiNamespace(ownerDomain = "snoozi.com", ownerName = "snoozi.com", packagePath = ""))
+@Api(name = "userendpoint",version="v4", namespace = @ApiNamespace(ownerDomain = "snoozi.com", ownerName = "snoozi.com", packagePath = ""))
 public class UserEndpoint {
 
 	/**
