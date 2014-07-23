@@ -10,12 +10,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry kind="lib" path="/Users/CtrlX/Documents/Developpement/sdk/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="file:/Users/CtrlX/Documents/Developpement/sdk/extras/google/google_play_services/libproject/google-play-services_lib/libs/../../../docs/reference/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="/Users/CtrlX/Documents/Developpement/sdk/extras/google/analytics_sdk_v2/libGoogleAnalyticsV2.jar"/>
 	<classpathentry kind="con" path="com.google.gdt.eclipse.managedapis.MANAGED_API_CONTAINER/storage-v1r3lv1.18.0-rc"/>
 	<classpathentry kind="src" path="endpoint-libs/libalarmendpoint-v4/alarmendpoint/alarmendpoint-v4-generated-source"/>
 	<classpathentry kind="src" path="endpoint-libs/libcommentsendpoint-v4/commentsendpoint/commentsendpoint-v4-generated-source"/>
