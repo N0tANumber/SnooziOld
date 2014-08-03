@@ -51,19 +51,31 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "commentsendpoint.getComments" : {
-      "path" : "comments/{id}",
+    "commentsendpoint.getCommentsFromVideo" : {
+      "path" : "getCommentsFromVideo",
       "httpMethod" : "GET",
       "authLevel" : "NONE",
       "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.getComments",
+      "rosyMethod" : "com.snoozi.CommentsEndpoint.getCommentsFromVideo",
       "request" : {
         "parameters" : {
-          "id" : {
+          "cursor" : {
+            "type" : "string",
+            "required" : false
+          },
+          "limit" : {
+            "type" : "int32",
+            "required" : false
+          },
+          "videoid" : {
             "type" : "int64",
-            "required" : true
+            "required" : false
+          },
+          "fromstamp" : {
+            "type" : "int64",
+            "required" : false
           }
         },
         "body" : "empty"
@@ -97,6 +109,27 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
+    "commentsendpoint.getComments" : {
+      "path" : "comments/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.CommentsEndpoint.getComments",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "commentsendpoint.insertComments" : {
       "path" : "comments",
       "httpMethod" : "POST",
@@ -105,22 +138,6 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.snoozi.CommentsEndpoint.insertComments",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "commentsendpoint.updateComments" : {
-      "path" : "comments",
-      "httpMethod" : "PUT",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.updateComments",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
         "bodyName" : "resource"
@@ -148,6 +165,22 @@
       },
       "response" : {
         "body" : "empty"
+      }
+    },
+    "commentsendpoint.updateComments" : {
+      "path" : "comments",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.CommentsEndpoint.updateComments",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
       }
     }
   },
@@ -206,14 +239,19 @@
           "$ref" : "CollectionResponse_Comments"
         }
       },
-      "com.snoozi.CommentsEndpoint.getComments" : {
+      "com.snoozi.CommentsEndpoint.getCommentsFromVideo" : {
         "response" : {
-          "$ref" : "Comments"
+          "$ref" : "CollectionResponse_Comments"
         }
       },
       "com.snoozi.CommentsEndpoint.listRecentComments" : {
         "response" : {
           "$ref" : "CollectionResponse_Comments"
+        }
+      },
+      "com.snoozi.CommentsEndpoint.getComments" : {
+        "response" : {
+          "$ref" : "Comments"
         }
       },
       "com.snoozi.CommentsEndpoint.insertComments" : {
@@ -224,6 +262,8 @@
           "$ref" : "Comments"
         }
       },
+      "com.snoozi.CommentsEndpoint.removeComments" : {
+      },
       "com.snoozi.CommentsEndpoint.updateComments" : {
         "request" : {
           "$ref" : "Comments"
@@ -231,8 +271,6 @@
         "response" : {
           "$ref" : "Comments"
         }
-      },
-      "com.snoozi.CommentsEndpoint.removeComments" : {
       }
     }
   }

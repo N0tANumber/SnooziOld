@@ -1,4 +1,4 @@
-  <classpathentry kind="lib" path="libs/google-api-services-commentsendpoint-v4-rev20140723184631-1.18.0-rc.jar" sourcepath="libs-sources/google-api-services-commentsendpoint-v4-rev20140723184631-1.18.0-rc-sources.jar"/>
+  <classpathentry kind="lib" path="libs/google-api-services-commentsendpoint-v4-rev20140803160642-1.18.0-rc.jar" sourcepath="libs-sources/google-api-services-commentsendpoint-v4-rev20140803160642-1.18.0-rc-sources.jar"/>
   <classpathentry kind="lib" path="libs/google-api-client-1.18.0-rc.jar" sourcepath="libs-sources/google-api-client-1.18.0-rc-sources.jar"/>
   <classpathentry kind="lib" path="libs/google-api-client-android-1.18.0-rc.jar" sourcepath="libs-sources/google-api-client-android-1.18.0-rc-sources.jar"/>
   <classpathentry kind="lib" path="libs/google-api-client-appengine-1.18.0-rc.jar" sourcepath="libs-sources/google-api-client-appengine-1.18.0-rc-sources.jar"/>

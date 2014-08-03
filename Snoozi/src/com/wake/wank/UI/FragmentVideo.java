@@ -27,6 +27,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -61,6 +63,8 @@ public class FragmentVideo extends Fragment {
 	private TextView mTxtwakeup;
 	private TextView mTxtlike;
 	private ImageView mBtnLike;
+	private EditText mEditComm;
+	private Button mBtnComm;
 
 
 
@@ -84,6 +88,8 @@ public class FragmentVideo extends Fragment {
 		mTxtlike = (TextView) rootView.findViewById(R.id.txtLikeCount);
 		mBtnLike = (ImageView) rootView.findViewById(R.id.imgBtnLike);
 
+		mEditComm = (EditText) rootView.findViewById(R.id.editComm);
+		mBtnComm =  (Button) rootView.findViewById(R.id.btnSendComm);
 
 
 
@@ -180,6 +186,31 @@ public class FragmentVideo extends Fragment {
 					currentVideo.addLike(1);
 					refreshInfo();
 
+				}
+				return false;
+			}
+		});
+
+		mBtnComm.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if(currentVideo != null)
+				{
+					String comment= mEditComm.getText().toString();
+					comment = comment.trim();
+					if(comment.length() > 0)
+					{
+						// We need to send the message
+						mBtnComm.setActivated(false);
+						mBtnComm.setText(getResources().getString(R.string.sending));
+						mEditComm.setActivated(false);
+						
+						new CommentSender().execute(comment);
+			            
+					}
+					
+					
 				}
 				return false;
 			}
@@ -458,4 +489,52 @@ public class FragmentVideo extends Fragment {
 	}
 
 
+	
+	private class CommentSender extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) 
+        {
+        	// TODO : We need to call the Comment endpoint to add
+        	
+        	android.os.Debug.waitForDebugger();
+
+        	
+        	
+        	
+        	
+            for (int i = 0; i < 5; i++) {
+                try {
+                    Thread.sleep(1000);
+                    
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
+                }
+            }
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+           
+        	android.os.Debug.waitForDebugger();
+mBtnComm.setActivated(true);
+			mEditComm.setActivated(true);
+			mEditComm.setText("");
+			mBtnComm.setText(getResources().getString(R.string.send));
+			
+			//TODO :  We need to refresh the comment list
+			
+        	//TextView txt = (TextView) findViewById(R.id.output);
+            //txt.setText("Executed"); // txt.setText(result);
+            // might want to change "executed" for the returned string passed
+            // into onPostExecute() but that is upto you
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
+    }
 }

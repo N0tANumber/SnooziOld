@@ -3,7 +3,7 @@ package com.wake.wank.UI;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.wake.wank.*;
 import com.wake.wank.models.MyAlarm;
 import com.wake.wank.utils.SnooziUtility;
@@ -60,8 +60,9 @@ public class AlarmSettingActivity extends Activity {
 		super.onStart();
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStart(this);
-
+				GoogleAnalytics.getInstance(this).reportActivityStart(this);
+			//	EasyTracker.getInstance().activityStart(this);
+			
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -72,7 +73,8 @@ public class AlarmSettingActivity extends Activity {
 		super.onStop();
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStop(this);
+				GoogleAnalytics.getInstance(this).reportActivityStop(this);
+				//EasyTracker.getInstance().activityStop(this);
 
 		} catch (Exception e) {
 			// TODO: handle exception

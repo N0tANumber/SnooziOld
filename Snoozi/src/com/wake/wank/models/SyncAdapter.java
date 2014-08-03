@@ -2,8 +2,6 @@ package com.wake.wank.models;
 
 import java.io.IOException;
 
-import org.json.JSONException;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.AbstractThreadedSyncAdapter;
@@ -13,11 +11,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.net.ParseException;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-
 import com.wake.wank.GCMIntentService;
 import com.wake.wank.MyApplication;
 import com.wake.wank.database.SnooziContract;

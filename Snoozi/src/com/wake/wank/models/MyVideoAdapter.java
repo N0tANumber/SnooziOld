@@ -3,15 +3,8 @@ package com.wake.wank.models;
 import java.util.List;
 
 import com.wake.wank.R;
-import com.wake.wank.utils.SnooziUtility;
-import com.wake.wank.utils.SnooziUtility.TRACETYPE;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -20,9 +13,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MyVideoAdapter extends ArrayAdapter<MyVideo> {

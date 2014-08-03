@@ -157,6 +157,9 @@ public class CommentsEndpoint {
 			if (containsComments(comments)) {
 				throw new EntityExistsException("Object already exists");
 			}
+			// When adding a comment, we take the server timestamp
+			comments.setTimestamp(System.currentTimeMillis());
+			
 			mgr.makePersistent(comments);
 		} finally {
 			mgr.close();
@@ -202,6 +205,65 @@ public class CommentsEndpoint {
 			mgr.close();
 		}
 	}
+	
+	
+	/**
+	 * Get all recent comment posted
+	 * @param cursorString  point to start	
+	 * @param limit record count
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "unused" })
+	@ApiMethod(name = "getCommentsFromVideo", path="getCommentsFromVideo")
+	public CollectionResponse<Comments> getCommentsFromVideo(
+			@Nullable @Named("cursor") String cursorString,
+			@Nullable @Named("limit") Integer limit,
+			@Nullable @Named("videoid") Long videoid,
+			@Nullable @Named("fromstamp") Long fromstamp) {
+
+		PersistenceManager mgr = null;
+		Cursor cursor = null;
+		List<Comments> execute = null;
+
+		try {
+			mgr = getPersistenceManager();
+			Query query = mgr.newQuery(Comments.class);
+			query.setFilter("videoid == videoidParam && timestamp > timeParam");
+			query.declareParameters("Long videoidParam, Long timeParam");
+			
+			
+			query.setOrdering("timestamp asc");
+			if (cursorString != null && cursorString != "") {
+				cursor = Cursor.fromWebSafeString(cursorString);
+				HashMap<String, Object> extensionMap = new HashMap<String, Object>();
+				extensionMap.put(JDOCursorHelper.CURSOR_EXTENSION, cursor);
+				query.setExtensions(extensionMap);
+			}
+
+			if (limit != null) {
+				if(limit > 30)
+					limit = 30;
+				query.setRange(0, limit);
+			}else
+				query.setRange(0, 30);
+			
+			execute = (List<Comments>) query.execute(videoid,fromstamp);
+			cursor = JDOCursorHelper.getCursor(execute);
+			if (cursor != null)
+				cursorString = cursor.toWebSafeString();
+
+			// Tight loop for fetching all entities from datastore and accomodate
+			// for lazy fetch.
+			for (Comments obj : execute)
+				;
+		} finally {
+			mgr.close();
+		}
+
+		return CollectionResponse.<Comments> builder().setItems(execute)
+				.setNextPageToken(cursorString).build();
+	}
+	
 	
 	
 

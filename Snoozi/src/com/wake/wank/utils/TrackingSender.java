@@ -21,17 +21,10 @@ import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.app.Application;
-import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.RemoteException;
 
 
 /**

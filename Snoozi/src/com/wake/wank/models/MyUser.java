@@ -25,6 +25,11 @@ import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 public class MyUser implements Bundleable{
 
 	private static Long MyUserId = 0l;
+	private static String MyUserPseudo = null;
+
+
+
+
 
 	
 	
@@ -403,6 +408,7 @@ public class MyUser implements Bundleable{
 			setUserid(userid); //We take the id from the server
 			setSignupstamp(usr.getSignupstamp());
 			MyUser.setMyUserId(userid);
+			MyUser.setMyUserPseudo(getPseudo());
 			SnooziUtility.trace(TRACETYPE.INFO,"new Profil server id : " + userid);
 
 			// We save it locally
@@ -413,6 +419,7 @@ public class MyUser implements Bundleable{
 			SharedPreferences settings = MyApplication.getAppContext().getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = settings.edit();
 			editor.putLong("USERID", userid);
+			editor.putString("USERPSEUDO", getPseudo());
 			editor.commit();
 
 
@@ -450,6 +457,30 @@ public class MyUser implements Bundleable{
 		MyUserId = userId;
 
 	}
+	
+
+	public static String getMyUserPseudo() {
+		if(MyUserPseudo == null)
+		{
+			Context context = MyApplication.getAppContext();
+			if(context != null)
+			{	
+				SharedPreferences settings = context.getSharedPreferences(SnooziUtility.PREFS_NAME, Context.MODE_PRIVATE);
+				MyUserPseudo = settings.getString("USERPSEUDO", null);
+			}
+		}
+		if(MyUserPseudo == null)
+			return "Wankster";
+		else
+			return MyUserPseudo;
+	}
+	
+	public static void setMyUserPseudo(String userPseudo) {
+		MyUserPseudo = userPseudo;
+
+	}
+	
+	
 
 	public int getId() {
 		return id;
@@ -545,6 +576,7 @@ public class MyUser implements Bundleable{
 		this.signupstamp = signupstamp;
 		setHasChanged(true);
 	}
+
 
 
 

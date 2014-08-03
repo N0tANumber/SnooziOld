@@ -1,6 +1,6 @@
 {
  "kind": "discovery#restDescription",
- "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/HGp6VU_TZ7aNaJeeJqIG7x0_N8E\"",
+ "etag": "\"MKGA2miAJpVGF7yQTQhsoDXpye8/V1GLGdzSCHpkitA6Wk85FQAQ9ks\"",
  "discoveryVersion": "v1",
  "id": "commentsendpoint:v4",
  "name": "commentsendpoint",
@@ -139,6 +139,38 @@
    ],
    "response": {
     "$ref": "Comments"
+   },
+   "scopes": [
+    "https://www.googleapis.com/auth/userinfo.email"
+   ]
+  },
+  "getCommentsFromVideo": {
+   "id": "commentsendpoint.getCommentsFromVideo",
+   "path": "getCommentsFromVideo",
+   "httpMethod": "GET",
+   "parameters": {
+    "cursor": {
+     "type": "string",
+     "location": "query"
+    },
+    "fromstamp": {
+     "type": "string",
+     "format": "int64",
+     "location": "query"
+    },
+    "limit": {
+     "type": "integer",
+     "format": "int32",
+     "location": "query"
+    },
+    "videoid": {
+     "type": "string",
+     "format": "int64",
+     "location": "query"
+    }
+   },
+   "response": {
+    "$ref": "CollectionResponse_Comments"
    },
    "scopes": [
     "https://www.googleapis.com/auth/userinfo.email"

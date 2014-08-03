@@ -1,10 +1,7 @@
 package com.wake.wank.UI;
 
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.wake.wank.R;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.utils.SnooziUtility;
@@ -373,7 +370,8 @@ public class HomeActivity extends FragmentActivity {
 		super.onStart();
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStart(this);
+				GoogleAnalytics.getInstance(this).reportActivityStart(this);
+			//EasyTracker.getInstance().activityStart(this);
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -385,7 +383,8 @@ public class HomeActivity extends FragmentActivity {
 		super.onStop();
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStop(this);
+				GoogleAnalytics.getInstance(this).reportActivityStop(this);
+			//EasyTracker.getInstance().activityStop(this);
 
 		} catch (Exception e) {
 			// TODO: handle exception

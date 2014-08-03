@@ -218,6 +218,45 @@ public class SnooziContract {
 		
 	}
 	
+	public static final class comments
+	{
+		public static final String CONTENT_PATH = "comments";
+		public static final Uri CONTENT_URI = Uri.withAppendedPath(SnooziContract.CONTENT_URI,CONTENT_PATH);
+		
+		public static final String CONTENT_MIME_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		public static final String CONTENT_MIME_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd." + AUTHORITY + "_" + CONTENT_PATH;
+		
+		public static final String TABLE = "comment";
+		
+		public static final String[] PROJECTION_ID = {Columns._ID};
+		public static final String[] PROJECTION_ALL = {Columns._ID,
+								Columns.COMMENTID,
+								Columns.DESCRIPTION,
+								Columns.LIKE,
+								Columns.MYLIKE,
+								Columns.TIMESTAMP,
+								Columns.VIDEOID,
+								Columns.USERID,
+								Columns.USERPSEUDO
+								};
+		
+		public static final String SORT_ORDER_DEFAULT = Columns.TIMESTAMP + " ASC";
+		public static final String SORT_ORDER_REVERSE = Columns.TIMESTAMP + " DESC";
+		
+		public final static class Columns implements BaseColumns{
+			private Columns(){}
+			public static final String COMMENTID = "commentid";
+			public static final String DESCRIPTION = "description";
+			public static final String LIKE = "like";
+			public static final String MYLIKE = "mylike";
+			public static final String TIMESTAMP = "timestamp";
+			public static final String VIDEOID = "videoid";
+			public static final String USERID = "userid";
+			public static final String USERPSEUDO = "userpseudo";
+			
+		}
+		
+	}
 	
 	
 	

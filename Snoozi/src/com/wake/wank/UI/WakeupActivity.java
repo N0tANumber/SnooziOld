@@ -3,7 +3,7 @@ package com.wake.wank.UI;
 
 import com.fima.glowpadview.GlowPadView;
 import com.fima.glowpadview.GlowPadView.OnTriggerListener;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.wake.wank.*;
 import com.wake.wank.models.AlarmPlanifier;
 import com.wake.wank.models.AlarmSound;
@@ -20,7 +20,6 @@ import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -137,7 +136,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStart(this);
+				GoogleAnalytics.getInstance(this).reportActivityStart(this);
+			//EasyTracker.getInstance().activityStart(this);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -213,7 +213,8 @@ public class WakeupActivity extends Activity  implements OnTriggerListener{
 		SnooziUtility.trace(TRACETYPE.INFO, "WakeupActivity.onStop");
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStop(this);
+				GoogleAnalytics.getInstance(this).reportActivityStop(this);
+			//EasyTracker.getInstance().activityStop(this);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

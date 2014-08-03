@@ -122,8 +122,11 @@ public class FragmentGallery extends Fragment {
 			SnooziUtility.trace(TRACETYPE.INFO, "FragmentGallery.refreshGalleryList");
 			
 			videoList.clear();
-			String whereClause = SnooziContract.videos.Columns.MYVIEWCOUNT + " > 0 AND " + SnooziContract.videos.Columns.FILESTATUS + " LIKE ?";
-			String[] whereValue = new String[]{"SUCCESSFUL"};
+			//String whereClause = SnooziContract.videos.Columns.MYVIEWCOUNT + " > 0 AND " + SnooziContract.videos.Columns.FILESTATUS + " LIKE ?";
+			//String[] whereValue = new String[]{"SUCCESSFUL"};
+			
+			String whereClause = SnooziContract.videos.Columns.MYVIEWCOUNT + " > 0 ";
+			String[] whereValue = null;
 			
 			videoList.addAll(MyVideo.getListFromSQL(whereClause,whereValue));
 

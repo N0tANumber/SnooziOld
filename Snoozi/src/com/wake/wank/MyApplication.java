@@ -1,7 +1,6 @@
 package com.wake.wank;
 
 import java.util.HashMap;
-
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
 import android.app.Application;
@@ -37,7 +36,7 @@ public class MyApplication extends Application {
 
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             
-            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(R.xml.myanalytics) : null;
+            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(R.xml.analytics) : null;
             mTrackers.put(trackerId, t);
 
         }

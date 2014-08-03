@@ -1,13 +1,13 @@
 {
   "files": [
     {
-      "downloadUrl": "/downloads/uservideoendpoint/v4/20140723184756/java/1.18.0-rc/snoozi.com-uservideoendpoint-v4-20140723184756-java-1.18.0-rc-sources.jar", 
-      "path": "snoozi.com-uservideoendpoint-v4-20140723184756-java-1.18.0-rc-sources.jar", 
+      "downloadUrl": "/downloads/uservideoendpoint/v4/20140803160732/java/1.18.0-rc/snoozi.com-uservideoendpoint-v4-20140803160732-java-1.18.0-rc-sources.jar", 
+      "path": "snoozi.com-uservideoendpoint-v4-20140803160732-java-1.18.0-rc-sources.jar", 
       "type": "source", 
-      "timestamp": "2014-07-23 18:47"
+      "timestamp": "2014-08-03 16:07"
     }, 
     {
-      "path": "snoozi.com-uservideoendpoint-v4-20140723184756-java-1.18.0-rc.jar.properties", 
+      "path": "snoozi.com-uservideoendpoint-v4-20140803160732-java-1.18.0-rc.jar.properties", 
       "type": "android.properties"
     }
   ], 
@@ -674,5 +674,5 @@
   "version": "v4", 
   "language_version": "1.18.0-rc", 
   "id": "uservideoendpoint:v4", 
-  "revision": 20140723184756
+  "revision": 20140803160732
 }

@@ -4,20 +4,16 @@ import com.snoozi.PMF;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
-import com.google.api.server.spi.config.DefaultValue;
 import com.google.api.server.spi.response.CollectionResponse;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.datanucleus.query.JDOCursorHelper;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
@@ -107,6 +103,9 @@ public class VideoEndpoint {
 			if (containsVideo(video)) {
 				throw new EntityExistsException("Object already exists");
 			}
+			// When adding a video, we take the server timestamp
+			video.setTimestamp(System.currentTimeMillis());
+						
 			mgr.makePersistent(video);
 		} finally {
 			mgr.close();

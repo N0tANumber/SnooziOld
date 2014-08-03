@@ -9,10 +9,9 @@ import java.io.OutputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.wake.wank.*;
-import com.wake.wank.database.SnooziContract;
 import com.wake.wank.models.MyUser;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
@@ -25,7 +24,6 @@ import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -151,7 +149,8 @@ public class MainActivity extends Activity {
 		super.onStop();
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStop(this);
+				GoogleAnalytics.getInstance(this).reportActivityStop(this);
+			//EasyTracker.getInstance().activityStop(this);
 			
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -168,7 +167,8 @@ public class MainActivity extends Activity {
 		try {
 			
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStart(this);
+				GoogleAnalytics.getInstance(this).reportActivityStart(this);
+			//EasyTracker.getInstance().activityStart(this);
 		} catch (Exception e) {
 			// TODO: handle exception
 		}

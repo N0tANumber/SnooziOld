@@ -1,13 +1,11 @@
 package com.wake.wank.database;
 
 
-import com.wake.wank.MyApplication;
 import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.content.ContentProvider;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -44,6 +42,9 @@ public class MyDataProvider extends ContentProvider {
     
     private static final int USER = 7;
     private static final int USER_ID = 8;
+    
+    private static final int COMMENT = 9;
+    private static final int COMMENT_ID = 10;
 	
 	
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);;
@@ -57,6 +58,8 @@ public class MyDataProvider extends ContentProvider {
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.alarms.CONTENT_PATH + "/#", ALARM_ID);	
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.users.CONTENT_PATH, USER);
 		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.users.CONTENT_PATH + "/#", USER_ID);	
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.comments.CONTENT_PATH, COMMENT);
+		sUriMatcher.addURI(SnooziContract.AUTHORITY, SnooziContract.comments.CONTENT_PATH + "/#", COMMENT_ID);	
 	}
 	
 	@Override
@@ -91,6 +94,10 @@ public class MyDataProvider extends ContentProvider {
 			return SnooziContract.users.CONTENT_MIME_TYPE;
 		case USER_ID:
 			return SnooziContract.users.CONTENT_MIME_ITEM_TYPE;
+		case COMMENT:
+			return SnooziContract.comments.CONTENT_MIME_TYPE;
+		case COMMENT_ID:
+			return SnooziContract.comments.CONTENT_MIME_ITEM_TYPE;
 		default:
 			SnooziUtility.trace(TRACETYPE.ERROR, "MyDataProvider.getType  Unsupported URI : " + uri);
 			return null;
@@ -144,7 +151,7 @@ public class MyDataProvider extends ContentProvider {
 				// SELECT ONE TRACKING EVENT
 				builder.setTables(SnooziContract.trackingevents.TABLE);
 				builder.appendWhere(SnooziContract.trackingevents.Columns._ID + " = " + uri.getLastPathSegment());
-				
+				break;
 			case VIDEO:
 				//SELECT ALL THE VIDEOS
 				builder.setTables(SnooziContract.videos.TABLE);
@@ -156,7 +163,7 @@ public class MyDataProvider extends ContentProvider {
 				// SELECT ONE VIDEO
 				builder.setTables(SnooziContract.videos.TABLE);
 				builder.appendWhere(SnooziContract.videos.Columns._ID + " = " + uri.getLastPathSegment());
-			
+				break;
 			case ALARM:
 				//SELECT ALL THE ALARMS
 				builder.setTables(SnooziContract.alarms.TABLE);
@@ -173,6 +180,18 @@ public class MyDataProvider extends ContentProvider {
 				// SELECT ONE USER
 				builder.setTables(SnooziContract.users.TABLE);
 				builder.appendWhere(SnooziContract.users.Columns._ID + " = " + uri.getLastPathSegment());
+				break;
+			case COMMENT:
+				//SELECT ALL THE COMMENTS
+				builder.setTables(SnooziContract.comments.TABLE);
+				if (TextUtils.isEmpty(sortOrder)) 
+					sortOrder = SnooziContract.comments.SORT_ORDER_DEFAULT;
+				break;
+				
+			case COMMENT_ID :
+				// SELECT ONE COMMENTS
+				builder.setTables(SnooziContract.comments.TABLE);
+				builder.appendWhere(SnooziContract.comments.Columns._ID + " = " + uri.getLastPathSegment());
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -226,6 +245,10 @@ public class MyDataProvider extends ContentProvider {
 			}else if (match == USER)
 			{
 				long id = db.insert( SnooziContract.users.TABLE,null, values);
+				result = getUriForId(id, uri);
+			}else if (match == COMMENT)
+			{
+				long id = db.insert( SnooziContract.comments.TABLE,null, values);
 				result = getUriForId(id, uri);
 			}else
 				throw new Exception("Unsupported URI for insertion : " + uri);
@@ -291,6 +314,18 @@ public class MyDataProvider extends ContentProvider {
 				table = SnooziContract.users.TABLE;
 				idStr = uri.getLastPathSegment();
 				where = SnooziContract.users.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				break;
+			case COMMENT:
+				table = SnooziContract.comments.TABLE;
+				where = selection;
+				break;
+			case COMMENT_ID:
+				table = SnooziContract.comments.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.comments.Columns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -379,6 +414,18 @@ public class MyDataProvider extends ContentProvider {
 					where += " AND " + selection;
 				}
 				break;
+			case COMMENT:
+				table = SnooziContract.comments.TABLE;
+				where = selection;
+				break;
+			case COMMENT_ID:
+				table = SnooziContract.comments.TABLE;
+				idStr = uri.getLastPathSegment();
+				where = SnooziContract.comments.Columns._ID + " = " + idStr;
+				if (!TextUtils.isEmpty(selection)) {
+					where += " AND " + selection;
+				}
+				break;
 			default:
 				// no support for updating photos or entities!
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -411,7 +458,7 @@ public class MyDataProvider extends ContentProvider {
 
 		// A string that defines the SQL statement for creating a table
 		private static final String DBNAME = "WankDB.db";
-		private static final int DB_VERSION = 5;
+		private static final int DB_VERSION = 6;
 		 
 		private static final String SQL_CREATE_TRACKINGEVENT = "CREATE TABLE IF NOT EXISTS " +
         		SnooziContract.trackingevents.TABLE +  // Table's name
@@ -478,6 +525,19 @@ public class MyDataProvider extends ContentProvider {
 				SnooziContract.users.Columns.SIGNUPSTAMP + " LONG default 0 )";
 		
 		
+		private static final String SQL_CREATE_COMMENT = "CREATE TABLE IF NOT EXISTS " +
+        		SnooziContract.comments.TABLE +  // Table's name
+		    "(" +                           // The columns in the table
+		     SnooziContract.comments.Columns._ID + "  INTEGER PRIMARY KEY, " +
+		     SnooziContract.comments.Columns.COMMENTID + " LONG default 0, " +
+		     SnooziContract.comments.Columns.DESCRIPTION + " TEXT, " +
+		     SnooziContract.comments.Columns.LIKE + " INTEGER default 0, " +
+		     SnooziContract.comments.Columns.MYLIKE + " INTEGER default 0, " +
+		     SnooziContract.comments.Columns.TIMESTAMP + " LONG default 0, " +
+		     SnooziContract.comments.Columns.VIDEOID + " LONG default 0, " +
+		     SnooziContract.comments.Columns.USERPSEUDO + " TEXT, " +
+		     SnooziContract.comments.Columns.USERID + " LONG default 0 )";
+		
 	    
 	    /*
 	     * Instantiates an open helper for the provider's SQLite data repository
@@ -498,6 +558,7 @@ public class MyDataProvider extends ContentProvider {
 	    	db.execSQL(SQL_CREATE_VIDEO);
 	    	db.execSQL(SQL_CREATE_ALARM);
 	    	db.execSQL(SQL_CREATE_USER);
+	    	db.execSQL(SQL_CREATE_COMMENT);
 	    	
 		}
 
@@ -540,13 +601,19 @@ public class MyDataProvider extends ContentProvider {
 	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 5");
 	            }
 	            
-	            /*
 	            if(oldVersion<6){
-	            	// Upgrade database structure from Version 4 to 5
+	            	// Upgrade database structure from Version 5 to 6
+	            	db.execSQL(SQL_CREATE_COMMENT);
+	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 6");
+	            }
+	            
+	            /*
+	            if(oldVersion<7){
+	            	// Upgrade database structure from Version 6 to 7
 	            	String alterTable = "ALTER ....";
 	            	
 	            	db.execSQL(alterTable);
-	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 6");
+	            	SnooziUtility.trace(TRACETYPE.INFO, "Successfully upgraded to Version 7");
 	            }*/
 
 	            // Only when this code is executed, the changes will be applied 

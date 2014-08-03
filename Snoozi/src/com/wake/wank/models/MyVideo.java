@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -638,7 +637,7 @@ public class MyVideo  implements Bundleable {
 							cleanedCount++;
 							//We delete the database entry
 							// Deleting the old Video 
-							provider.delete(SnooziContract.videos.CONTENT_URI, SnooziContract.trackingevents.Columns._ID + " = ? ", new String[]{String.valueOf(id)});
+							provider.delete(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.Columns._ID + " = ? ", new String[]{String.valueOf(id)});
 							SnooziUtility.trace(TRACETYPE.INFO, "cleanupOldVideo - Permanently Deleted video :  " +  id);
 						}else if(isdeleted)
 						{
@@ -656,7 +655,7 @@ public class MyVideo  implements Bundleable {
 			success = true;
 
 		} catch (Exception e) {
-			SnooziUtility.trace(TRACETYPE.ERROR, "SyncAdapter Exception :  " +  e.toString());
+			SnooziUtility.trace(TRACETYPE.ERROR, "cleanupOldVideo Exception :  " +  e.toString());
 		}finally{
 			if(cursor != null)
 				cursor.close();

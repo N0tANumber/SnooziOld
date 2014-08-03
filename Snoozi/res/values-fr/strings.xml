@@ -70,5 +70,8 @@
   <string name="stoprecord">Stop Recording</string>
   <string name="addAlarm">nouvelle alarme</string>
   <string name="maxalarmcount">Vous ne pouvez avoir plus de 3 alarmes. Pour en supprimer une, glissez la vers la gauche </string>
+  <string name="send">Envoi</string>
+  <string name="sending">En cours</string>
+  <string name="leavecomment">laisse un commentaire...</string>
   
 </resources>

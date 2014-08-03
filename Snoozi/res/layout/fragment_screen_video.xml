@@ -14,7 +14,7 @@
         android:background="#fff" >
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/editComm"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -32,7 +32,7 @@
         </EditText>
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/btnSendComm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -41,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btnbackground"
             android:text="@string/send"
-            android:textAppearance="?android:attr/textAppearanceSmallInverse" />
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </LinearLayout>
 <View
@@ -158,7 +158,7 @@
                     android:gravity="left"
                     android:text="@string/app_name"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="#000" />
+                    android:textColor="#fff" />
 
             </LinearLayout>
 

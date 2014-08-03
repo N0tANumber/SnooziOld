@@ -8,7 +8,6 @@ import com.wake.wank.utils.SnooziUtility;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;

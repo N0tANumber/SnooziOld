@@ -1,16 +1,12 @@
 package com.wake.wank.UI;
 
 
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.android.gms.analytics.GoogleAnalytics;
 //import com.google.android.gms.ads.*;
 //import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.wake.wank.*;
 import com.wake.wank.models.MyVideo;
-import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility;
-import com.wake.wank.utils.TrackingEventAction;
-import com.wake.wank.utils.TrackingEventCategory;
-import com.wake.wank.utils.TrackingSender;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.app.Activity;
@@ -56,7 +52,8 @@ public class VideoActivity extends FragmentActivity {
 		super.onStart();
 		try {
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStart(this);
+				GoogleAnalytics.getInstance(this).reportActivityStart(this);
+			//EasyTracker.getInstance().activityStart(this);
 
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -81,7 +78,8 @@ public class VideoActivity extends FragmentActivity {
 
 
 			if(!SnooziUtility.DEV_MODE)
-				EasyTracker.getInstance().activityStop(this);
+				GoogleAnalytics.getInstance(this).reportActivityStop(this);
+			//EasyTracker.getInstance().activityStop(this);
 
 
 			Intent returnIntent = new Intent();

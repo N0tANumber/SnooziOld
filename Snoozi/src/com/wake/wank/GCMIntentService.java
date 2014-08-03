@@ -2,7 +2,6 @@ package com.wake.wank;
 
 import java.io.IOException;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +17,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.snoozi.deviceinfoendpoint.Deviceinfoendpoint;
 import com.snoozi.deviceinfoendpoint.model.DeviceInfo;
 import com.wake.wank.UI.RegisterActivity;
-import com.wake.wank.database.SnooziContract;
 import com.wake.wank.models.CloudEndpointUtils;
 import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility;
