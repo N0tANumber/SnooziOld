@@ -188,62 +188,6 @@ public class FragmentClock extends Fragment  implements OnTouchListener{
 			}
 		});
 
-		/*
-		LinearLayout setAlarmBtn = (LinearLayout) rootView.findViewById(R.id.BtnSetAlarm);
-		setAlarmBtn.setOnTouchListener(new OnTouchListener() {
-
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if(event.getAction() == MotionEvent.ACTION_UP)
-				{
-					// TODO Auto-generated method stub
-					launchSettingActivity();
-
-				}
-				return false;
-			}
-		});
-		 */
-
-
-		// Build button list
-		//txtLike = (TextView)rootView.findViewById(R.id.TxtTime);
-		//txtday = (TextView)rootView.findViewById(R.id.Txtdays);
-		//chkactivate = (CheckBox) rootView.findViewById(R.id.checkBoxActiv);
-
-
-
-		/*Activate setup*/
-		/*
-		activateListener = new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				SetAlarm(isChecked);
-			}
-
-		};*/
-
-
-		// Recherchez AdView comme ressource et chargez une demande.
-		/*		Bundle bundle = new Bundle();
-     		bundle.putString("color_bg", "641213");
-     		bundle.putString("color_bg_top", "641213");
-     		bundle.putString("color_border", "641213");
-     		bundle.putString("color_link", "FFFFFF");
-     		bundle.putString("color_text", "FFFFFF");
-     		bundle.putString("color_url", "cc9933");
-
-     		AdMobExtras extras = new AdMobExtras(bundle);
-     		AdView adView = (AdView)rootView.findViewById(R.id.adView);
-     	    AdRequest adRequest = new AdRequest.Builder()
-     			    .addNetworkExtras(extras)
-     			    .tagForChildDirectedTreatment(false)
-     	    		.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // Émulateur
-     	    	    .addTestDevice("88D53265ED709666EA324C27AAE13FC1")
-     	    	    .addTestDevice("BFCEAEB7FADA53A2A79A6F7C4DD211AB")
-     	    	    .build();
-     	    adView.loadAd(adRequest);
-		 */
 
 
 

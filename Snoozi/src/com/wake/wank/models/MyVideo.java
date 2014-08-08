@@ -17,6 +17,7 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.snoozi.commentsendpoint.model.Comments;
 import com.snoozi.videoendpoint.Videoendpoint;
 import com.snoozi.videoendpoint.model.CollectionResponseVideo;
 import com.snoozi.videoendpoint.model.Video;
@@ -24,6 +25,7 @@ import com.wake.wank.MyApplication;
 import com.wake.wank.database.SnooziContract;
 import com.wake.wank.receivers.VideoDownloadReceiver;
 import com.wake.wank.utils.SnooziUtility;
+import com.wake.wank.utils.SnooziUtility.SYNC_ACTION;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.database.Cursor;
@@ -186,7 +188,7 @@ public class MyVideo  implements Bundleable {
 		
 		int difference = myfinallike - this.getMylike();
 		this.setLike(getLike() + difference);
-		this.setAddedLike( difference);
+		this.setAddedLike( myfinallike);
 		
 		this.setMylike(myfinallike);
 		
@@ -566,6 +568,11 @@ public class MyVideo  implements Bundleable {
 										SnooziUtility.trace(TRACETYPE.INFO,"UPDATED Video " + video.getId() + " : " + updatecount);
 									}
 								}
+								
+								//We retrieve the comment too
+								Bundle b = new Bundle();
+								b.putLong("videoid",video.getId());
+								MyComments.async(SYNC_ACTION.COMMENT_RETRIEVE, b);
 
 							}
 							catch (Exception e) {
@@ -666,7 +673,27 @@ public class MyVideo  implements Bundleable {
 
 	}
 
+	
+	public void sendComment(String text) throws IOException {
+		
+		MyComments newComm = new MyComments();
+		newComm.setVideoid(getVideoid());
+		newComm.setDescription(text);
+		newComm.setUserid(MyUser.getMyUserId());
+		newComm.setUserpseudo(MyUser.getMyUserPseudo());
+		
+		MyComments.async(SYNC_ACTION.COMMENT_SEND, newComm.toBundle());
+	}
 
+
+	public void getServerComments() throws IOException {
+		// TODO Auto-generated method stub
+		Bundle b = new Bundle();
+		b.putLong("videoid",getVideoid());
+		
+		MyComments.async(SYNC_ACTION.COMMENT_RETRIEVE, b);
+		
+	}
 
 	//###### GETTER & SETTERS #########
 
@@ -867,6 +894,7 @@ public class MyVideo  implements Bundleable {
 	}
 
 
+	
 
 
 

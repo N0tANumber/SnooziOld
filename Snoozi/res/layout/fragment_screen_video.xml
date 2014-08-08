@@ -41,7 +41,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btnbackground"
             android:text="@string/send"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#fff" />
 
     </LinearLayout>
 <View
@@ -51,7 +52,7 @@
         android:background="#634176" />
  
     <ScrollView
-        android:id="@+id/scrollView1"
+        android:id="@+id/scrollViewVideo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/layoutcomments" >
@@ -160,6 +161,14 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#fff" />
 
+	            <ListView
+	            android:id="@+id/listviewcomment"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:divider="#eee"
+	            android:dividerHeight="1dp"
+	           
+	             />
             </LinearLayout>
 
         </LinearLayout>

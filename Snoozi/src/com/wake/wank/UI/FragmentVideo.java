@@ -3,8 +3,16 @@ package com.wake.wank.UI;
 
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.wake.wank.MyApplication;
 import com.wake.wank.R;
+import com.wake.wank.database.SnooziContract;
+import com.wake.wank.models.MyAlarm;
+import com.wake.wank.models.MyComments;
+import com.wake.wank.models.MyCommentsAdapter;
 import com.wake.wank.models.MyVideo;
 import com.wake.wank.models.SyncAdapter;
 import com.wake.wank.utils.SnooziUtility;
@@ -13,10 +21,14 @@ import com.wake.wank.utils.TrackingEventCategory;
 import com.wake.wank.utils.TrackingSender;
 import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.AsyncTask.Status;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -25,14 +37,20 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 public class FragmentVideo extends Fragment {
@@ -51,13 +69,17 @@ public class FragmentVideo extends Fragment {
 	private VIDEO_STATE mVideoPlayback = VIDEO_STATE.STOPPED;
 	private int duration = 0;
 	public int current = 0;
-	private myAsync _progresstask = null;
+	private ProgessUpdater _progresstask = null;
+	private CommentSender _commsendtask = null;
+	private CommentRetriever _commretrievetask = null;
 	//private AudioManager audioManager;
 	//private int _musicVol;
 	//private int _oldmusicVol;
 	public int _videoViewCount = 0;
 
 	private boolean _isActivityPaused = false;
+
+	private ScrollView mScrollViewVideo;
 	private TextView mVideoTitle;
 	private ViewGroup rootView;
 	private TextView mTxtwakeup;
@@ -65,6 +87,12 @@ public class FragmentVideo extends Fragment {
 	private ImageView mBtnLike;
 	private EditText mEditComm;
 	private Button mBtnComm;
+
+
+	//for comments
+	private List<MyComments> commentList ;
+	private MyCommentsAdapter mAdapter;
+	private ListView commentlistView;
 
 
 
@@ -78,6 +106,7 @@ public class FragmentVideo extends Fragment {
 
 
 
+		mScrollViewVideo = (ScrollView)rootView.findViewById(R.id.scrollViewVideo);
 		mVideoView = (VideoView)rootView.findViewById(R.id.myvideoView);
 		mVideoTitle = (TextView) rootView.findViewById(R.id.txtinfo);
 		mVideoTitle.setClickable(true);
@@ -91,6 +120,11 @@ public class FragmentVideo extends Fragment {
 		mEditComm = (EditText) rootView.findViewById(R.id.editComm);
 		mBtnComm =  (Button) rootView.findViewById(R.id.btnSendComm);
 
+
+		commentlistView = (ListView) rootView.findViewById(R.id.listviewcomment);
+		commentList = new ArrayList<MyComments>();
+		mAdapter = new MyCommentsAdapter(this.getActivity(), commentList);
+		commentlistView.setAdapter(mAdapter);
 
 
 
@@ -197,20 +231,40 @@ public class FragmentVideo extends Fragment {
 			public boolean onTouch(View v, MotionEvent event) {
 				if(currentVideo != null)
 				{
-					String comment= mEditComm.getText().toString();
-					comment = comment.trim();
-					if(comment.length() > 0)
-					{
-						// We need to send the message
-						mBtnComm.setActivated(false);
-						mBtnComm.setText(getResources().getString(R.string.sending));
-						mEditComm.setActivated(false);
-						
-						new CommentSender().execute(comment);
-			            
+					try {
+						if(_commsendtask != null && _commsendtask.getStatus() == Status.RUNNING)
+						{
+							_commsendtask.cancel(true);
+						}
+
+
+						_commsendtask = new CommentSender(currentVideo);
+
+						String comment= mEditComm.getText().toString();
+						comment = comment.trim();
+						if(comment.length() > 0)
+						{
+							// We need to send the message
+
+							mBtnComm.setEnabled(false);
+							mBtnComm.setText(getResources().getString(R.string.sending));
+							mEditComm.setEnabled(false);
+
+
+							if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+								_commsendtask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,comment);
+							else
+								_commsendtask.execute(comment);
+
+
+
+						}
+					} catch (Exception e) {
+						SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.mBtnComm.setOnTouchListener :  " + e.toString());
+
 					}
-					
-					
+
+
 				}
 				return false;
 			}
@@ -238,6 +292,8 @@ public class FragmentVideo extends Fragment {
 
 		try {
 			setCurrentVideo(video);
+
+
 			if(mVideoView != null)
 			{
 				Uri theUri = Uri.parse(currentVideo.getLocalurl());
@@ -250,6 +306,7 @@ public class FragmentVideo extends Fragment {
 					return false;
 				}
 				refreshInfo();
+				refreshComment(true);
 			}
 
 		} catch (Exception e) {
@@ -263,17 +320,6 @@ public class FragmentVideo extends Fragment {
 
 	}
 
-
-	@Override
-	public void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-
-		_videoViewCount = 0;
-		if(currentVideo != null)
-			openVideo(currentVideo);
-
-	}
 
 
 
@@ -319,6 +365,19 @@ public class FragmentVideo extends Fragment {
 
 			if(currentVideo.getMylike() != 0)
 				likesender.sendUserEvent(TrackingEventCategory.VIDEO,TrackingEventAction.RATING, currentVideo.getMylike() +"", currentVideo.getVideoid());
+
+			if(_commsendtask != null)
+			{
+				if(_commsendtask.getStatus() == Status.RUNNING)
+					_commsendtask.cancel(true);
+				_commsendtask = null;
+			}
+			if(_commretrievetask != null)
+			{
+				if(_commretrievetask.getStatus() == Status.RUNNING)
+					_commretrievetask.cancel(true);
+				_commretrievetask = null;
+			}
 
 
 		} catch (Exception e) {
@@ -374,10 +433,86 @@ public class FragmentVideo extends Fragment {
 
 
 
-
-
 	}
 
+
+	public void refreshComment(boolean isgetFromServer)
+	{
+		SnooziUtility.trace(TRACETYPE.INFO, "FragmentVideo.refreshComment");
+
+		commentList.clear();
+		if(currentVideo != null)
+		{
+
+			String whereClause = SnooziContract.comments.Columns.VIDEOID + " =  " + currentVideo.getVideoid();
+			String[] whereValue = null;
+			commentList.addAll(MyComments.getListFromSQL(whereClause,whereValue));
+		}
+
+		if(mAdapter != null)
+		{
+			mAdapter.notifyDataSetChanged();
+			setListViewHeightBasedOnChildren(commentlistView);
+
+		}
+
+		if(isgetFromServer)
+		{
+			// We need to refresh the comments from the server
+			if(_commretrievetask != null && _commretrievetask.getStatus() == Status.RUNNING)
+			{
+				_commretrievetask.cancel(true);
+			}
+			_commretrievetask = new CommentRetriever(currentVideo);
+			if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+				_commretrievetask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			else
+				_commretrievetask.execute();
+
+
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setListViewHeightBasedOnChildren(ListView listView) {
+		try {
+
+			ArrayAdapter<MyComments> listAdapter = (ArrayAdapter<MyComments>) listView.getAdapter(); 
+			if (listAdapter == null) {
+				// pre-condition
+				return;
+			}
+
+			int totalHeight = 0;
+			for (int i = 0; i < listAdapter.getCount(); i++) {
+				View listItem = listAdapter.getView(i, null, listView);
+				listItem.setLayoutParams(new LayoutParams(ListView.LayoutParams.WRAP_CONTENT, ListView.LayoutParams.WRAP_CONTENT));
+				listItem.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+				//listItem.measure(0, 0);
+				totalHeight += listItem.getMeasuredHeight();
+			}
+
+			ViewGroup.LayoutParams params = listView.getLayoutParams();
+			params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+			listView.setLayoutParams(params);
+			listView.requestLayout();
+		} catch (Exception e) {
+			SnooziUtility.trace(TRACETYPE.ERROR, "FragmentVideo.setListViewHeightBasedOnChildren error :" + e.toString());
+
+		}
+	}
+
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+
+		_videoViewCount = 0;
+		if(currentVideo != null)
+			openVideo(currentVideo);
+
+	}
 
 
 
@@ -421,7 +556,7 @@ public class FragmentVideo extends Fragment {
 		mVideoView.start();
 		mVideoPlayback = VIDEO_STATE.PLAYING;
 		if(_progresstask == null)
-			_progresstask = new myAsync();
+			_progresstask = new ProgessUpdater();
 
 		_progresstask.execute();
 	}	
@@ -445,7 +580,7 @@ public class FragmentVideo extends Fragment {
 		this.currentVideo = currentVideo;
 	}
 
-	private class myAsync extends AsyncTask<Void, Integer, Void>
+	private class ProgessUpdater extends AsyncTask<Void, Integer, Void>
 	{
 
 		@Override
@@ -488,53 +623,112 @@ public class FragmentVideo extends Fragment {
 		}
 	}
 
+	private class CommentRetriever extends AsyncTask<Void, Void, String> {
 
+		private MyVideo video;
+
+		public CommentRetriever(MyVideo theVideo) {
+			super();
+			video = theVideo;
+		}
+
+		@Override
+		protected String doInBackground(Void... params) 
+		{
+			try {
+				//  We need to refresh the comment list from the server too
+				video.getServerComments();video.getServerComments();
+
+			} catch (IOException e) {
+				SnooziUtility.trace(TRACETYPE.INFO, "CommentRetriever interrupted : "+e.toString());
+				return "IO";
+			} catch (Exception e) {
+				SnooziUtility.trace(TRACETYPE.INFO, "CommentRetriever interrupted : "+e.toString());
+				return e.toString();
+			}
+
+			return "OK";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if(result.equals("OK"))
+				refreshComment(false);
+		}
+
+		@Override
+		protected void onPreExecute() {}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {}
+	}
+
+
+
+
+	
 	
 	private class CommentSender extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... params) 
-        {
-        	// TODO : We need to call the Comment endpoint to add
-        	
-        	android.os.Debug.waitForDebugger();
+		private MyVideo video;
 
-        	
-        	
-        	
-        	
-            for (int i = 0; i < 5; i++) {
-                try {
-                    Thread.sleep(1000);
-                    
-                } catch (InterruptedException e) {
-                    Thread.interrupted();
-                }
-            }
-            return "Executed";
-        }
+		public CommentSender(MyVideo theVideo) {
+			super();
+			video = theVideo;
+		}
 
-        @Override
-        protected void onPostExecute(String result) {
-           
-        	android.os.Debug.waitForDebugger();
-mBtnComm.setActivated(true);
-			mEditComm.setActivated(true);
-			mEditComm.setText("");
+		@Override
+		protected String doInBackground(String... params) 
+		{
+
+			try {
+				if(params.length > 0)
+					video.sendComment(params[0]);
+				else
+					throw new Exception("no comments to add");
+
+
+			} catch (IOException e) {
+				SnooziUtility.trace(TRACETYPE.INFO, "CommentSender interrupted : "+e.toString());
+				return "IO";
+			} catch (Exception e) {
+				SnooziUtility.trace(TRACETYPE.INFO, "CommentSender interrupted : "+e.toString());
+				return e.toString();
+			}
+
+			return "OK";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			mBtnComm.setEnabled(true);
+			mEditComm.setEnabled(true);
 			mBtnComm.setText(getResources().getString(R.string.send));
-			
-			//TODO :  We need to refresh the comment list
-			
-        	//TextView txt = (TextView) findViewById(R.id.output);
-            //txt.setText("Executed"); // txt.setText(result);
-            // might want to change "executed" for the returned string passed
-            // into onPostExecute() but that is upto you
-        }
 
-        @Override
-        protected void onPreExecute() {}
+			if(result.equals("OK"))
+			{
+				mEditComm.setText("");
+				refreshComment(true);
+				//scroll to last comment
+				mScrollViewVideo.fullScroll(View.FOCUS_DOWN);
+				
+			}else if(result.equals("IO"))
+			{
+				// display a toast message explaining no network
+				Toast.makeText(MyApplication.getAppContext(),getResources().getString(R.string.checknetwork) , Toast.LENGTH_LONG).show();
+			}else 
 
-        @Override
-        protected void onProgressUpdate(Void... values) {}
-    }
+			{
+				// display a toast message explaining the result
+				Toast.makeText(MyApplication.getAppContext(),result, Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+		@Override
+		protected void onPreExecute() {}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {}
+	}
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wake.wank"
-    android:versionCode="14"
-    android:versionName="sexy.squirrel">
+    android:versionCode="15"
+    android:versionName="sexy.donkey">
 
     <uses-sdk
         android:minSdkVersion="11"

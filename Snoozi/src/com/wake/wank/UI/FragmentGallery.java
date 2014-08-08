@@ -2,6 +2,7 @@ package com.wake.wank.UI;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.wake.wank.R;
@@ -128,7 +129,14 @@ public class FragmentGallery extends Fragment {
 			String whereClause = SnooziContract.videos.Columns.MYVIEWCOUNT + " > 0 ";
 			String[] whereValue = null;
 			
-			videoList.addAll(MyVideo.getListFromSQL(whereClause,whereValue));
+			int maxvideocount = 4;
+			List<MyVideo> allvideo = MyVideo.getListFromSQL(whereClause,whereValue);
+			for (Iterator<MyVideo> theVideoIterator = allvideo.iterator(); theVideoIterator.hasNext();) {
+				MyVideo myVideo = theVideoIterator.next();
+				videoList.add(myVideo);
+				if(--maxvideocount == 0)
+					break;
+			}
 
 		}
 		if(mAdapter != null)
