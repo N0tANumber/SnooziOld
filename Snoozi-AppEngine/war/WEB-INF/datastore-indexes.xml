@@ -26,7 +26,11 @@
         <property name="userid" direction="asc"/>
        <property name="timestamp" direction="asc"/>
     </datastore-index>
+    <datastore-index kind="Comments" ancestor="false" source="manual">
+        <property name="videoid" direction="asc"/>
+       <property name="timestamp" direction="asc"/>
+    </datastore-index>
     
-
+  
     
 </datastore-indexes>

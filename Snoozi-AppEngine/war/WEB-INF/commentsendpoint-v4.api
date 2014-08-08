@@ -130,22 +130,6 @@
         "body" : "autoTemplate(backendResponse)"
       }
     },
-    "commentsendpoint.insertComments" : {
-      "path" : "comments",
-      "httpMethod" : "POST",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.CommentsEndpoint.insertComments",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
     "commentsendpoint.removeComments" : {
       "path" : "comments/{id}",
       "httpMethod" : "DELETE",
@@ -175,6 +159,22 @@
       "audiences" : [ ],
       "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
       "rosyMethod" : "com.snoozi.CommentsEndpoint.updateComments",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "commentsendpoint.insertComments" : {
+      "path" : "comments",
+      "httpMethod" : "POST",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.CommentsEndpoint.insertComments",
       "request" : {
         "body" : "autoTemplate(backendRequest)",
         "bodyName" : "resource"
@@ -254,7 +254,9 @@
           "$ref" : "Comments"
         }
       },
-      "com.snoozi.CommentsEndpoint.insertComments" : {
+      "com.snoozi.CommentsEndpoint.removeComments" : {
+      },
+      "com.snoozi.CommentsEndpoint.updateComments" : {
         "request" : {
           "$ref" : "Comments"
         },
@@ -262,9 +264,7 @@
           "$ref" : "Comments"
         }
       },
-      "com.snoozi.CommentsEndpoint.removeComments" : {
-      },
-      "com.snoozi.CommentsEndpoint.updateComments" : {
+      "com.snoozi.CommentsEndpoint.insertComments" : {
         "request" : {
           "$ref" : "Comments"
         },
