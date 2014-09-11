@@ -1,6 +1,6 @@
 <?php
 
-$APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
+$APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.2.apk";
 
 ?>
 <!DOCTYPE html>
@@ -146,7 +146,7 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 							
 							<!-- Intro Section Button -->	
 							<div class="intro_button text-center">
-								<a class="btn btn-primary btn-lg" href="#howto">Try it now!</a>
+								<a class="btn btn-primary btn-lg" href="#howto">Subscribe now!</a>
 							</div>
 								
 						</div>	<!-- End Intro Section Description -->	
@@ -157,15 +157,41 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 						</div>
 						-->
 						<!-- Intro Section Form -->		
-						<!--
+						
 							<div id="intro_form" class="col-sm-5 col-md-5">
 						
 							
 							
 							<div class="form_register">
-								<h2> Register Now! </h2>
 								
-								<form action="contact.php" name="contactform" class="row" method="post">
+								<!-- Begin MailChimp Signup Form -->
+								
+								<form action="http://snoozi.us8.list-manage1.com/subscribe/post?u=3337b6881ccecdef9f8348cfc&amp;id=c96b2bc083" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+									<h3>Apply to become an Early Bird and help us out by testing our Prototype (v0.3)!</h3>
+								<div class="mc-field-group">
+									<label for="mce-EMAIL">Email Address  
+								</label>
+									<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+								</div>
+									<div id="mce-responses" class="clear">
+										<div class="response" id="mce-error-response" style="display:none"></div>
+										<div class="response" id="mce-success-response" style="display:none"></div>
+									</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+								    <div style="position: absolute; left: -5000px;"><input type="text" name="b_3337b6881ccecdef9f8348cfc_e1aa0aaf59" tabindex="-1" value=""></div>
+									<br/><br/>
+									<div id="form_register_btn" class="text-center">
+										<input class="btn btn-primary btn-lg" type="submit" value="Register" id="mc-embedded-subscribe" name="subscribe">
+									</div>
+								    
+								</form>
+								
+
+								<!--End mc_embed_signup-->
+								
+								<!--
+								<h2> Apply to become an Early Bird and help us out by testing our Prototype (v0.3)! </h2>
+								
+								<form action="contact.php" name="contactform" class="row" method="get">
 									
 									<div id="input_name" class="col-md-12">
 										<input id="name" class="form-control" type="text" name="first_name" placeholder="Full Name"> 
@@ -189,11 +215,11 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 									</div>  
 																	
 								</form>	
-								
+								-->
 							</div>
 						
 													
-						</div>	-->	<!-- End Intro Section Form -->
+						</div>		<!-- End Intro Section Form -->
 					
 					</div>	<!-- End row -->	
 					
@@ -209,68 +235,31 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 					<!-- Section Title -->	
 					<div class="row">
 						<div class="col-md-12 titlebar"><a id="howto">&nbsp;</a>
-							<h1>Try out our <strong>Prototype</strong> v0.2 on Android</h1>
-							<p>The Prototype is a simple alarm clock that will wake you up with a random video for 10 days.<br> Once you have install the Prototype, set your alarm and let Snoozi do the rest!</p>
+							<h1>Coming <strong>soon</strong> on Android</h1>
+							<p>Snoozi isn't available yet on Google PlayStore, because we do not believe in Jobs half done!
+							If you are interested in being the first, feel free to subscribe for an early access. We’d love to contact you as soon as possible!</p>
 						</div>
 					</div>
+					
+					
+						
 				
-					<div class="row">
+					<div class="row text-center">
 					
 						<!--  About-1 Text -->	
-						<div id="about-1-text" class="col-md-6">	
+						<div id="about-1-text" class="col-md-12">	
 						
-							<h4>Why not via Google PlayStore?</h4>
+							<h4>Subscribe and be the first informed :</h4>
 							
-							<p>Our Prototype isn't available on Google PlayStore, because at Snoozi, we do not believe in Jobs half done! Our Prototype is specially designed for testing and not yet ready for delivery. If you are interested in helping us out, feel free to try our prototype. We’d love to have your feedbacks!
-								<br>If you have never installed any application outside of Google PlayStore, follow these simple steps :
-							</p>
-														
-							<!--  Accordion -->
-							<div id="accordion_holder">	
-								<h4>How to install Snoozi?</h4>
-			
-								<ul class="accordion clearfix">
-									
-									<!-- Text #1 -->
-									<li id="text_1">
-										<a href="#text1">1. Open the Security panel</a>								
-										<div>
-											<p>On your Android device, go to your "Settings" panel. Then from the list, select "Security"</p>
-										</div>									
-									</li>				
-											
-									<!-- Text #2 -->
-									<li id="text_2">
-										<a href="#text2">2. Allow installation from unknown sources</a>								
-										<div>
-											<p>In the Security panel just check the "Unknown Sources" box!						
-											</p>
-										</div>									
-									</li>	
-											
-									<!-- Text #3 -->
-									<li id="text_3">
-										<a href="#text3">3. Click on Download Now!</a>								
-										<div>
-											<p>Once you have Set up your device for Installation, simply click the Download Now button and Start your journey with Snoozi! Snoozi Team thank you for your time and interest in our product!
-											</p>
-										</div>									
-									</li>
-
-								</ul>	
-								
-							</div>	<!--  End Accordion -->
-							
-							<div class="intro_button text-center">
-								<a class="btn btn-primary btn-lg" href="<?php echo $APK_URL;?>">Download Now</a>
-							</div>
+							<div class="clearfix">
+								<form id="subscribe-for" class="subscribe-form " action="newsletter.php" method="post">
+									<input type="email" name="email" class="subscribe-input" placeholder="Enter your e-mail address...">
+									<button type="submit" class="subscribe-submit">Subscribe</button>
+								</form>
+							</div>	
 						</div>	<!-- End About-1 Text --> 
 						
-						<!-- About-1 Image --> 
-						<div id="about-1-img" class="col-md-6 text-center" style="margin-top:50px">
-							<img class="img-responsive" src="img/thumbs/startup-1.png" alt="image" />		
-						</div>
-					
+						
 					</div>	<!-- End row -->	
 				</div>	   <!-- End container -->		
 			</section>  <!-- END ABOUT-1 -->
@@ -433,7 +422,7 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 							</p>
 							
 							<!-- Call To Action Button -->	
-							<a href="<?php echo $APK_URL;?>" class="btn btn-primary btn-lg">Download Now</a>
+							<a href="#howto" class="btn btn-primary btn-lg">Subscribe Now</a>
 							
 						</div>	<!-- End Call To Action Content -->	
 					
@@ -451,10 +440,10 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 						<!-- Footer Navigation -->
 						<div id="footer_nav" class="col-sm-6 col-md-4">
 							<ul class="footer-nav clearfix">
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">Help</a></li>
-								<li><a href="#">Privacy</a></li>
-								<li><a href="#">Terms</a></li>
+								<li><a href="mailto:contact@snoozi.co">Contact</a></li>
+								<li><a href="mailto:support@snoozi.co">Help</a></li>
+								<!--<li><a href="#">Privacy</a></li>
+								<li><a href="#">Terms</a></li> -->
 							</ul>
 
 							<div id="footer_copy">
@@ -491,18 +480,7 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 							</ul>
 						</div>	 <!-- End Footer Social Icons -->	
 						
-						<!-- Newsletter Form -->						
-						<div class="col-md-4">							
-							<div id="newsletter_form" class="col-sm-12">
-								<div class="clearfix">
-									<form id="subscribe-form" class="subscribe-form pull-right" action="newsletter.php" method="post">
-										<input type="email" name="email" class="subscribe-input" placeholder="Enter your e-mail address...">
-										<button type="submit" class="subscribe-submit">Subscribe</button>
-									</form>
-								</div>	
-								<p id="newsletter-paragraph" class="pull-right">Join our newsletter subscription, be always informed</p>
-							</div>
-						</div>	<!-- End Newsletter Form -->	
+						
 					
 					</div>	<!-- End row -->	
 				</div>	  <!-- End container -->		
@@ -534,21 +512,7 @@ $APK_URL = "http://storage.googleapis.com/apkfile/Snoozi_v0.1.1.apk";
 		  <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 		<![endif]-->
 		
-				
-		<!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information. -->
-		<!--
-		<script>
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-XXXXX-X']);
-			_gaq.push(['_trackPageview']);
-
-			(function() {
-				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-			})();
-		</script>
-		-->
+	
 		
 	
 <script>

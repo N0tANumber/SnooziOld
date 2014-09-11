@@ -1,167 +1,126 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000000"
-    android:gravity="center_vertical|center_horizontal|center"
-    android:orientation="vertical" >
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:background="#641213"
+	>
 
-  <ScrollView
-      android:id="@+id/scrollView1"
-      android:layout_width="match_parent"
-      android:layout_height="fill_parent" >
+	<ScrollView
+	    android:id="@+id/scrollView1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content" >
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical" >
-
-          <TextView
-              android:id="@+id/msgView"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="10dp"
-              android:gravity="center_horizontal"
-              android:text="@string/welcome"
-              android:textAppearance="?android:attr/textAppearanceMedium"
-              android:textColor="#fff"
-              android:typeface="sans" />
-
-          <LinearLayout
-              android:id="@+id/inputlayout"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="15dp"
-              android:layout_marginRight="15dp"
-              android:orientation="vertical" >
-
-              <View
-                  android:layout_width="fill_parent"
-                  android:layout_height="1dp"
-                  android:layout_marginBottom="10dp"
-                  android:layout_marginTop="5dp"
-                  android:background="@android:color/darker_gray" />
-
-              <TextView
-                  android:id="@+id/textView1"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:text="@string/Hour"
-                  android:textAppearance="?android:attr/textAppearanceMedium"
-                  android:textColor="#ffffff" />
-
-              <TimePicker
-                  android:id="@+id/timePicker"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content" />
-
-              <View
-                  android:layout_width="fill_parent"
-                  android:layout_height="1dp"
-                  android:layout_marginTop="10dp"
-                  android:background="@android:color/darker_gray" />
-
-              <LinearLayout
-                  android:id="@+id/BtnRepeat"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:clickable="true"
-                  android:focusable="true"
-                  android:orientation="vertical" >
-
-                  <TextView
-                      android:id="@+id/TextView02"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginTop="10dp"
-                      android:text="@string/Repeat"
-                      android:textAppearance="?android:attr/textAppearanceMedium"
-                      android:textColor="#ffffff" />
-
-                  <TextView
-                      android:id="@+id/txtdays"
-                      android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:layout_marginBottom="10dp"
-                      android:text="@string/Everyday"
-                      android:textAppearance="?android:attr/textAppearanceSmall"
-                      android:textColor="#ddd" />
-              </LinearLayout>
-
-              <View
-                  android:layout_width="fill_parent"
-                  android:layout_height="1dp"
-                  android:layout_marginBottom="10dp"
-                  android:background="@android:color/darker_gray" />
-
-              <CheckedTextView
-                  android:id="@+id/chk_vibrate"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-                  android:checked="true"
-                  android:clickable="true"
-                  android:focusable="true"
-                  android:gravity="center_vertical"
-                  android:paddingRight="20dp"
-                  android:text="@string/Vibration"
-                  android:textAppearance="?android:attr/textAppearanceMedium"
-                  android:textColor="#ffffff" />
-              <View
-                  android:layout_width="fill_parent"
-                  android:layout_height="1dp"
-                  android:layout_marginBottom="10dp"
-                  android:background="@android:color/darker_gray" />
+		<LinearLayout android:id="@+id/inputlayout"
+			android:layout_width="match_parent" android:layout_height="wrap_content"
+			android:layout_marginLeft="15dp" android:layout_marginRight="15dp"
+			android:orientation="vertical">
 
 			<TextView
+			    android:id="@+id/TextView03"
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="20dp"
+			    android:gravity="center_horizontal"
+			    android:text="@string/preversion"
+			    android:textAppearance="?android:attr/textAppearanceMedium"
+			    android:textColor="#fff"
+			    android:typeface="sans" />
+
+	<CheckedTextView android:id="@+id/chk_activate"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+				android:checked="true" android:clickable="true" android:focusable="true"
+				android:gravity="center_vertical" android:paddingRight="20dp"
+				android:text="@string/activate" android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="#ffffff" />
+			
+			<View android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_marginTop="10dp" android:background="@android:color/darker_gray" />
+
+			<TextView android:id="@+id/textView1" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/Hour"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="#ffffff" />
+
+			<TimePicker android:id="@+id/timePicker"
+				android:layout_width="fill_parent" android:layout_height="wrap_content" />
+
+			<View android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_marginTop="10dp" android:background="@android:color/darker_gray" />
+
+			<LinearLayout android:id="@+id/BtnRepeat"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:clickable="true" android:focusable="true"
+				android:orientation="vertical">
+
+				<TextView android:id="@+id/TextView02"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:layout_marginTop="10dp" android:text="@string/Repeat"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:textColor="#ffffff" />
+
+				<TextView android:id="@+id/txtdays" android:layout_width="wrap_content"
+					android:layout_height="wrap_content" android:layout_marginBottom="10dp"
+					android:text="@string/Everyday" android:textAppearance="?android:attr/textAppearanceSmall"
+					android:textColor="#ddd" />
+			</LinearLayout>
+
+			<View android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_marginBottom="10dp" android:background="@android:color/darker_gray" />
+
+			<CheckedTextView android:id="@+id/chk_vibrate"
+				android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:checkMark="?android:attr/listChoiceIndicatorMultiple"
+				android:checked="true" android:clickable="true" android:focusable="true"
+				android:gravity="center_vertical" android:paddingRight="20dp"
+				android:text="@string/Vibration" android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="#ffffff" />
+			<View android:layout_width="fill_parent" android:layout_height="1dp"
+				android:layout_marginBottom="10dp" android:background="@android:color/darker_gray" />
+
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:layout_marginTop="10dp"
+				android:text="@string/volume" android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="#ffffff" />
+
+			<SeekBar
+			    android:id="@+id/volumeseekBar"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginBottom="80dp" />
+			
+
+		</LinearLayout>
+	</ScrollView>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#000"
+    android:gravity="center"
+    android:orientation="horizontal" >
+
+		<TextView
+		    android:id="@+id/BtnCancel"
 		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_marginTop="10dp"
-		    android:text="@string/volume"
-		    android:textAppearance="?android:attr/textAppearanceMedium"
-		    android:textColor="#ffffff" />
+		    android:layout_height="50dp"
+		    android:layout_weight="1"
+		    android:gravity="center_horizontal|center_vertical"
+		    android:text="@string/cancel"
+		   android:clickable="true" android:focusable="true" android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+<View android:layout_width="1dp" android:layout_height="fill_parent"
+				android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:background="@android:color/darker_gray" />
+    
+	<TextView
+	    android:id="@+id/BtnDone"
+	    android:layout_width="wrap_content"
+	    android:layout_height="50dp"
+	    android:layout_weight="1"
+	    android:gravity="center_horizontal|center_vertical"
+	    android:text="@string/done"
+	    android:clickable="true" android:focusable="true" android:textAppearance="?android:attr/textAppearanceLarge" />
 
-              <SeekBar
-                  android:id="@+id/volumeseekBar"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content" />
-            
-              <Button
-                  android:id="@+id/BtnDone"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="50dp"
-                  android:text="@string/done"
-                  android:visibility="gone" />
+	</LinearLayout>
 
-          </LinearLayout>
-
-          <ToggleButton
-              android:id="@+id/chk_activate"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="10dp"
-              android:layout_marginRight="10dp"
-              android:layout_marginTop="30dp"
-              android:text="@string/app_name"
-              android:textOff="@string/alarmoff"
-              android:textOn="@string/alarmon" />
-
-          <TextView
-              android:id="@+id/TextView03"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="20dp"
-              android:layout_marginLeft="10dp"
-              android:layout_marginRight="10dp"
-              android:layout_marginTop="20dp"
-              android:gravity="center_horizontal"
-              android:text="@string/preversion"
-              android:textColor="#fff"
-              android:typeface="sans" />
-
-      </LinearLayout>
-
-  </ScrollView>
-
-</LinearLayout>
+</RelativeLayout>

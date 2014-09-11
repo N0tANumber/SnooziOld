@@ -8,6 +8,7 @@
         <property name="timestamp" direction="asc" />
         <property name="type" direction="asc" />
     </datastore-index>
+    
     <datastore-index kind="Video" ancestor="false">
         <property name="userid" direction="asc" />
         <property name="like" direction="desc" />
@@ -20,5 +21,12 @@
         <property name="status" direction="asc"/>
         <property name="timestamp" direction="desc"/>
 	</datastore-index>
+	<datastore-index kind="Video" ancestor="false" source="manual">
+        <property name="status" direction="asc"/>
+        <property name="userid" direction="asc"/>
+       <property name="timestamp" direction="asc"/>
+    </datastore-index>
+    
+
     
 </datastore-indexes>
