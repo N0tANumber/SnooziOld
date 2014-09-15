@@ -26,6 +26,64 @@
   "ownerDomain" : "snoozi.com",
   "ownerName" : "snoozi.com",
   "methods" : {
+    "uservideoendpoint.getUserVideo" : {
+      "path" : "uservideo/{id}",
+      "httpMethod" : "GET",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.getUserVideo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
+    "uservideoendpoint.removeUserVideo" : {
+      "path" : "uservideo/{id}",
+      "httpMethod" : "DELETE",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.removeUserVideo",
+      "request" : {
+        "parameters" : {
+          "id" : {
+            "type" : "int64",
+            "required" : true
+          }
+        },
+        "body" : "empty"
+      },
+      "response" : {
+        "body" : "empty"
+      }
+    },
+    "uservideoendpoint.updateUserVideo" : {
+      "path" : "uservideo",
+      "httpMethod" : "PUT",
+      "authLevel" : "NONE",
+      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
+      "audiences" : [ ],
+      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
+      "rosyMethod" : "com.snoozi.UserVideoEndpoint.updateUserVideo",
+      "request" : {
+        "body" : "autoTemplate(backendRequest)",
+        "bodyName" : "resource"
+      },
+      "response" : {
+        "body" : "autoTemplate(backendResponse)"
+      }
+    },
     "uservideoendpoint.insertUserVideo" : {
       "path" : "uservideo",
       "httpMethod" : "POST",
@@ -59,64 +117,6 @@
           "limit" : {
             "type" : "int32",
             "required" : false
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "uservideoendpoint.updateUserVideo" : {
-      "path" : "uservideo",
-      "httpMethod" : "PUT",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.UserVideoEndpoint.updateUserVideo",
-      "request" : {
-        "body" : "autoTemplate(backendRequest)",
-        "bodyName" : "resource"
-      },
-      "response" : {
-        "body" : "autoTemplate(backendResponse)"
-      }
-    },
-    "uservideoendpoint.removeUserVideo" : {
-      "path" : "uservideo/{id}",
-      "httpMethod" : "DELETE",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.UserVideoEndpoint.removeUserVideo",
-      "request" : {
-        "parameters" : {
-          "id" : {
-            "type" : "int64",
-            "required" : true
-          }
-        },
-        "body" : "empty"
-      },
-      "response" : {
-        "body" : "empty"
-      }
-    },
-    "uservideoendpoint.getUserVideo" : {
-      "path" : "uservideo/{id}",
-      "httpMethod" : "GET",
-      "authLevel" : "NONE",
-      "scopes" : [ "https://www.googleapis.com/auth/userinfo.email" ],
-      "audiences" : [ ],
-      "clientIds" : [ "292824132082.apps.googleusercontent.com" ],
-      "rosyMethod" : "com.snoozi.UserVideoEndpoint.getUserVideo",
-      "request" : {
-        "parameters" : {
-          "id" : {
-            "type" : "int64",
-            "required" : true
           }
         },
         "body" : "empty"
@@ -172,6 +172,21 @@
       }
     },
     "methods" : {
+      "com.snoozi.UserVideoEndpoint.getUserVideo" : {
+        "response" : {
+          "$ref" : "UserVideo"
+        }
+      },
+      "com.snoozi.UserVideoEndpoint.removeUserVideo" : {
+      },
+      "com.snoozi.UserVideoEndpoint.updateUserVideo" : {
+        "request" : {
+          "$ref" : "UserVideo"
+        },
+        "response" : {
+          "$ref" : "UserVideo"
+        }
+      },
       "com.snoozi.UserVideoEndpoint.insertUserVideo" : {
         "request" : {
           "$ref" : "UserVideo"
@@ -183,21 +198,6 @@
       "com.snoozi.UserVideoEndpoint.listUserVideo" : {
         "response" : {
           "$ref" : "CollectionResponse_UserVideo"
-        }
-      },
-      "com.snoozi.UserVideoEndpoint.updateUserVideo" : {
-        "request" : {
-          "$ref" : "UserVideo"
-        },
-        "response" : {
-          "$ref" : "UserVideo"
-        }
-      },
-      "com.snoozi.UserVideoEndpoint.removeUserVideo" : {
-      },
-      "com.snoozi.UserVideoEndpoint.getUserVideo" : {
-        "response" : {
-          "$ref" : "UserVideo"
         }
       }
     }
