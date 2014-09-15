@@ -25,6 +25,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 
 
 /**
@@ -170,6 +171,7 @@ public class TrackingSender {
 						AndroidHttp.newCompatibleTransport(),
 						new JacksonFactory(),
 						new HttpRequestInitializer() {
+							@Override
 							public void initialize(HttpRequest httpRequest) { }
 						});
 
@@ -195,7 +197,7 @@ public class TrackingSender {
 				}
 				do {
 					// getting the data from the cursor
-					int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns._ID));
+					int id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID));
 					long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTAMP));
 					String timestring = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.TIMESTRING));
 					String description = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.trackingevents.Columns.DESCRIPTION));
@@ -231,7 +233,7 @@ public class TrackingSender {
 
 						// Deleting the Tracking event
 						provider.delete(SnooziContract.trackingevents.CONTENT_URI, 
-								SnooziContract.trackingevents.Columns._ID + " = ? ", 
+								BaseColumns._ID + " = ? ", 
 								new String[]{String.valueOf(id)});
 					}
 				} while (cursor.moveToNext());

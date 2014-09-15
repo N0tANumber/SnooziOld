@@ -285,6 +285,7 @@ public class HomeActivity extends FragmentActivity {
 	public class DepthPageTransformer implements ViewPager.PageTransformer {
 		private static final float MIN_SCALE = 0.75f;
 
+		@Override
 		public void transformPage(View view, float position) {
 			int pageWidth = view.getWidth();
 
@@ -325,6 +326,7 @@ public class HomeActivity extends FragmentActivity {
 		private static final float MIN_SCALE = 0.85f;
 		private static final float MIN_ALPHA = 0.5f;
 
+		@Override
 		public void transformPage(View view, float position) {
 			int pageWidth = view.getWidth();
 			int pageHeight = view.getHeight();

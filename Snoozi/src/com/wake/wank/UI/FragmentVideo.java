@@ -163,6 +163,7 @@ public class FragmentVideo extends Fragment {
 
 
 		mVideoView.setOnPreparedListener(new OnPreparedListener() {
+			@Override
 			public void onPrepared(MediaPlayer mp) {
 				try {
 					duration = mVideoView.getDuration();
@@ -199,6 +200,7 @@ public class FragmentVideo extends Fragment {
 			}
 		});
 		mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			@Override
 			public void onCompletion(MediaPlayer mp) {
 				try {
 					_videoViewCount++;
@@ -486,7 +488,7 @@ public class FragmentVideo extends Fragment {
 			int totalHeight = 0;
 			for (int i = 0; i < listAdapter.getCount(); i++) {
 				View listItem = listAdapter.getView(i, null, listView);
-				listItem.setLayoutParams(new LayoutParams(ListView.LayoutParams.WRAP_CONTENT, ListView.LayoutParams.WRAP_CONTENT));
+				listItem.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 				listItem.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED), MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 				//listItem.measure(0, 0);
 				totalHeight += listItem.getMeasuredHeight();
@@ -596,7 +598,7 @@ public class FragmentVideo extends Fragment {
 						//        + current);
 						if(duration > 0)
 						{
-							int currentPrecent = (int) (current * 100 / duration);
+							int currentPrecent = current * 100 / duration;
 							if(theprecent != currentPrecent)
 							{
 								publishProgress(currentPrecent);

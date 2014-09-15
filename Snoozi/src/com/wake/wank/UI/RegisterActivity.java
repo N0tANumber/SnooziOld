@@ -154,7 +154,8 @@ public class RegisterActivity extends Activity {
         AndroidHttp.newCompatibleTransport(),
         new JacksonFactory(),
         new HttpRequestInitializer() {
-          public void initialize(HttpRequest httpRequest) { }
+          @Override
+		public void initialize(HttpRequest httpRequest) { }
         });
 
     messageEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
@@ -245,7 +246,8 @@ public class RegisterActivity extends Activity {
         .setMessage(message)
         .setPositiveButton(android.R.string.ok,
             new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
+              @Override
+			public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
               }
             }).show();
@@ -278,7 +280,8 @@ public class RegisterActivity extends Activity {
       }            
     }
     
-    protected void onPostExecute(CollectionResponseMessageData messages) {
+    @Override
+	protected void onPostExecute(CollectionResponseMessageData messages) {
       // Check if exception was thrown
       if (exceptionThrown != null) {
         Log.e(RegisterActivity.class.getName(), 

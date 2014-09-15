@@ -68,7 +68,8 @@ public class CloudEndpointUtils {
     final boolean enableGZip = builder.getRootUrl().startsWith("https:");
 
     builder.setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-      public void initialize(AbstractGoogleClientRequest<?> request)
+      @Override
+	public void initialize(AbstractGoogleClientRequest<?> request)
           throws IOException {
         if (!enableGZip) {
           request.setDisableGZipContent(true);
@@ -132,7 +133,8 @@ public class CloudEndpointUtils {
     final String errorMessage = message == null ? "Error" : "[Error ] "
         + message;
     activity.runOnUiThread(new Runnable() {
-      public void run() {
+      @Override
+	public void run() {
         Toast.makeText(activity, errorMessage, Toast.LENGTH_LONG)
             .show();
       }

@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.BaseColumns;
 
 public class VideoDownloadReceiver extends BroadcastReceiver {
 
@@ -46,7 +47,7 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 					if (cursor.moveToFirst()) 
 					{
 						//UPDATE FILESTATUS OF THE VIDEO
-						int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
+						int id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID));
 						ContentValues values = new ContentValues();
 						boolean toUpdate = false;
 
@@ -125,7 +126,7 @@ public class VideoDownloadReceiver extends BroadcastReceiver {
 						long filedownloadid = 0l;
 
 
-						int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
+						int id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID));
 						String url = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.URL));
 						String localUrl = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LOCALURL));
 

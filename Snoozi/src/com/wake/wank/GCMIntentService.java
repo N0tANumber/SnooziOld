@@ -82,7 +82,8 @@ public class GCMIntentService extends GCMBaseIntentService {
     Deviceinfoendpoint.Builder endpointBuilder = new Deviceinfoendpoint.Builder(
         AndroidHttp.newCompatibleTransport(), new JacksonFactory(),
         new HttpRequestInitializer() {
-          public void initialize(HttpRequest httpRequest) {
+          @Override
+		public void initialize(HttpRequest httpRequest) {
           }
         });
     endpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();

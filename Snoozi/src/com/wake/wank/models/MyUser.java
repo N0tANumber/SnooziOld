@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
+
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -114,7 +116,7 @@ public class MyUser implements Bundleable{
 
 		try {
 
-			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.users.Columns._ID)));
+			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
 			this.setPseudo(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.users.Columns.PSEUDO)));
 			this.setCity(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.users.Columns.CITY)));
 			this.setCountry(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.users.Columns.COUNTRY)));
@@ -293,6 +295,7 @@ public class MyUser implements Bundleable{
 				AndroidHttp.newCompatibleTransport(),
 				new JacksonFactory(),
 				new HttpRequestInitializer() {
+					@Override
 					public void initialize(HttpRequest httpRequest) { }
 				});
 		Userendpoint userEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();

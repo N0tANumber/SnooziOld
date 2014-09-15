@@ -17,7 +17,6 @@ import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.snoozi.commentsendpoint.model.Comments;
 import com.snoozi.videoendpoint.Videoendpoint;
 import com.snoozi.videoendpoint.model.CollectionResponseVideo;
 import com.snoozi.videoendpoint.model.Video;
@@ -32,6 +31,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.BaseColumns;
 
 public class MyVideo  implements Bundleable {
 
@@ -147,7 +147,7 @@ public class MyVideo  implements Bundleable {
 
 		try {
 
-			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID)));
+			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
 			this.setUrl(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.URL)));
 			this.setVideoid(cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.VIDEOID)));
 			this.setLocalurl(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LOCALURL)));
@@ -389,6 +389,7 @@ public class MyVideo  implements Bundleable {
 				AndroidHttp.newCompatibleTransport(),
 				new JacksonFactory(),
 				new HttpRequestInitializer() {
+					@Override
 					public void initialize(HttpRequest httpRequest) { }
 				});
 		Videoendpoint videoEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
@@ -551,7 +552,7 @@ public class MyVideo  implements Bundleable {
 									if (cursor.moveToFirst()) 
 									{
 										//UPDATE OF THE VIDEO
-										int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
+										int id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID));
 										String url = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.URL));
 										String fileStatus = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.FILESTATUS));
 										if(!url.equals(video.getUrl()) || fileStatus.equals("ERROR"))
@@ -630,7 +631,7 @@ public class MyVideo  implements Bundleable {
 						if(counter <= maxKeptVideo)
 							continue;
 						
-						int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
+						int id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID));
 						String localurl = cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns.LOCALURL));
 
 						Uri uri = Uri.parse(localurl);
@@ -644,7 +645,7 @@ public class MyVideo  implements Bundleable {
 							cleanedCount++;
 							//We delete the database entry
 							// Deleting the old Video 
-							provider.delete(SnooziContract.videos.CONTENT_URI, SnooziContract.videos.Columns._ID + " = ? ", new String[]{String.valueOf(id)});
+							provider.delete(SnooziContract.videos.CONTENT_URI, BaseColumns._ID + " = ? ", new String[]{String.valueOf(id)});
 							SnooziUtility.trace(TRACETYPE.INFO, "cleanupOldVideo - Permanently Deleted video :  " +  id);
 						}else if(isdeleted)
 						{

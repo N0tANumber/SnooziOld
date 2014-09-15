@@ -11,9 +11,6 @@ import java.util.List;
 
 
 
-//import com.google.android.gms.ads.AdRequest;
-//import com.google.android.gms.ads.AdView;
-//import com.google.android.gms.ads.mediation.admob.AdMobExtras;
 import com.wake.wank.R;
 import com.wake.wank.models.MyAlarm;
 import com.wake.wank.models.MyAlarmAdapter;

@@ -1,6 +1,5 @@
 package com.wake.wank.UI;
 
-
 import com.fima.glowpadview.GlowPadView;
 import com.fima.glowpadview.GlowPadView.OnTriggerListener;
 import com.google.android.gms.analytics.GoogleAnalytics;

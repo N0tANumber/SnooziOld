@@ -25,5 +25,6 @@
 	<classpathentry kind="src" path="endpoint-libs/libuserendpoint-v4/userendpoint/userendpoint-v4-generated-source"/>
 	<classpathentry kind="src" path="endpoint-libs/libuservideoendpoint-v4/uservideoendpoint/uservideoendpoint-v4-generated-source"/>
 	<classpathentry kind="src" path="endpoint-libs/libvideoendpoint-v4/videoendpoint/videoendpoint-v4-generated-source"/>
+	<classpathentry kind="lib" path="/GlowPadView"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

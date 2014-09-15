@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 public class MyDataProvider extends ContentProvider {
@@ -150,7 +151,7 @@ public class MyDataProvider extends ContentProvider {
 			case TRACKING_ID :
 				// SELECT ONE TRACKING EVENT
 				builder.setTables(SnooziContract.trackingevents.TABLE);
-				builder.appendWhere(SnooziContract.trackingevents.Columns._ID + " = " + uri.getLastPathSegment());
+				builder.appendWhere(BaseColumns._ID + " = " + uri.getLastPathSegment());
 				break;
 			case VIDEO:
 				//SELECT ALL THE VIDEOS
@@ -162,7 +163,7 @@ public class MyDataProvider extends ContentProvider {
 			case VIDEO_ID :
 				// SELECT ONE VIDEO
 				builder.setTables(SnooziContract.videos.TABLE);
-				builder.appendWhere(SnooziContract.videos.Columns._ID + " = " + uri.getLastPathSegment());
+				builder.appendWhere(BaseColumns._ID + " = " + uri.getLastPathSegment());
 				break;
 			case ALARM:
 				//SELECT ALL THE ALARMS
@@ -174,12 +175,12 @@ public class MyDataProvider extends ContentProvider {
 			case ALARM_ID :
 				// SELECT ONE ALARM
 				builder.setTables(SnooziContract.alarms.TABLE);
-				builder.appendWhere(SnooziContract.alarms.Columns._ID + " = " + uri.getLastPathSegment());
+				builder.appendWhere(BaseColumns._ID + " = " + uri.getLastPathSegment());
 				break;
 			case USER_ID :
 				// SELECT ONE USER
 				builder.setTables(SnooziContract.users.TABLE);
-				builder.appendWhere(SnooziContract.users.Columns._ID + " = " + uri.getLastPathSegment());
+				builder.appendWhere(BaseColumns._ID + " = " + uri.getLastPathSegment());
 				break;
 			case COMMENT:
 				//SELECT ALL THE COMMENTS
@@ -191,7 +192,7 @@ public class MyDataProvider extends ContentProvider {
 			case COMMENT_ID :
 				// SELECT ONE COMMENTS
 				builder.setTables(SnooziContract.comments.TABLE);
-				builder.appendWhere(SnooziContract.comments.Columns._ID + " = " + uri.getLastPathSegment());
+				builder.appendWhere(BaseColumns._ID + " = " + uri.getLastPathSegment());
 				break;
 			default:
 				throw new IllegalArgumentException("Unsupported URI: " + uri);
@@ -277,7 +278,7 @@ public class MyDataProvider extends ContentProvider {
 			case TRACKING_ID:
 				table = SnooziContract.trackingevents.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -289,7 +290,7 @@ public class MyDataProvider extends ContentProvider {
 			case VIDEO_ID:
 				table = SnooziContract.videos.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.videos.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -301,7 +302,7 @@ public class MyDataProvider extends ContentProvider {
 			case ALARM_ID:
 				table = SnooziContract.alarms.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.alarms.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -313,7 +314,7 @@ public class MyDataProvider extends ContentProvider {
 			case USER_ID:
 				table = SnooziContract.users.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.users.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -325,7 +326,7 @@ public class MyDataProvider extends ContentProvider {
 			case COMMENT_ID:
 				table = SnooziContract.comments.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.comments.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -373,7 +374,7 @@ public class MyDataProvider extends ContentProvider {
 			case TRACKING_ID:
 				table = SnooziContract.trackingevents.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.trackingevents.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -385,7 +386,7 @@ public class MyDataProvider extends ContentProvider {
 			case VIDEO_ID:
 				table = SnooziContract.videos.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.videos.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -397,7 +398,7 @@ public class MyDataProvider extends ContentProvider {
 			case ALARM_ID:
 				table = SnooziContract.alarms.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.alarms.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -409,7 +410,7 @@ public class MyDataProvider extends ContentProvider {
 			case USER_ID:
 				table = SnooziContract.users.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.users.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -421,7 +422,7 @@ public class MyDataProvider extends ContentProvider {
 			case COMMENT_ID:
 				table = SnooziContract.comments.TABLE;
 				idStr = uri.getLastPathSegment();
-				where = SnooziContract.comments.Columns._ID + " = " + idStr;
+				where = BaseColumns._ID + " = " + idStr;
 				if (!TextUtils.isEmpty(selection)) {
 					where += " AND " + selection;
 				}
@@ -552,7 +553,8 @@ public class MyDataProvider extends ContentProvider {
 	     * Creates the data repository. This is called when the provider attempts to open the
 	     * repository and SQLite reports that it doesn't exist.
 	     */
-	    public void onCreate(SQLiteDatabase db) {
+	    @Override
+		public void onCreate(SQLiteDatabase db) {
 	        // Creates the main table
 	    	db.execSQL(SQL_CREATE_TRACKINGEVENT);
 	    	db.execSQL(SQL_CREATE_VIDEO);

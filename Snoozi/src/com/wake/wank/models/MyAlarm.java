@@ -27,6 +27,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.widget.Toast;
 
 public class MyAlarm  implements Bundleable {
@@ -141,7 +142,7 @@ public class MyAlarm  implements Bundleable {
 
 		try {
 
-			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.alarms.Columns._ID)));
+			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
 			this.setActivate((cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.alarms.Columns.ACTIVATE)) == 1)? true : false);
 			this.setHour(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.alarms.Columns.HOUR)));
 			this.setMinute(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.alarms.Columns.MINUTE)));
@@ -425,6 +426,7 @@ public class MyAlarm  implements Bundleable {
 				AndroidHttp.newCompatibleTransport(),
 				new JacksonFactory(),
 				new HttpRequestInitializer() {
+					@Override
 					public void initialize(HttpRequest httpRequest) { }
 				});
 		Alarmendpoint alarmEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
@@ -528,6 +530,7 @@ public class MyAlarm  implements Bundleable {
 	 * get the time of the Alarm
 	 * @return
 	 */
+	@Override
 	public String toString() {
 
 		return (activate ? "ON" : "OFF") + " - " + toTime() + " - " + dayString;

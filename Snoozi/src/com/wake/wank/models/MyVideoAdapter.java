@@ -3,6 +3,7 @@ package com.wake.wank.models;
 import java.util.List;
 
 import com.wake.wank.R;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;

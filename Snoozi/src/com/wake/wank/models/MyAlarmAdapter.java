@@ -38,6 +38,7 @@ public class MyAlarmAdapter extends ArrayAdapter<MyAlarm> {
 
 		
 		this.activateListener = new OnCheckedChangeListener() {
+			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
 				try {

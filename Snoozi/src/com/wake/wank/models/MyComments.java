@@ -23,6 +23,7 @@ import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 
 public class MyComments  implements Bundleable {
 
@@ -104,7 +105,7 @@ public class MyComments  implements Bundleable {
 		this(); // default constructor
 
 		try {
-			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.comments.Columns._ID)));
+			this.setId(cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID)));
 			this.setCommentid(cursor.getLong(cursor.getColumnIndexOrThrow(SnooziContract.comments.Columns.COMMENTID)));
 			this.setDescription(cursor.getString(cursor.getColumnIndexOrThrow(SnooziContract.comments.Columns.DESCRIPTION)));
 			this.setLike(cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.comments.Columns.LIKE)));
@@ -261,6 +262,7 @@ public class MyComments  implements Bundleable {
 				AndroidHttp.newCompatibleTransport(),
 				new JacksonFactory(),
 				new HttpRequestInitializer() {
+					@Override
 					public void initialize(HttpRequest httpRequest) { }
 				});
 		Commentsendpoint commentEndpoint = CloudEndpointUtils.updateBuilder(endpointBuilder).build();
@@ -429,7 +431,7 @@ public class MyComments  implements Bundleable {
 								if (cursor.moveToFirst()) 
 								{
 									//UPDATE OF THE COMMENT
-									int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.comments.Columns._ID));
+									int id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID));
 									
 									//Already present in database, we update the info ( description, like)
 									int updatecount = provider.update(ContentUris.withAppendedId(SnooziContract.comments.CONTENT_URI, id), values,null,null);
@@ -479,12 +481,12 @@ public class MyComments  implements Bundleable {
 				
 					do {
 						
-						int id = cursor.getInt(cursor.getColumnIndexOrThrow(SnooziContract.videos.Columns._ID));
+						int id = cursor.getInt(cursor.getColumnIndexOrThrow(BaseColumns._ID));
 						
 						
 						
 							//We delete the database entry
-							provider.delete(SnooziContract.comments.CONTENT_URI, SnooziContract.comments.Columns._ID + " = ? ", new String[]{String.valueOf(id)});
+							provider.delete(SnooziContract.comments.CONTENT_URI, BaseColumns._ID + " = ? ", new String[]{String.valueOf(id)});
 							SnooziUtility.trace(TRACETYPE.INFO, "cleanupOldComment - Permanently Deleted comment :  " +  id);
 						
 
