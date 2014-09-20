@@ -1,6 +1,5 @@
 package com.wake.wank.UI;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +22,7 @@ import com.wake.wank.utils.SnooziUtility.TRACETYPE;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,14 +38,6 @@ import android.content.SharedPreferences;
  * Check out RegisterActivity.java for more details.
  */
 public class MainActivity extends Activity {
-
-
-
-	
-
-
-
-
 
 	@SuppressWarnings("unused")
 	@Override
@@ -65,9 +57,9 @@ public class MainActivity extends Activity {
 		//startActivity(intent);
 		
 		
-		final Timer timer = new Timer(true);
-		TimerTask timerTask = new TimerTask() 
-		{
+		try {
+            new Handler().postDelayed(new Runnable() {
+                  
 			@Override
 			public void run() 
 			{   
@@ -134,13 +126,12 @@ public class MainActivity extends Activity {
 				
 				launchHomeActivity();
 			}
-		};
-
-		timer.schedule(timerTask, 300);
-		
+		}, 100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		
 	}
-
 	
 	
 	@Override
@@ -148,8 +139,8 @@ public class MainActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onStop();
 		try {
-			if(!SnooziUtility.DEV_MODE)
-				GoogleAnalytics.getInstance(this).reportActivityStop(this);
+			//if(!SnooziUtility.DEV_MODE)
+				//GoogleAnalytics.getInstance(this).reportActivityStop(this);
 			//EasyTracker.getInstance().activityStop(this);
 			
 		} catch (Exception e) {
@@ -166,8 +157,8 @@ public class MainActivity extends Activity {
 		
 		try {
 			
-			if(!SnooziUtility.DEV_MODE)
-				GoogleAnalytics.getInstance(this).reportActivityStart(this);
+			//if(!SnooziUtility.DEV_MODE)
+				//GoogleAnalytics.getInstance(this).reportActivityStart(this);
 			//EasyTracker.getInstance().activityStart(this);
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -175,10 +166,6 @@ public class MainActivity extends Activity {
 	}
 	
 	
-	
-
-
-
 	private void launchHomeActivity()
 	{
 		 Intent intent = new Intent(this, HomeActivity.class);
